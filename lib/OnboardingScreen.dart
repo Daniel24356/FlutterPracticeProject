@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'LoginScreen.dart';
+
 void main() => runApp(const OnboardingApp());
 
 class OnboardingApp extends StatelessWidget {
@@ -7,9 +9,12 @@ class OnboardingApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: OnboardingScreen(),
+      home: const OnboardingScreen(),
+      routes: {
+        '/login': (context) => const LoginScreen(), // 👈 your real login screen
+      },
     );
   }
 }
@@ -31,7 +36,7 @@ class OnboardingScreen extends StatelessWidget {
                 width: double.infinity,
                 decoration: const BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('images/onboard.png'), // 👈 Replace with your asset
+                    image: AssetImage('images/onboard.png'),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -55,61 +60,63 @@ class OnboardingScreen extends StatelessWidget {
                     )
                   ],
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Enjoy the new experience of\nchating with global friends",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                child: SingleChildScrollView( // 👈 scrollable fix
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Enjoy the new experience of\nchating with global friends",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 12),
-                    const Text(
-                      "Connect people arround the world for free",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                    const SizedBox(height: 45),
+                      const SizedBox(height: 12),
+                      const Text(
+                        "Connect people arround the world for free",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                      const SizedBox(height: 45),
 
-                    // Get Started Button
-                    SizedBox(
-                      width: double.infinity,
-                      height: 60,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/login');
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF7A3FFF),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(24),
+                      // Get Started Button
+                      SizedBox(
+                        width: double.infinity,
+                        height: 60,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/login'); // 👈 works now
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF7A3FFF),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                          ),
+                          child: const Text(
+                            "Get Started",
+                            style: TextStyle(fontSize: 16, color: Colors.white),
                           ),
                         ),
-                        child: const Text(
-                          "Get Started",
-                          style: TextStyle(fontSize: 16, color: Colors.white),
-                        ),
                       ),
-                    ),
 
-                    const SizedBox(height: 40),
+                      const SizedBox(height: 40),
 
-                    // Powered by section
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text("Powered by "),
-                        Image.asset(
-                          'images/usage.png', // 👈 Replace with your actual logo image
-                          width: 90,
-                          fit: BoxFit.contain,
-                        ),
-                      ],
-                    ),
-                  ],
+                      // Powered by section
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text("Powered by "),
+                          Image.asset(
+                            'images/usage.png',
+                            width: 90,
+                            fit: BoxFit.contain,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -119,3 +126,4 @@ class OnboardingScreen extends StatelessWidget {
     );
   }
 }
+

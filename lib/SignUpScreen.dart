@@ -26,7 +26,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF6FAFF), // matches the design bg
+      backgroundColor: Colors.white, // matches the design bg
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -37,14 +37,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
               Column(
                 children: const [
                   Icon(Icons.favorite_border,
-                      color: Color(0xFF007BFF), size: 48),
+                      color: Colors.green, size: 48),
                   SizedBox(height: 8),
                   Text(
                     "PawfectCare",
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF007BFF),
+                      color: Colors.green,
                     ),
                   ),
                 ],
@@ -144,7 +144,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ))
                             .toList(),
                         decoration: InputDecoration(
-                          labelText: "I am a...",
+                          // labelText: "I am a...",
                           prefixIcon: const Icon(Icons.pets_outlined),
                           filled: true,
                           fillColor: const Color(0xFFF8F9FA),
@@ -199,7 +199,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         width: double.infinity,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF007BFF),
+                            backgroundColor: Colors.green,
                             padding: const EdgeInsets.symmetric(vertical: 14),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -211,7 +211,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           child: const Text(
                             "Create Account",
                             style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600),
+                                fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
                           ),
                         ),
                       ),
@@ -234,7 +234,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     child: const Text(
                       "Sign in",
                       style: TextStyle(
-                        color: Color(0xFF007BFF),
+                        color: Colors.green,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

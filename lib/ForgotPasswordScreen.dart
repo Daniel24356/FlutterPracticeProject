@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class ForgotPasswordScreen extends StatefulWidget {
+  const ForgotPasswordScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final _formKey = GlobalKey<FormState>();
   String email = "";
-  String password = "";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF6FAFF), // light gradient feel
+      backgroundColor: const Color(0xFFF6FAFF), // same background as login
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -40,18 +39,19 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 20),
 
-              // Welcome Text
+              // Reset Password Title
               const Text(
-                "Welcome Back",
+                "Reset Password",
                 style: TextStyle(
-                  fontSize: 22,
+                  fontSize: 20,
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 6),
               const Text(
-                "Sign in to your account to continue",
+                "Enter your email to receive reset instructions",
                 style: TextStyle(color: Colors.grey, fontSize: 14),
+                textAlign: TextAlign.center,
               ),
               const SizedBox(height: 30),
 
@@ -76,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       // Email field
                       TextFormField(
                         decoration: InputDecoration(
-                          labelText: "Email",
+                          labelText: "Email Address",
                           hintText: "Enter your email",
                           prefixIcon: const Icon(Icons.email_outlined),
                           filled: true,
@@ -88,47 +88,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         onChanged: (val) => setState(() => email = val),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 20),
 
-                      // Password field
-                      TextFormField(
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          labelText: "Password",
-                          hintText: "Enter your password",
-                          prefixIcon: const Icon(Icons.lock_outline),
-                          filled: true,
-                          fillColor: const Color(0xFFF8F9FA),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
-                        onChanged: (val) => setState(() => password = val),
-                      ),
-
-                      const SizedBox(height: 8),
-
-                      // Forgot Password
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.pushReplacementNamed(context, '/forgotPassword');
-                          },
-                          child: const Text(
-                            "Forgot Password?",
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Color(0xFF007BFF),
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 10),
-
-                      // Login Button
+                      // Reset Button
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
@@ -140,40 +102,38 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           onPressed: () {
-                            Navigator.pushReplacementNamed(context, '/petDashboardApp');
+                            // Send reset logic here
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text("Reset link sent to email")),
+                            );
                           },
                           child: const Text(
-                            "Sign In",
+                            "Send Reset Link",
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 16),
+
+                      // Back to Login
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text(
+                          "← Back to Login",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Color(0xFF007BFF),
                           ),
                         ),
                       ),
                     ],
                   ),
                 ),
-              ),
-
-              const SizedBox(height: 16),
-
-              // Sign Up option
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Don’t have an account? "),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, '/signup');
-                    },
-                    child: const Text(
-                      "Sign up",
-                      style: TextStyle(
-                        color: Color(0xFF007BFF),
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ],
               ),
             ],
           ),

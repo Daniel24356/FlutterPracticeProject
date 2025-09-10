@@ -6,7 +6,7 @@ import 'SignUpScreen.dart';
 import 'AppointmentPage.dart';
 import 'PetDashboardApp.dart';
 import 'ForgotPasswordScreen.dart';
-// import 'PetStorePage.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -23,11 +23,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.deepPurple),
       initialRoute: '/',
       routes: {
-        '/': (context) => const PetDashboardApp(),
-        // '/petStore': (context) => const PetStorePage(),
+        '/': (context) => const OnboardingScreen(),
         '/login': (context) => const LoginScreen(),
         '/signup': (context) => const SignUpScreen(),
         '/forgotPassword': (context) => const ForgotPasswordScreen(),
+        '/petDashboardApp': (context) => const PetDashboardApp(),
         // '/appointmentscreen': (context) => const AppointmentPage()
       },
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'PetStorePage.dart';
 
 void main() {
   runApp(const PetDashboardApp());
@@ -328,12 +329,12 @@ class BookAppointmentPage extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text('Book Appointment', style: TextStyle(color: Colors.green)), backgroundColor: Colors.white, elevation: 0), body: const Center(child: Text('Booking form (use the Flutter appointment sheet)')));
 }
 
-class PetStorePage extends StatelessWidget {
-  const PetStorePage({super.key});
-
-  @override
-  Widget build(BuildContext context) => Scaffold(body: SafeArea(child: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: const [Icon(Icons.storefront, size: 56, color: Colors.green), SizedBox(height: 12), Text('Pet Store', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))]))));
-}
+// class PetStorePage extends StatelessWidget {
+//   const PetStorePage({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) => Scaffold(body: SafeArea(child: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: const [Icon(Icons.storefront, size: 56, color: Colors.green), SizedBox(height: 12), Text('Pet Store', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))]))));
+// }
 
 class HealthRecordsPage extends StatelessWidget {
   const HealthRecordsPage({super.key});

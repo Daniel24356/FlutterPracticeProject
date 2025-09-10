@@ -86,6 +86,7 @@ class _PetStorePageState extends State<PetStorePage> {
                   _buildCategory("images/dog.png", "Dog", Colors.blue.shade100),
                   _buildCategory("images/fish.png", "Fish", Colors.orange.shade100),
                   _buildCategory("images/bird.png", "Bird", Colors.purple.shade100),
+                  _buildCategory("images/rabbit.png", "Rabbit", Colors.yellow.shade100),
                 ],
               ),
               const SizedBox(height: 20),
@@ -94,7 +95,7 @@ class _PetStorePageState extends State<PetStorePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: const [
-                  Text("Shop by Category",
+                  Text("Categories",
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   Text("See All",
                       style: TextStyle(color: greenColor, fontWeight: FontWeight.w500)),
@@ -104,7 +105,7 @@ class _PetStorePageState extends State<PetStorePage> {
 
               // Horizontal Tags
               SizedBox(
-                height: 40,
+                height: 35,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: [

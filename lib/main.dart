@@ -7,7 +7,7 @@ import 'LoginScreen.dart';
 import 'SignUpScreen.dart';
 import 'AppointmentPage.dart';
 import 'PetDashboardApp.dart';
-import 'PetStorePage.dart';
+// import 'PetStorePage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const PetDashboardApp(),
-        '/petStore': (context) => const PetStorePage(),
+        // '/petStore': (context) => const PetStorePage(),
         '/login': (context) => const LoginScreen(),
         '/signup': (context) => const SignUpScreen(),
         '/chat': (context) => const ChatListScreen(),

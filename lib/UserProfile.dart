@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'EditProfilePage.dart';
 
 class UserProfile extends StatelessWidget {
   const UserProfile({super.key});
@@ -90,28 +91,35 @@ class UserProfile extends StatelessWidget {
 
             // Menu Items
             _buildMenuItem(
-                icon: Icons.person,
-                bgColor: Colors.green,
-                title: "My Account"),
+              icon: Icons.person,
+              bgColor: Colors.green,
+              title: "My Account",
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const EditProfilePage()),
+                );
+              },
+            ),
             _buildMenuItem(
                 icon: Icons.lock,
-                bgColor: Colors.blue,
-                title: "Password Manager"),
-            _buildMenuItem(
-                icon: Icons.location_on,
                 bgColor: Colors.red,
-                title: "Manage Address"),
+                title: "Password Manager"),
+            // _buildMenuItem(
+            //     icon: Icons.location_on,
+            //     bgColor: Colors.red,
+            //     title: "Manage Address"),
             // _buildMenuItem(
             //     icon: Icons.account_balance_wallet,
             //     bgColor: Colors.purple,
             //     title: "My Wallet"),
             _buildMenuItem(
                 icon: Icons.settings,
-                bgColor: Colors.teal,
+                bgColor: Colors.orange,
                 title: "Settings"),
             _buildMenuItem(
                 icon: Icons.help,
-                bgColor: Colors.indigo,
+                bgColor: Colors.purple,
                 title: "Help Center"),
             const SizedBox(height: 30),
           ],

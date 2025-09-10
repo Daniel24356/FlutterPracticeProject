@@ -456,7 +456,11 @@ class _AppointmentListPageState extends State<AppointmentListPage>
             Row(children: [
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => RescheduleAppointmentPage(
+                            appointment: appointment)));
+                  },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
                       shape: RoundedRectangleBorder(
@@ -504,10 +508,7 @@ class _AppointmentListPageState extends State<AppointmentListPage>
                       TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 ]),
                 ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => const BookAppointmentPage()));
-                  },
+                  onPressed: () {},
                   icon: const Icon(Icons.add, size: 16),
                   label: const Text("Book New"),
                   style: ElevatedButton.styleFrom(
@@ -579,6 +580,151 @@ class _AppointmentListPageState extends State<AppointmentListPage>
     );
   }
 }
+
+class RescheduleAppointmentPage extends StatefulWidget {
+  final Map<String, dynamic> appointment;
+  const RescheduleAppointmentPage({super.key, required this.appointment});
+
+  @override
+  State<RescheduleAppointmentPage> createState() =>
+      _RescheduleAppointmentPageState();
+}
+
+class _RescheduleAppointmentPageState extends State<RescheduleAppointmentPage> {
+  DateTime? selectedDate;
+  TimeOfDay? selectedTime;
+  String? reason;
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _notesController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    final appointment = widget.appointment;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Reschedule Appointment"),
+        backgroundColor: Colors.green,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: [
+              // Pet & doctor info
+              Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+                child: ListTile(
+                  leading: Text(appointment["pet"]["emoji"],
+                      style: const TextStyle(fontSize: 28)),
+                  title: Text(appointment["pet"]["name"],
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                  subtitle: Text("Dr. ${appointment["veterinarian"]}"),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Date Picker
+              ListTile(
+                leading: const Icon(Icons.calendar_today, color: Colors.green),
+                title: Text(selectedDate == null
+                    ? "Choose new date"
+                    : "${selectedDate!.year}-${selectedDate!.month}-${selectedDate!.day}"),
+                onTap: () async {
+                  final picked = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now().add(const Duration(days: 1)),
+                    firstDate: DateTime.now(),
+                    lastDate: DateTime.now().add(const Duration(days: 365)),
+                  );
+                  if (picked != null) {
+                    setState(() => selectedDate = picked);
+                  }
+                },
+              ),
+              const Divider(),
+
+              // Time Picker
+              ListTile(
+                leading: const Icon(Icons.access_time, color: Colors.green),
+                title: Text(selectedTime == null
+                    ? "Choose new time"
+                    : selectedTime!.format(context)),
+                onTap: () async {
+                  final picked = await showTimePicker(
+                    context: context,
+                    initialTime: TimeOfDay.now(),
+                  );
+                  if (picked != null) {
+                    setState(() => selectedTime = picked);
+                  }
+                },
+              ),
+              const Divider(),
+
+              // Reason dropdown
+              DropdownButtonFormField<String>(
+                value: reason,
+                decoration: InputDecoration(
+                  labelText: "Reason for rescheduling",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                ),
+                items: [
+                  "Scheduling conflict",
+                  "Emergency",
+                  "Not feeling well",
+                  "Other"
+                ]
+                    .map((r) =>
+                    DropdownMenuItem(value: r, child: Text(r)))
+                    .toList(),
+                onChanged: (val) => setState(() => reason = val),
+                validator: (val) =>
+                val == null ? "Please select a reason" : null,
+              ),
+              const SizedBox(height: 16),
+
+              // Notes
+              TextFormField(
+                controller: _notesController,
+                maxLines: 3,
+                decoration: InputDecoration(
+                  labelText: "Additional notes (optional)",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Reschedule request sent!")),
+                    );
+                    Navigator.pop(context);
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                ),
+                child: const Text("Confirm Reschedule",
+                    style: TextStyle(fontSize: 16, color: Colors.white)),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 
 // -------------------- Book Appointment Page --------------------
 class BookAppointmentPage extends StatefulWidget {

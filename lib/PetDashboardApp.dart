@@ -306,25 +306,278 @@ class _SectionHeader extends StatelessWidget {
 }
 
 // -------------------- Pages placeholders --------------------
-class AppointmentListPage extends StatelessWidget {
+class AppointmentListPage extends StatefulWidget {
   const AppointmentListPage({super.key});
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    body: SafeArea(
-      child: Center(
-        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          const Text('Appointments', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+  State<AppointmentListPage> createState() => _AppointmentListPageState();
+}
+
+class _AppointmentListPageState extends State<AppointmentListPage>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  String searchTerm = "";
+
+  final List<Map<String, dynamic>> upcomingAppointments = [
+    {
+      "id": "1",
+      "pet": {"name": "Max", "species": "Dog", "emoji": "🐕"},
+      "veterinarian": "Dr. Sarah Smith",
+      "clinic": "Downtown Pet Clinic",
+      "date": "2024-09-15",
+      "time": "10:00 AM",
+      "type": "General Checkup",
+      "status": "confirmed",
+      "phone": "+1 (555) 123-4567"
+    },
+    {
+      "id": "2",
+      "pet": {"name": "Luna", "species": "Cat", "emoji": "🐱"},
+      "veterinarian": "Dr. Michael Johnson",
+      "clinic": "Pet Hospital",
+      "date": "2024-09-18",
+      "time": "2:30 PM",
+      "type": "Vaccination",
+      "status": "pending",
+      "phone": "+1 (555) 987-6543"
+    }
+  ];
+
+  final List<Map<String, dynamic>> pastAppointments = [
+    {
+      "id": "3",
+      "pet": {"name": "Coco", "species": "Rabbit", "emoji": "🐰"},
+      "veterinarian": "Dr. Emily Brown",
+      "clinic": "Animal Care Center",
+      "date": "2024-08-10",
+      "time": "11:00 AM",
+      "type": "Dental Cleaning",
+      "status": "completed"
+    },
+    {
+      "id": "4",
+      "pet": {"name": "Max", "species": "Dog", "emoji": "🐕"},
+      "veterinarian": "Dr. Sarah Smith",
+      "clinic": "Downtown Pet Clinic",
+      "date": "2024-07-15",
+      "time": "9:30 AM",
+      "type": "Surgery Follow-up",
+      "status": "completed"
+    }
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  Color _statusColor(String status) {
+    switch (status) {
+      case "confirmed":
+        return Colors.green;
+      case "pending":
+        return Colors.orange;
+      case "completed":
+        return Colors.grey;
+      case "cancelled":
+        return Colors.red;
+      default:
+        return Colors.blueGrey;
+    }
+  }
+
+  Widget _appointmentCard(Map<String, dynamic> appointment,
+      {bool showActions = false}) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 3,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Row(children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: Colors.green.shade100,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Center(
+                  child: Text(appointment["pet"]["emoji"],
+                      style: const TextStyle(fontSize: 24)),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(appointment["pet"]["name"],
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 16)),
+                Text(appointment["pet"]["species"],
+                    style: const TextStyle(color: Colors.grey)),
+              ]),
+            ]),
+            Chip(
+              label: Text(appointment["status"].toString().toUpperCase()),
+              backgroundColor: _statusColor(appointment["status"]).withOpacity(0.2),
+              labelStyle: TextStyle(color: _statusColor(appointment["status"])),
+            ),
+          ]),
           const SizedBox(height: 12),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-            onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const BookAppointmentPage())),
-            child: const Text('Book New', style: TextStyle(color: Colors.white)),
-          )
+          Row(children: [
+            const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
+            const SizedBox(width: 4),
+            Text(appointment["date"]),
+            const SizedBox(width: 16),
+            const Icon(Icons.access_time, size: 16, color: Colors.grey),
+            const SizedBox(width: 4),
+            Text(appointment["time"]),
+          ]),
+          const SizedBox(height: 8),
+          Row(children: [
+            const Icon(Icons.location_on, size: 16, color: Colors.grey),
+            const SizedBox(width: 4),
+            Text(appointment["clinic"]),
+          ]),
+          const SizedBox(height: 8),
+          Text("Dr: ${appointment["veterinarian"]}",
+              style: const TextStyle(fontWeight: FontWeight.w500)),
+          Text("Type: ${appointment["type"]}"),
+          if (appointment["phone"] != null)
+            Row(children: [
+              const Icon(Icons.phone, size: 16, color: Colors.grey),
+              const SizedBox(width: 4),
+              Text(appointment["phone"]),
+            ]),
+          if (showActions) ...[
+            const Divider(height: 24),
+            Row(children: [
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12))),
+                  child: const Text("Reschedule"),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () {},
+                  style: OutlinedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12))),
+                  child: const Text("Cancel"),
+                ),
+              ),
+            ]),
+          ]
         ]),
       ),
-    ),
-  );
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Column(children: [
+          // Header
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: Colors.grey.shade300)),
+              color: Colors.white,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(children: const [
+                  Icon(Icons.calendar_month, color: Colors.green),
+                  SizedBox(width: 8),
+                  Text("My Appointments",
+                      style:
+                      TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                ]),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => const BookAppointmentPage()));
+                  },
+                  icon: const Icon(Icons.add, size: 16),
+                  label: const Text("Book New"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Search box
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: "Search appointments...",
+                prefixIcon: const Icon(Icons.search),
+                border:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+              onChanged: (val) => setState(() => searchTerm = val),
+            ),
+          ),
+
+          // Tabs
+          TabBar(
+            controller: _tabController,
+            tabs: [
+              Tab(text: "Upcoming (${upcomingAppointments.length})"),
+              Tab(text: "Past (${pastAppointments.length})"),
+            ],
+            labelColor: Colors.green,
+            unselectedLabelColor: Colors.black,
+          ),
+
+          // Tab Content
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                // Upcoming
+                ListView(
+                  padding: const EdgeInsets.all(16),
+                  children: upcomingAppointments
+                      .where((appt) => appt["pet"]["name"]
+                      .toLowerCase()
+                      .contains(searchTerm.toLowerCase()))
+                      .map((appt) =>
+                      _appointmentCard(appt, showActions: true))
+                      .toList(),
+                ),
+                // Past
+                ListView(
+                  padding: const EdgeInsets.all(16),
+                  children: pastAppointments
+                      .where((appt) => appt["pet"]["name"]
+                      .toLowerCase()
+                      .contains(searchTerm.toLowerCase()))
+                      .map((appt) => _appointmentCard(appt))
+                      .toList(),
+                ),
+              ],
+            ),
+          ),
+        ]),
+      ),
+    );
+  }
 }
 
 // -------------------- Book Appointment Page --------------------

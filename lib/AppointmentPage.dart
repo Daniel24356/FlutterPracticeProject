@@ -27,7 +27,7 @@ class Appointment {
 }
 
 class AppointmentPage extends StatefulWidget {
-  const AppointmentPage({super.key});
+  const AppointmentPage({super.key, required String petName});
 
   @override
   State<AppointmentPage> createState() => _AppointmentPageState();

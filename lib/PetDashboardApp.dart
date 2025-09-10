@@ -7,6 +7,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'AppointmentPage.dart';
 import 'UserProfile.dart';
+import 'PetStorePage.dart';
 
 void main() {
   runApp(const PetDashboardApp());
@@ -124,11 +125,11 @@ class _DashboardShellState extends State<DashboardShell> with TickerProviderStat
         unselectedItemColor: Colors.grey.shade600,
         showUnselectedLabels: true,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.calendar_month), label: 'Appointments'),
           BottomNavigationBarItem(icon: Icon(Icons.storefront), label: 'Store'),
-          BottomNavigationBarItem(icon: Icon(Icons.medical_information), label: 'Health'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          BottomNavigationBarItem(icon: Icon(Icons.medical_information_outlined), label: 'Health'),
+          BottomNavigationBarItem(icon: Icon(Icons.person_outlined), label: 'Profile'),
         ],
       ),
     );
@@ -960,12 +961,12 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
 }
 
 
-class PetStorePage extends StatelessWidget {
-  const PetStorePage({super.key});
-
-  @override
-  Widget build(BuildContext context) => Scaffold(body: SafeArea(child: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: const [Icon(Icons.storefront, size: 56, color: Colors.green), SizedBox(height: 12), Text('Pet Store', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))]))));
-}
+// class PetStorePage extends StatelessWidget {
+//   const PetStorePage({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) => Scaffold(body: SafeArea(child: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: const [Icon(Icons.storefront, size: 56, color: Colors.green), SizedBox(height: 12), Text('Pet Store', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))]))));
+// }
 
 class HealthRecordsPage extends StatelessWidget {
   const HealthRecordsPage({super.key});

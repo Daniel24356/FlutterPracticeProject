@@ -13,6 +13,10 @@ class _PetStorePageState extends State<PetStorePage> {
     {"name": "Cat Food", "price": "31.2", "image": "https://cdn.onemars.net/sites/whiskas_my_rRNUA_mwh5/image/mockup_wks_pouch_ad_tuna_new-look_-80g_f_1705068714309_1705677823811.png", "isFav": false},
     {"name": "Cat Bed", "price": "31.2", "image": "https://target.scene7.com/is/image/Target/GUEST_e272c047-b798-4a77-9daa-876b6166c941?wid=488&hei=488&fmt=pjpeg", "isFav": false},
     {"name": "Cat Toy", "price": "31.2", "image": "https://m.media-amazon.com/images/I/615Ccf+wziL._AC_SL1300_.jpg", "isFav": false},
+
+    {"name": "Cat Food", "price": "31.2", "image": "https://cdn.onemars.net/sites/whiskas_my_rRNUA_mwh5/image/mockup_wks_pouch_ad_tuna_new-look_-80g_f_1705068714309_1705677823811.png", "isFav": false},
+    {"name": "Cat Bed", "price": "31.2", "image": "https://target.scene7.com/is/image/Target/GUEST_e272c047-b798-4a77-9daa-876b6166c941?wid=488&hei=488&fmt=pjpeg", "isFav": false},
+    {"name": "Cat Toy", "price": "31.2", "image": "https://m.media-amazon.com/images/I/615Ccf+wziL._AC_SL1300_.jpg", "isFav": false},
   ];
 
   @override
@@ -41,7 +45,7 @@ class _PetStorePageState extends State<PetStorePage> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
-                          Text("Hi, Good Morning!",
+                          Text("Hi, Welcome!",
                               style: TextStyle(color: Colors.grey, fontSize: 12)),
                           Text("Evelyn Parker",
                               style: TextStyle(

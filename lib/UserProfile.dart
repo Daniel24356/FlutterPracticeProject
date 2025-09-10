@@ -74,16 +74,16 @@ class UserProfile extends StatelessWidget {
             // Profile Avatar
             const CircleAvatar(
               radius: 50,
-              backgroundImage: AssetImage("assets/profile.jpg"), // your image
+              backgroundImage: AssetImage("images/avatar.jpeg"), // your image
             ),
             const SizedBox(height: 12),
             const Text(
-              "Usman Irfan",
+              "Evelyn Parker",
               style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
             ),
             const SizedBox(height: 4),
             const Text(
-              "usmanirfan123@gmail.com",
+              "evelynparker17@gmail.com",
               style: TextStyle(color: Colors.grey, fontSize: 14),
             ),
             const SizedBox(height: 20),
@@ -101,10 +101,10 @@ class UserProfile extends StatelessWidget {
                 icon: Icons.location_on,
                 bgColor: Colors.red,
                 title: "Manage Address"),
-            _buildMenuItem(
-                icon: Icons.account_balance_wallet,
-                bgColor: Colors.purple,
-                title: "My Wallet"),
+            // _buildMenuItem(
+            //     icon: Icons.account_balance_wallet,
+            //     bgColor: Colors.purple,
+            //     title: "My Wallet"),
             _buildMenuItem(
                 icon: Icons.settings,
                 bgColor: Colors.teal,

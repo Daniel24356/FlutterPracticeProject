@@ -10,7 +10,7 @@ class PetStorePage extends StatefulWidget {
 class _PetStorePageState extends State<PetStorePage> {
   // Sample product list
   final List<Map<String, dynamic>> products = [
-    {"name": "Cat Food", "image": "https://via.placeholder.com/150", "isFav": false},
+    {"name": "Cat Food", "image": "https://cdn.onemars.net/sites/whiskas_my_rRNUA_mwh5/image/mockup_wks_pouch_ad_tuna_new-look_-80g_f_1705068714309_1705677823811.png", "isFav": false},
     {"name": "Cat Bed", "image": "https://via.placeholder.com/150", "isFav": false},
     {"name": "Cat Toy", "image": "https://via.placeholder.com/150", "isFav": false},
   ];
@@ -35,9 +35,7 @@ class _PetStorePageState extends State<PetStorePage> {
                     children: [
                       const CircleAvatar(
                         radius: 22,
-                        backgroundImage: NetworkImage(
-                          "https://via.placeholder.com/150", // replace with real image
-                        ),
+                        backgroundImage: AssetImage('images/avatar.jpeg')
                       ),
                       const SizedBox(width: 10),
                       Column(
@@ -45,7 +43,7 @@ class _PetStorePageState extends State<PetStorePage> {
                         children: const [
                           Text("Hi, Good Morning!",
                               style: TextStyle(color: Colors.grey, fontSize: 12)),
-                          Text("Usman Irfan",
+                          Text("Evelyn Parker",
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold)),
                         ],
@@ -73,50 +71,7 @@ class _PetStorePageState extends State<PetStorePage> {
               ),
               const SizedBox(height: 20),
 
-              // Special Offer
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: greenColor,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text("40%",
-                              style: TextStyle(
-                                  fontSize: 32,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white)),
-                          const Text("Limited-Time Discount\nOn Accessories",
-                              style: TextStyle(color: Colors.white, fontSize: 14)),
-                          const SizedBox(height: 10),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              foregroundColor: greenColor,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20)),
-                            ),
-                            onPressed: () {},
-                            child: const Text("Play Now"),
-                          )
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    // Cat image placeholder
-                    Image.network(
-                      "https://placekitten.com/120/120",
-                      height: 100,
-                    )
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
+
 
               // Category
               const Text("Category",

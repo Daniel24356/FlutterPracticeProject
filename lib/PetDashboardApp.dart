@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'dart:math';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import 'AppointmentPage.dart';
 
 
@@ -16,7 +18,7 @@ class PetDashboardApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'PetCare Dashboard',
+      title: 'PawfectCare',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
@@ -88,7 +90,7 @@ class _DashboardShellState extends State<DashboardShell> with TickerProviderStat
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
-        title: const Text('PetCare', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
+        title: const Text('Pawfect Care', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
         leading: Builder(builder: (c) => IconButton(icon: const Icon(Icons.menu, color: Colors.green), onPressed: () => Scaffold.of(c).openDrawer())),
         actions: [
           IconButton(
@@ -972,11 +974,288 @@ class HealthRecordsPage extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(body: SafeArea(child: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: const [Icon(Icons.medical_information, size: 56, color: Colors.green), SizedBox(height: 12), Text('Health Records', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))]))));
 }
 
-class ContactPage extends StatelessWidget {
+class ContactPage extends StatefulWidget {
   const ContactPage({super.key});
 
   @override
-  Widget build(BuildContext context) => Scaffold(body: SafeArea(child: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: const [Icon(Icons.contact_page, size: 56, color: Colors.green), SizedBox(height: 12), Text('Contact', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))]))));
+  State<ContactPage> createState() => _ContactPageState();
+}
+
+class _ContactPageState extends State<ContactPage> {
+  final _formKey = GlobalKey<FormState>();
+
+  final Map<String, dynamic> formData = {
+    "name": "",
+    "email": "",
+    "phone": "",
+    "subject": "",
+    "category": "",
+    "message": "",
+  };
+
+  // Mock locations
+  final List<Map<String, String>> locations = [
+    {
+      "name": "Downtown Veterinary Clinic",
+      "address": "123 Main Street, Downtown, City 12345",
+      "phone": "+1 (555) 123-4567",
+      "email": "downtown@pawfectcare.com",
+      "hours": "Mon-Fri: 8AM-6PM, Sat: 9AM-4PM, Sun: 10AM-2PM"
+    },
+    {
+      "name": "Suburban Pet Hospital",
+      "address": "456 Oak Avenue, Suburbs, City 67890",
+      "phone": "+1 (555) 987-6543",
+      "email": "suburban@pawfectcare.com",
+      "hours": "Mon-Fri: 7AM-7PM, Sat-Sun: 9AM-5PM"
+    },
+    {
+      "name": "Emergency Pet Care Center",
+      "address": "789 Emergency Blvd, Medical District, City 11111",
+      "phone": "+1 (555) 911-PETS",
+      "email": "emergency@pawfectcare.com",
+      "hours": "24/7 Emergency Services"
+    },
+  ];
+
+  final List<Map<String, String>> faqs = [
+    {
+      "question": "How do I schedule an appointment?",
+      "answer":
+      "You can book appointments through the app, call our clinics directly, or visit our website. Emergency appointments are available 24/7."
+    },
+    {
+      "question": "What should I bring to my pet's first visit?",
+      "answer":
+      "Please bring any previous medical records, current medications, vaccination records, and a list of questions you may have."
+    },
+    {
+      "question": "Do you offer emergency services?",
+      "answer":
+      "Yes, our Emergency Pet Care Center provides 24/7 emergency services for urgent medical situations."
+    },
+    {
+      "question": "How can I access my pet's health records?",
+      "answer":
+      "All health records are available through the PawfectCare app. You can view, download, and share records with other veterinarians as needed."
+    },
+  ];
+
+  // Random pet store coordinates
+  final List<LatLng> petStores = [
+    LatLng(37.7749, -122.4194), // San Francisco
+    LatLng(40.7128, -74.0060),  // New York
+    LatLng(34.0522, -118.2437), // Los Angeles
+  ];
+
+  LatLng? selectedStore;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedStore = petStores[Random().nextInt(petStores.length)];
+  }
+
+  void _submitForm() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      debugPrint("Form Submitted: $formData");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Message Sent!")),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Contact Us", style: TextStyle(color: Colors.green)),
+        backgroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.green),
+        elevation: 0,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Contact form
+            Card(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              elevation: 3,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      const Text("Send us a Message",
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 12),
+                      TextFormField(
+                        decoration: const InputDecoration(labelText: "Full Name *"),
+                        onSaved: (val) => formData["name"] = val!,
+                        validator: (val) => val!.isEmpty ? "Required" : null,
+                      ),
+                      TextFormField(
+                        decoration: const InputDecoration(labelText: "Email *"),
+                        onSaved: (val) => formData["email"] = val!,
+                        validator: (val) => val!.isEmpty ? "Required" : null,
+                      ),
+                      TextFormField(
+                        decoration: const InputDecoration(labelText: "Phone"),
+                        onSaved: (val) => formData["phone"] = val!,
+                      ),
+                      DropdownButtonFormField<String>(
+                        decoration: const InputDecoration(labelText: "Category *"),
+                        items: const [
+                          DropdownMenuItem(value: "appointment", child: Text("Appointment")),
+                          DropdownMenuItem(value: "medical", child: Text("Medical Question")),
+                          DropdownMenuItem(value: "billing", child: Text("Billing")),
+                          DropdownMenuItem(value: "emergency", child: Text("Emergency")),
+                          DropdownMenuItem(value: "general", child: Text("General Inquiry")),
+                          DropdownMenuItem(value: "feedback", child: Text("Feedback")),
+                        ],
+                        onChanged: (val) => formData["category"] = val!,
+                        validator: (val) => val == null ? "Required" : null,
+                      ),
+                      TextFormField(
+                        decoration: const InputDecoration(labelText: "Subject *"),
+                        onSaved: (val) => formData["subject"] = val!,
+                        validator: (val) => val!.isEmpty ? "Required" : null,
+                      ),
+                      TextFormField(
+                        decoration: const InputDecoration(labelText: "Message *"),
+                        maxLines: 5,
+                        onSaved: (val) => formData["message"] = val!,
+                        validator: (val) => val!.isEmpty ? "Required" : null,
+                      ),
+                      const SizedBox(height: 16),
+                      ElevatedButton.icon(
+                        icon: const Icon(Icons.send),
+                        label: const Text("Send Message"),
+                        onPressed: _submitForm,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            // Quick Contact
+            Card(
+              child: ListTile(
+                leading: const Icon(Icons.phone, color: Colors.green),
+                title: const Text("Phone"),
+                subtitle: const Text("+1 (555) 123-PETS"),
+              ),
+            ),
+            Card(
+              child: ListTile(
+                leading: const Icon(Icons.email, color: Colors.blue),
+                title: const Text("Email"),
+                subtitle: const Text("support@pawfectcare.com"),
+              ),
+            ),
+            Card(
+              child: ListTile(
+                leading: const Icon(Icons.access_time, color: Colors.orange),
+                title: const Text("Response Time"),
+                subtitle: const Text("Within 24 hours"),
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            // Emergency
+            Card(
+              color: Colors.red[50],
+              child: ListTile(
+                leading: const Icon(Icons.emergency, color: Colors.red),
+                title: const Text("Emergency Contact", style: TextStyle(color: Colors.red)),
+                subtitle: const Text("+1 (555) 911-PETS\n24/7 Emergency Line"),
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            // Locations
+            const Text("Our Locations",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 12),
+            Column(
+              children: locations.map((loc) {
+                return Card(
+                  child: ListTile(
+                    leading: const Icon(Icons.location_on, color: Colors.green),
+                    title: Text(loc["name"]!),
+                    subtitle: Text("${loc["address"]}\n${loc["hours"]}"),
+                  ),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 20),
+
+            // Map (OpenStreetMap)
+            const Text("Find a Pet Store",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 12),
+            SizedBox(
+              height: 200,
+              child: FlutterMap(
+                options: MapOptions(
+                  center: selectedStore!,
+                  zoom: 12.0,
+                ),
+                children: [
+                  TileLayer(
+                    urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                    userAgentPackageName: 'com.example.app',
+                  ),
+                  MarkerLayer(
+                    markers: [
+                    Marker(
+                    point: selectedStore!,
+                    width: 60,
+                    height: 60,
+                    child: const Icon(
+                      Icons.location_pin,
+                      color: Colors.red,
+                      size: 40,
+                    ),
+                  ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            // FAQs
+            const Text("Frequently Asked Questions",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 12),
+            Column(
+              children: faqs.map((faq) {
+                return ExpansionTile(
+                  title: Text(faq["question"]!),
+                  children: [Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(faq["answer"]!),
+                  )],
+                );
+              }).toList(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class AddPetPage extends StatefulWidget {

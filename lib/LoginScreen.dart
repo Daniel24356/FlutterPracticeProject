@@ -26,14 +26,14 @@ class _LoginScreenState extends State<LoginScreen> {
               Column(
                 children: const [
                   Icon(Icons.favorite_border,
-                      color: Color(0xFF007BFF), size: 48), // Blue heart logo
+                      color: Colors.green, size: 48), // Blue heart logo
                   SizedBox(height: 8),
                   Text(
                     "PawfectCare",
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF007BFF),
+                      color: Colors.green,
                     ),
                   ),
                 ],
@@ -133,7 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         width: double.infinity,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF007BFF),
+                            backgroundColor: Colors.green,
                             padding: const EdgeInsets.symmetric(vertical: 14),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -145,7 +145,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: const Text(
                             "Sign In",
                             style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600),
+                                fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
                           ),
                         ),
                       ),
@@ -168,7 +168,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: const Text(
                       "Sign up",
                       style: TextStyle(
-                        color: Color(0xFF007BFF),
+                        color: Colors.green,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

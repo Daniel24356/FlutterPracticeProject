@@ -23,10 +23,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.deepPurple),
       initialRoute: '/',
       routes: {
-        '/': (context) => const PetDashboardApp(),
+        '/': (context) => const OnboardingScreen(),
         '/login': (context) => const LoginScreen(),
         '/signup': (context) => const SignUpScreen(),
         '/forgotPassword': (context) => const ForgotPasswordScreen(),
+        '/petDashboardApp': (context) => const PetDashboardApp(),
         // '/appointmentscreen': (context) => const AppointmentPage()
       },
     );

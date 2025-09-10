@@ -25,7 +25,6 @@ class MyApp extends StatelessWidget {
         '/': (context) => const PetDashboardApp(),
         '/login': (context) => const LoginScreen(),
         '/signup': (context) => const SignUpScreen(),
-        '/chat': (context) => const ChatListScreen(),
         '/chatPages': (context) => ChatPage(),
         // '/appointmentscreen': (context) => const AppointmentPage()
       },

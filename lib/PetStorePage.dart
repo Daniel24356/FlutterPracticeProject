@@ -22,7 +22,7 @@ class _PetStorePageState extends State<PetStorePage> {
     {
       "name": "Cat Bed",
       "price": 25.5,
-      "category": "Beds",
+      "category": "Homes",
       "pet": "Cat",
       "image":
       "https://target.scene7.com/is/image/Target/GUEST_e272c047-b798-4a77-9daa-876b6166c941?wid=488&hei=488&fmt=pjpeg",
@@ -39,7 +39,7 @@ class _PetStorePageState extends State<PetStorePage> {
     {
       "name": "Rabbit Hutch",
       "price": 40.0,
-      "category": "Accessories",
+      "category": "Homes",
       "pet": "Rabbit",
       "image":
       "https://m.media-amazon.com/images/I/81n9NeZ2ggS._AC_SL1500_.jpg",
@@ -57,10 +57,29 @@ class _PetStorePageState extends State<PetStorePage> {
     {
       "name": "Aquarium",
       "price": 60.0,
-      "category": "Accessories",
+      "category": "Homes",
       "pet": "Fish",
       "image":
       "https://cdn.britannica.com/29/121829-050-911F77EC/freshwater-aquarium.jpg",
+      "isFav": false
+    },
+
+    {
+      "name": "Dog Leash",
+      "price": 6.7,
+      "category": "Accessories",
+      "pet": "Dog",
+      "image":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSn7V0fsG2gQZUTCl5iEHs1JUV8W5Twx_oHUA&s",
+      "isFav": false
+    },
+    {
+      "name": "Bird Stand",
+      "price": 13.0,
+      "category": "Accessories",
+      "pet": "Bird",
+      "image":
+      "https://i5.walmartimages.com/seo/Pretyzoom-1pc-Colorful-Wooden-Bird-Swing-For-Parrots-Roosters-And-Other-Pets-For-Climbing-And-Exploring_3148dfa6-6c1d-4175-987f-1665ec28e12d.def9a40a4b9a89415accb8de2c50b200.jpeg",
       "isFav": false
     },
   ];
@@ -195,7 +214,7 @@ class _PetStorePageState extends State<PetStorePage> {
                     _buildTag("Food & Treats"),
                     _buildTag("Health"),
                     _buildTag("Grooming"),
-                    _buildTag("Beds"),
+                    _buildTag("Homes"),
                     _buildTag("Toys"),
                     _buildTag("Accessories"),
                   ],
@@ -230,7 +249,14 @@ class _PetStorePageState extends State<PetStorePage> {
   Widget _buildCategory(String image, String title, Color bgColor) {
     final isSelected = selectedPet == title;
     return GestureDetector(
-      onTap: () => setState(() => selectedPet = title),
+      onTap: () => setState(() {
+        if (selectedPet == title) {
+          // 👇 if tapped again, reset to "All"
+          selectedPet = "All";
+        } else {
+          selectedPet = title;
+        }
+      }),
       child: Column(
         children: [
           Container(

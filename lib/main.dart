@@ -5,6 +5,7 @@ import 'LoginScreen.dart';
 import 'SignUpScreen.dart';
 import 'AppointmentPage.dart';
 import 'PetDashboardApp.dart';
+import 'ForgotPasswordScreen.dart'
 
 
 void main() {

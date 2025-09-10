@@ -811,12 +811,12 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
 }
 
 
-class PetStorePage extends StatelessWidget {
-  const PetStorePage({super.key});
-
-  @override
-  Widget build(BuildContext context) => Scaffold(body: SafeArea(child: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: const [Icon(Icons.storefront, size: 56, color: Colors.green), SizedBox(height: 12), Text('Pet Store', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))]))));
-}
+// class PetStorePage extends StatelessWidget {
+//   const PetStorePage({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) => Scaffold(body: SafeArea(child: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: const [Icon(Icons.storefront, size: 56, color: Colors.green), SizedBox(height: 12), Text('Pet Store', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))]))));
+// }
 
 class HealthRecordsPage extends StatelessWidget {
   const HealthRecordsPage({super.key});

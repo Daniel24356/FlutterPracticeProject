@@ -185,8 +185,8 @@ class _PetStorePageState extends State<PetStorePage> {
               BoxShadow(
                 color: Colors.grey.shade300,
                 blurRadius: 5,
-                spreadRadius: 2,
-                offset: const Offset(0, 3),
+                spreadRadius: 1,
+                offset: const Offset(0, 2),
               )
             ],
           ),
@@ -225,7 +225,7 @@ class _PetStorePageState extends State<PetStorePage> {
               ),
               Positioned(
                 top: 10,
-                right: 10,
+                right: 8,
                 child: GestureDetector(
                   onTap: () {
                     setLocalState(() {

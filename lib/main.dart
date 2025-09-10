@@ -4,6 +4,7 @@ import 'OnboardingScreen.dart';
 import 'ChatListScreen.dart';
 import 'LoginScreen.dart';
 import 'SignUpScreen.dart';
+import 'PetStorePage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
         '/signup': (context) => const SignUpScreen(),
         '/chat': (context) => const ChatListScreen(),
         '/chatPages': (context) => ChatPage(),
+        '/petStore': (context) => PetStorePage(),
       },
     );
   }

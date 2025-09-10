@@ -10,18 +10,88 @@ class PetStorePage extends StatefulWidget {
 class _PetStorePageState extends State<PetStorePage> {
   // Sample product list
   final List<Map<String, dynamic>> products = [
-    {"name": "Cat Food", "price": "31.2", "image": "https://cdn.onemars.net/sites/whiskas_my_rRNUA_mwh5/image/mockup_wks_pouch_ad_tuna_new-look_-80g_f_1705068714309_1705677823811.png", "isFav": false},
-    {"name": "Cat Bed", "price": "31.2", "image": "https://target.scene7.com/is/image/Target/GUEST_e272c047-b798-4a77-9daa-876b6166c941?wid=488&hei=488&fmt=pjpeg", "isFav": false},
-    {"name": "Cat Toy", "price": "31.2", "image": "https://m.media-amazon.com/images/I/615Ccf+wziL._AC_SL1300_.jpg", "isFav": false},
-
-    {"name": "Cat Food", "price": "31.2", "image": "https://cdn.onemars.net/sites/whiskas_my_rRNUA_mwh5/image/mockup_wks_pouch_ad_tuna_new-look_-80g_f_1705068714309_1705677823811.png", "isFav": false},
-    {"name": "Cat Bed", "price": "31.2", "image": "https://target.scene7.com/is/image/Target/GUEST_e272c047-b798-4a77-9daa-876b6166c941?wid=488&hei=488&fmt=pjpeg", "isFav": false},
-    {"name": "Cat Toy", "price": "31.2", "image": "https://m.media-amazon.com/images/I/615Ccf+wziL._AC_SL1300_.jpg", "isFav": false},
+    {
+      "name": "Cat Food",
+      "price": 31.2,
+      "category": "Food & Treats",
+      "pet": "Cat",
+      "image":
+      "https://cdn.onemars.net/sites/whiskas_my_rRNUA_mwh5/image/mockup_wks_pouch_ad_tuna_new-look_-80g_f_1705068714309_1705677823811.png",
+      "isFav": false
+    },
+    {
+      "name": "Cat Bed",
+      "price": 25.5,
+      "category": "Beds",
+      "pet": "Cat",
+      "image":
+      "https://target.scene7.com/is/image/Target/GUEST_e272c047-b798-4a77-9daa-876b6166c941?wid=488&hei=488&fmt=pjpeg",
+      "isFav": false
+    },
+    {
+      "name": "Grooming Kit",
+      "price": 15.8,
+      "category": "Grooming",
+      "pet": "Dog",
+      "image": "https://m.media-amazon.com/images/I/61AdoOztqGL._SL1000_.jpg",
+      "isFav": false
+    },
+    {
+      "name": "Rabbit Hutch",
+      "price": 40.0,
+      "category": "Accessories",
+      "pet": "Rabbit",
+      "image":
+      "https://m.media-amazon.com/images/I/81n9NeZ2ggS._AC_SL1500_.jpg",
+      "isFav": false
+    },
+    {
+      "name": "Bird Food",
+      "price": 10.0,
+      "category": "Food & Treats",
+      "pet": "Bird",
+      "image":
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSELFoxSzg8MyFSIFErMMEaLXdOaeJgIQWJ7Q&s",
+      "isFav": false
+    },
+    {
+      "name": "Aquarium",
+      "price": 60.0,
+      "category": "Accessories",
+      "pet": "Fish",
+      "image":
+      "https://cdn.britannica.com/29/121829-050-911F77EC/freshwater-aquarium.jpg",
+      "isFav": false
+    },
   ];
+
+  // Filters
+  String searchQuery = "";
+  String selectedPet = "All";
+  String selectedCategory = "All";
+  double minPrice = 0;
+  double maxPrice = 100;
+
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     const greenColor = Color(0xFF0DB14C);
+
+    // Apply filters
+    List<Map<String, dynamic>> filteredProducts = products.where((product) {
+      final matchesSearch = product["name"]
+          .toString()
+          .toLowerCase()
+          .contains(searchQuery.toLowerCase());
+      final matchesPet = selectedPet == "All" || product["pet"] == selectedPet;
+      final matchesCategory =
+          selectedCategory == "All" || product["category"] == selectedCategory;
+      final matchesPrice = product["price"] >= minPrice &&
+          product["price"] <= maxPrice;
+
+      return matchesSearch && matchesPet && matchesCategory && matchesPrice;
+    }).toList();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -38,20 +108,18 @@ class _PetStorePageState extends State<PetStorePage> {
                   Row(
                     children: [
                       const CircleAvatar(
-                        radius: 22,
-                        backgroundImage: AssetImage('images/avatar.jpeg')
-                      ),
+                          radius: 22,
+                          backgroundImage: AssetImage('images/avatar.jpeg')),
                       const SizedBox(width: 10),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text("Hi, Welcome!",
-                              style: TextStyle(color: Colors.grey, fontSize: 12)),
+                              style:
+                              TextStyle(color: Colors.grey, fontSize: 12)),
                           Text("Evelyn Parker",
                               style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold
-                              )
-                          ),
+                                  fontSize: 16, fontWeight: FontWeight.bold)),
                         ],
                       )
                     ],
@@ -63,10 +131,17 @@ class _PetStorePageState extends State<PetStorePage> {
 
               // Search Bar
               TextField(
+                controller: _searchController,
+                onChanged: (value) {
+                  setState(() => searchQuery = value);
+                },
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.search, color: Colors.grey),
                   hintText: "Search pet accessories...",
-                  suffixIcon: const Icon(Icons.tune, color: Colors.grey),
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.tune, color: Colors.grey),
+                    onPressed: () => _showPriceFilter(context),
+                  ),
                   filled: true,
                   fillColor: Colors.grey.shade100,
                   contentPadding: const EdgeInsets.symmetric(vertical: 0),
@@ -77,9 +152,7 @@ class _PetStorePageState extends State<PetStorePage> {
               ),
               const SizedBox(height: 20),
 
-
-
-              // Category
+              // Pets Row
               const Text("Pets",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
@@ -88,9 +161,12 @@ class _PetStorePageState extends State<PetStorePage> {
                 children: [
                   _buildCategory("images/cat.png", "Cat", Colors.green.shade100),
                   _buildCategory("images/dog.png", "Dog", Colors.blue.shade100),
-                  _buildCategory("images/fish.png", "Fish", Colors.orange.shade100),
-                  _buildCategory("images/bird.png", "Bird", Colors.purple.shade100),
-                  _buildCategory("images/rabbit.png", "Rabbit", Colors.yellow.shade100),
+                  _buildCategory(
+                      "images/fish.png", "Fish", Colors.orange.shade100),
+                  _buildCategory(
+                      "images/bird.png", "Bird", Colors.purple.shade100),
+                  _buildCategory("images/rabbit.png", "Rabbit",
+                      Colors.yellow.shade100),
                 ],
               ),
               const SizedBox(height: 20),
@@ -100,9 +176,11 @@ class _PetStorePageState extends State<PetStorePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: const [
                   Text("Categories",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      style:
+                      TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   Text("See All",
-                      style: TextStyle(color: greenColor, fontWeight: FontWeight.w500)),
+                      style: TextStyle(
+                          color: greenColor, fontWeight: FontWeight.w500)),
                 ],
               ),
               const SizedBox(height: 10),
@@ -113,13 +191,13 @@ class _PetStorePageState extends State<PetStorePage> {
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: [
-                    _buildTag("All", true),
-                    _buildTag("Food & Treats", false),
-                    _buildTag("Health", false),
-                    _buildTag("Grooming", false),
-                    _buildTag("Beds", false),
-                    _buildTag("Toys", false),
-                    _buildTag("Accessories", false),
+                    _buildTag("All"),
+                    _buildTag("Food & Treats"),
+                    _buildTag("Health"),
+                    _buildTag("Grooming"),
+                    _buildTag("Beds"),
+                    _buildTag("Toys"),
+                    _buildTag("Accessories"),
                   ],
                 ),
               ),
@@ -129,11 +207,15 @@ class _PetStorePageState extends State<PetStorePage> {
               GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: products.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, childAspectRatio: 0.8, crossAxisSpacing: 12, mainAxisSpacing: 12),
+                itemCount: filteredProducts.length,
+                gridDelegate:
+                const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 0.8,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12),
                 itemBuilder: (context, index) {
-                  final product = products[index];
+                  final product = filteredProducts[index];
                   return _buildProductCard(product, index);
                 },
               ),
@@ -144,38 +226,57 @@ class _PetStorePageState extends State<PetStorePage> {
     );
   }
 
+  // Build Category with selection border
   Widget _buildCategory(String image, String title, Color bgColor) {
-    return Column(
-      children: [
-        CircleAvatar(
-          radius: 28,
-          backgroundColor: bgColor,
-          backgroundImage: AssetImage(image), // <- works for local assets
+    final isSelected = selectedPet == title;
+    return GestureDetector(
+      onTap: () => setState(() => selectedPet = title),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(3),
+            decoration: BoxDecoration(
+              border: isSelected
+                  ? Border.all(color: const Color(0xFF0DB14C), width: 2)
+                  : null,
+              shape: BoxShape.circle,
+            ),
+            child: CircleAvatar(
+              radius: 28,
+              backgroundColor: bgColor,
+              backgroundImage: AssetImage(image),
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(title),
+        ],
+      ),
+    );
+  }
+
+  // Build horizontal tags
+  Widget _buildTag(String label) {
+    final isSelected = selectedCategory == label;
+    return GestureDetector(
+      onTap: () => setState(() => selectedCategory = label),
+      child: Container(
+        margin: const EdgeInsets.only(right: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? const Color(0xFF0DB14C) : Colors.grey.shade200,
+          borderRadius: BorderRadius.circular(20),
         ),
-        const SizedBox(height: 6),
-        Text(title),
-      ],
-    );
-  }
-
-
-  Widget _buildTag(String label, bool selected) {
-    return Container(
-      margin: const EdgeInsets.only(right: 10),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-      decoration: BoxDecoration(
-        color: selected ? const Color(0xFF0DB14C) : Colors.grey.shade200,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-            color: selected ? Colors.white : Colors.black,
-            fontWeight: FontWeight.w500),
+        child: Text(
+          label,
+          style: TextStyle(
+              color: isSelected ? Colors.white : Colors.black,
+              fontWeight: FontWeight.w500),
+        ),
       ),
     );
   }
 
+  // Product Card
   Widget _buildProductCard(Map<String, dynamic> product, int index) {
     return StatefulBuilder(
       builder: (context, setLocalState) {
@@ -201,12 +302,9 @@ class _PetStorePageState extends State<PetStorePage> {
                 children: [
                   Expanded(
                     child: ClipRRect(
-                      borderRadius:
-                      const BorderRadius.vertical(top: Radius.circular(16)),
-                      child: Image.network(
-                        product["image"],
-                        fit: BoxFit.cover,
-                      ),
+                      borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(16)),
+                      child: Image.network(product["image"], fit: BoxFit.cover),
                     ),
                   ),
                   Padding(
@@ -218,7 +316,7 @@ class _PetStorePageState extends State<PetStorePage> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      "\$${product["price"]}", // 👈 prepend dollar sign
+                      "\$${product["price"]}",
                       style: const TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: 12,
@@ -241,7 +339,9 @@ class _PetStorePageState extends State<PetStorePage> {
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
                     child: Icon(
-                      product["isFav"] ? Icons.favorite : Icons.favorite_border,
+                      product["isFav"]
+                          ? Icons.favorite
+                          : Icons.favorite_border,
                       color: product["isFav"] ? Colors.red : Colors.grey,
                     ),
                   ),
@@ -249,6 +349,64 @@ class _PetStorePageState extends State<PetStorePage> {
               )
             ],
           ),
+        );
+      },
+    );
+  }
+
+  // Bottom sheet filter
+  void _showPriceFilter(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        double tempMin = minPrice;
+        double tempMax = maxPrice;
+
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text("Filter by Price",
+                      style:
+                      TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  RangeSlider(
+                    values: RangeValues(tempMin, tempMax),
+                    min: 0,
+                    max: 100,
+                    divisions: 20,
+                    activeColor: const Color(0xFF0DB14C),
+                    labels: RangeLabels(
+                        "\$${tempMin.toStringAsFixed(0)}",
+                        "\$${tempMax.toStringAsFixed(0)}"),
+                    onChanged: (values) {
+                      setModalState(() {
+                        tempMin = values.start;
+                        tempMax = values.end;
+                      });
+                    },
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF0DB14C)),
+                    onPressed: () {
+                      setState(() {
+                        minPrice = tempMin;
+                        maxPrice = tempMax;
+                      });
+                      Navigator.pop(context);
+                    },
+                    child: const Text("Apply"),
+                  )
+                ],
+              ),
+            );
+          },
         );
       },
     );

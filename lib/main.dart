@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projects/HealthRecordsScreen.dart';
 // import 'package:projects/ProductDetailScreen.dart';
 import 'ChatAppScreen.dart';
 import 'OnboardingScreen.dart';
@@ -21,11 +22,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.deepPurple),
       initialRoute: '/',
       routes: {
-        '/': (context) => const OnboardingScreen(),
-        '/login': (context) => const LoginScreen(),
-        '/signup': (context) => const SignUpScreen(),
-        '/chat': (context) => const ChatListScreen(),
-        '/chatPages': (context) => ChatPage(),
+        '/': (context) => const HealthRecordsScreen()
+        // '/login': (context) => const LoginScreen(),
+        // '/signup': (context) => const SignUpScreen(),
+        // '/chat': (context) => const ChatListScreen(),
+        // '/chatPages': (context) => ChatPage(),
       },
     );
   }

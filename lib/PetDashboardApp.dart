@@ -6,7 +6,7 @@ import 'dart:math';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'AppointmentPage.dart';
-import 'PetStorePage.dart';
+import 'UserProfile.dart';
 
 void main() {
   runApp(const PetDashboardApp());
@@ -49,7 +49,7 @@ class _DashboardShellState extends State<DashboardShell> with TickerProviderStat
     AppointmentListPage(),
     PetStorePage(),
     HealthRecordsPage(),
-    ContactPage(),
+    UserProfile(),
   ];
 
   @override
@@ -128,7 +128,7 @@ class _DashboardShellState extends State<DashboardShell> with TickerProviderStat
           BottomNavigationBarItem(icon: Icon(Icons.calendar_month), label: 'Appointments'),
           BottomNavigationBarItem(icon: Icon(Icons.storefront), label: 'Store'),
           BottomNavigationBarItem(icon: Icon(Icons.medical_information), label: 'Health'),
-          BottomNavigationBarItem(icon: Icon(Icons.contact_page), label: 'Contact'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
       ),
     );

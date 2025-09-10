@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+class UserProfile extends StatelessWidget {
+  const UserProfile({super.key});
 
   Widget _buildMenuItem(
       {required IconData icon,

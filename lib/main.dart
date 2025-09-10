@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:projects/HealthRecordsScreen.dart';
 // import 'package:projects/ProductDetailScreen.dart';
-import 'ChatAppScreen.dart';
 import 'OnboardingScreen.dart';
-import 'ChatListScreen.dart';
 import 'LoginScreen.dart';
 import 'SignUpScreen.dart';
+import 'AppointmentPage.dart';
+import 'PetDashboardApp.dart';
+import 'ForgotPasswordScreen.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -18,15 +19,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Chat App',
+      title: 'PawfectCare',
       theme: ThemeData(primarySwatch: Colors.deepPurple),
       initialRoute: '/',
       routes: {
-        '/': (context) => const HealthRecordsScreen()
-        // '/login': (context) => const LoginScreen(),
-        // '/signup': (context) => const SignUpScreen(),
-        // '/chat': (context) => const ChatListScreen(),
-        // '/chatPages': (context) => ChatPage(),
+        '/': (context) => const PetDashboardApp(),
+        '/login': (context) => const LoginScreen(),
+        '/signup': (context) => const SignUpScreen(),
+        '/forgotPassword': (context) => const ForgotPasswordScreen(),
+        // '/appointmentscreen': (context) => const AppointmentPage()
       },
     );
   }

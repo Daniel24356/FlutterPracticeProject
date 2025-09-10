@@ -222,7 +222,7 @@ class IndexPage extends StatelessWidget {
                   const SizedBox(height: 18),
                   _SectionHeader(title: 'Store Picks', actionLabel: 'Open Store', onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PetStorePage()))),
                   const SizedBox(height: 8),
-                  SizedBox(height: 160, child: ListView(scrollDirection: Axis.horizontal, children: const [ _StoreItem(), _StoreItem(), _StoreItem() ])),
+                  SizedBox(height: 160, child: ListView(scrollDirection: Axis.horizontal, children: const [_StoreItem(), _StoreItem(), _StoreItem()])),
                 ],
               ),
             )
@@ -234,6 +234,8 @@ class IndexPage extends StatelessWidget {
 }
 
 class _QuickStatsCard extends StatelessWidget {
+  const _QuickStatsCard({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -254,7 +256,7 @@ class _MiniCard extends StatelessWidget {
   final Color color;
   final String title;
   final String subtitle;
-  const _MiniCard({this.color = Colors.green, required this.title, required this.subtitle});
+  const _MiniCard({this.color = Colors.green, required this.title, required this.subtitle, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -272,7 +274,7 @@ class _MiniCard extends StatelessWidget {
 }
 
 class _StoreItem extends StatelessWidget {
-  const _StoreItem();
+  const _StoreItem({super.key});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -289,7 +291,7 @@ class _SectionHeader extends StatelessWidget {
   final String title;
   final String actionLabel;
   final VoidCallback onPressed;
-  const _SectionHeader({required this.title, required this.actionLabel, required this.onPressed});
+  const _SectionHeader({required this.title, required this.actionLabel, required this.onPressed, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -302,7 +304,21 @@ class AppointmentListPage extends StatelessWidget {
   const AppointmentListPage({super.key});
 
   @override
-  Widget build(BuildContext context) => Scaffold(body: SafeArea(child: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [const Text('Appointments', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)), const SizedBox(height: 12), ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.green), onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const BookAppointmentPage())), child: const Text('Book New', style: TextStyle(color: Colors.white)))]))));
+  Widget build(BuildContext context) => Scaffold(
+    body: SafeArea(
+      child: Center(
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          const Text('Appointments', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 12),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const BookAppointmentPage())),
+            child: const Text('Book New', style: TextStyle(color: Colors.white)),
+          )
+        ]),
+      ),
+    ),
+  );
 }
 
 class BookAppointmentPage extends StatelessWidget {
@@ -358,21 +374,84 @@ class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
-  Widget build(BuildContext context) => Scaffold(body: SafeArea(child: Center(child: Padding(padding: const EdgeInsets.all(16), child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [const Text('Login', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)), const SizedBox(height: 12), TextField(decoration: const InputDecoration(labelText: 'Email')), const SizedBox(height: 8), TextField(decoration: const InputDecoration(labelText: 'Password'), obscureText: true), const SizedBox(height: 12), ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.green), onPressed: () {}, child: const Text('Login', style: TextStyle(color: Colors.white))) ])))));
+  Widget build(BuildContext context) => Scaffold(
+    body: SafeArea(
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            const Text('Login', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 12),
+            const TextField(decoration: InputDecoration(labelText: 'Email')),
+            const SizedBox(height: 8),
+            const TextField(decoration: InputDecoration(labelText: 'Password'), obscureText: true),
+            const SizedBox(height: 12),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              onPressed: () {},
+              child: const Text('Login', style: TextStyle(color: Colors.white)),
+            )
+          ]),
+        ),
+      ),
+    ),
+  );
 }
 
 class SignupPage extends StatelessWidget {
   const SignupPage({super.key});
 
   @override
-  Widget build(BuildContext context) => Scaffold(body: SafeArea(child: Center(child: Padding(padding: const EdgeInsets.all(16), child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [const Text('Signup', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)), const SizedBox(height: 12), TextField(decoration: const InputDecoration(labelText: 'Name')), const SizedBox(height: 8), TextField(decoration: const InputDecoration(labelText: 'Email')), const SizedBox(height: 8), TextField(decoration: const InputDecoration(labelText: 'Password'), obscureText: true), const SizedBox(height: 12), ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.green), onPressed: () {}, child: const Text('Create Account', style: TextStyle(color: Colors.white))) ])))));
+  Widget build(BuildContext context) => Scaffold(
+    body: SafeArea(
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            const Text('Signup', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 12),
+            const TextField(decoration: InputDecoration(labelText: 'Name')),
+            const SizedBox(height: 8),
+            const TextField(decoration: InputDecoration(labelText: 'Email')),
+            const SizedBox(height: 8),
+            const TextField(decoration: InputDecoration(labelText: 'Password'), obscureText: true),
+            const SizedBox(height: 12),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              onPressed: () {},
+              child: const Text('Create Account', style: TextStyle(color: Colors.white)),
+            )
+          ]),
+        ),
+      ),
+    ),
+  );
 }
 
 class ForgotPasswordPage extends StatelessWidget {
   const ForgotPasswordPage({super.key});
 
   @override
-  Widget build(BuildContext context) => Scaffold(body: SafeArea(child: Center(child: Padding(padding: const EdgeInsets.all(16), child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [const Text('Forgot Password', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)), const SizedBox(height: 12), TextField(decoration: const InputDecoration(labelText: 'Email')), const SizedBox(height: 12), ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.green), onPressed: () {}, child: const Text('Reset Password', style: TextStyle(color: Colors.white))) ])))));
+  Widget build(BuildContext context) => Scaffold(
+    body: SafeArea(
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            const Text('Forgot Password', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 12),
+            const TextField(decoration: InputDecoration(labelText: 'Email')),
+            const SizedBox(height: 12),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              onPressed: () {},
+              child: const Text('Reset Password', style: TextStyle(color: Colors.white)),
+            )
+          ]),
+        ),
+      ),
+    ),
+  );
 }
 
 // -------------------- End --------------------

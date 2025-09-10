@@ -11,8 +11,8 @@ class _PetStorePageState extends State<PetStorePage> {
   // Sample product list
   final List<Map<String, dynamic>> products = [
     {"name": "Cat Food", "image": "https://cdn.onemars.net/sites/whiskas_my_rRNUA_mwh5/image/mockup_wks_pouch_ad_tuna_new-look_-80g_f_1705068714309_1705677823811.png", "isFav": false},
-    {"name": "Cat Bed", "image": "https://via.placeholder.com/150", "isFav": false},
-    {"name": "Cat Toy", "image": "https://via.placeholder.com/150", "isFav": false},
+    {"name": "Cat Bed", "image": "https://target.scene7.com/is/image/Target/GUEST_e272c047-b798-4a77-9daa-876b6166c941?wid=488&hei=488&fmt=pjpeg", "isFav": false},
+    {"name": "Cat Toy", "image": "https://m.media-amazon.com/images/I/615Ccf+wziL._AC_SL1300_.jpg", "isFav": false},
   ];
 
   @override
@@ -45,7 +45,9 @@ class _PetStorePageState extends State<PetStorePage> {
                               style: TextStyle(color: Colors.grey, fontSize: 12)),
                           Text("Evelyn Parker",
                               style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold)),
+                                  fontSize: 16, fontWeight: FontWeight.bold
+                              )
+                          ),
                         ],
                       )
                     ],
@@ -80,10 +82,10 @@ class _PetStorePageState extends State<PetStorePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _buildCategory(Icons.pets, "Cat", Colors.green.shade100),
-                  _buildCategory(Icons.pets, "Dog", Colors.blue.shade100),
-                  _buildCategory(Icons.pets, "Fish", Colors.orange.shade100),
-                  _buildCategory(Icons.pets, "Bird", Colors.purple.shade100),
+                  _buildCategory("images/cat.png", "Cat", Colors.green.shade100),
+                  _buildCategory("images/dog.png", "Dog", Colors.blue.shade100),
+                  _buildCategory("images/fish.png", "Fish", Colors.orange.shade100),
+                  _buildCategory("images/bird.png", "Bird", Colors.purple.shade100),
                 ],
               ),
               const SizedBox(height: 20),
@@ -134,19 +136,20 @@ class _PetStorePageState extends State<PetStorePage> {
     );
   }
 
-  Widget _buildCategory(IconData icon, String title, Color bgColor) {
+  Widget _buildCategory(String image, String title, Color bgColor) {
     return Column(
       children: [
         CircleAvatar(
           radius: 28,
           backgroundColor: bgColor,
-          child: Icon(icon, color: Colors.black),
+          backgroundImage: AssetImage(image), // <- works for local assets
         ),
         const SizedBox(height: 6),
         Text(title),
       ],
     );
   }
+
 
   Widget _buildTag(String label, bool selected) {
     return Container(

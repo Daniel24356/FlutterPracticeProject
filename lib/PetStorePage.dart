@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class PetStorePage extends StatefulWidget {
@@ -302,7 +303,7 @@ class _PetStorePageState extends State<PetStorePage> {
     );
   }
 
-  // Product Card
+
   Widget _buildProductCard(Map<String, dynamic> product, int index) {
     return StatefulBuilder(
       builder: (context, setLocalState) {
@@ -310,75 +311,215 @@ class _PetStorePageState extends State<PetStorePage> {
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
           decoration: BoxDecoration(
-            color: Colors.white,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.shade300,
-                blurRadius: 5,
-                spreadRadius: 1,
-                offset: const Offset(0, 2),
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 8,
+                spreadRadius: 2,
+                offset: const Offset(0, 4),
               )
             ],
           ),
-          child: Stack(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Expanded(
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(16)),
-                      child: Image.network(product["image"], fit: BoxFit.cover),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(product["name"],
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w500, fontSize: 14)),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      "\$${product["price"]}",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Positioned(
-                top: 10,
-                right: 8,
-                child: GestureDetector(
-                  onTap: () {
-                    setLocalState(() {
-                      product["isFav"] = !product["isFav"];
-                    });
-                  },
-                  child: AnimatedScale(
-                    scale: product["isFav"] ? 1.3 : 1.0,
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                    child: Icon(
-                      product["isFav"]
-                          ? Icons.favorite
-                          : Icons.favorite_border,
-                      color: product["isFav"] ? Colors.red : Colors.grey,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: Stack(
+              children: [
+                // Product Image
+                AspectRatio(
+                  aspectRatio: 1,
+                  child: Image.network(
+                    product["image"],
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Container(
+                      color: Colors.grey.shade200,
+                      child: const Icon(Icons.image_not_supported,
+                          color: Colors.grey, size: 40),
                     ),
                   ),
                 ),
-              )
-            ],
+
+                // Favorite button
+                Positioned(
+                  top: 10,
+                  right: 10,
+                  child: GestureDetector(
+                    onTap: () {
+                      setLocalState(() {
+                        product["isFav"] = !product["isFav"];
+                      });
+                    },
+                    child: AnimatedScale(
+                      scale: product["isFav"] ? 1.2 : 1.0,
+                      duration: const Duration(milliseconds: 250),
+                      curve: Curves.easeInOut,
+                      child: CircleAvatar(
+                        radius: 18,
+                        backgroundColor: Colors.white.withOpacity(0.9),
+                        child: Icon(
+                          product["isFav"]
+                              ? Icons.favorite
+                              : Icons.favorite_border,
+                          color: product["isFav"] ? Colors.red : Colors.grey,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                // Blurred overlay with name, price & cart
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.vertical(
+                      bottom: Radius.circular(16),
+                    ),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 8),
+                        color: Colors.black.withOpacity(0.3), // subtle dark blend
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // Product name & price
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    product["name"],
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    "\$${product["price"]}",
+                                    style: const TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.greenAccent,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            // Cart icon
+                            GestureDetector(
+                              onTap: () {
+                                debugPrint("Added ${product["name"]} to cart");
+                              },
+                              child: CircleAvatar(
+                                radius: 16,
+                                backgroundColor: Colors.white,
+                                child: const Icon(
+                                  Icons.shopping_cart_outlined,
+                                  size: 18,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },
     );
   }
+
+  // // Product Card
+  // Widget _buildProductCard(Map<String, dynamic> product, int index) {
+  //   return StatefulBuilder(
+  //     builder: (context, setLocalState) {
+  //       return AnimatedContainer(
+  //         duration: const Duration(milliseconds: 300),
+  //         curve: Curves.easeInOut,
+  //         decoration: BoxDecoration(
+  //           color: Colors.white,
+  //           borderRadius: BorderRadius.circular(16),
+  //           boxShadow: [
+  //             BoxShadow(
+  //               color: Colors.grey.shade300,
+  //               blurRadius: 5,
+  //               spreadRadius: 1,
+  //               offset: const Offset(0, 2),
+  //             )
+  //           ],
+  //         ),
+  //         child: Stack(
+  //           children: [
+  //             Column(
+  //               crossAxisAlignment: CrossAxisAlignment.stretch,
+  //               children: [
+  //                 Expanded(
+  //                   child: ClipRRect(
+  //                     borderRadius: const BorderRadius.vertical(
+  //                         top: Radius.circular(16)),
+  //                     child: Image.network(product["image"], fit: BoxFit.cover),
+  //                   ),
+  //                 ),
+  //                 Padding(
+  //                   padding: const EdgeInsets.all(8.0),
+  //                   child: Text(product["name"],
+  //                       style: const TextStyle(
+  //                           fontWeight: FontWeight.w500, fontSize: 14)),
+  //                 ),
+  //                 Padding(
+  //                   padding: const EdgeInsets.all(8.0),
+  //                   child: Text(
+  //                     "\$${product["price"]}",
+  //                     style: const TextStyle(
+  //                       fontWeight: FontWeight.w400,
+  //                       fontSize: 12,
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //             Positioned(
+  //               top: 10,
+  //               right: 8,
+  //               child: GestureDetector(
+  //                 onTap: () {
+  //                   setLocalState(() {
+  //                     product["isFav"] = !product["isFav"];
+  //                   });
+  //                 },
+  //                 child: AnimatedScale(
+  //                   scale: product["isFav"] ? 1.3 : 1.0,
+  //                   duration: const Duration(milliseconds: 300),
+  //                   curve: Curves.easeInOut,
+  //                   child: Icon(
+  //                     product["isFav"]
+  //                         ? Icons.favorite
+  //                         : Icons.favorite_border,
+  //                     color: product["isFav"] ? Colors.red : Colors.grey,
+  //                   ),
+  //                 ),
+  //               ),
+  //             )
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   // Bottom sheet filter
   void _showPriceFilter(BuildContext context) {

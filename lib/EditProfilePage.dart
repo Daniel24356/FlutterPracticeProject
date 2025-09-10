@@ -121,12 +121,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
             Row(
               children: [
                 Expanded(
-                  child: _buildDropdown("Country", selectedCountry, ["Bangladesh", "India", "USA"],
+                  child: _buildDropdown("Country", selectedCountry,
+                      ["Bangladesh", "India", "USA"],
                           (val) => setState(() => selectedCountry = val!)),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: _buildDropdown("City", selectedCity, ["Dhaka", "Chittagong", "Sylhet"],
+                  child: _buildDropdown(
+                      "City", selectedCity, ["Dhaka", "Chittagong", "Sylhet"],
                           (val) => setState(() => selectedCity = val!)),
                 ),
               ],
@@ -174,40 +176,71 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Widget _buildTextField(String label, TextEditingController controller) {
-    return TextField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: label,
-        filled: true,
-        fillColor: Colors.grey.shade100,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
         ),
-      ),
+        const SizedBox(height: 6), // 👈 space between label and field
+        TextField(
+          controller: controller,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.grey.shade100,
+            contentPadding: const EdgeInsets.symmetric(
+                vertical: 14, horizontal: 12), // tighter padding
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
-  Widget _buildDropdown(
-      String label, String value, List<String> items, ValueChanged<String?> onChanged) {
-    return DropdownButtonFormField<String>(
-      value: value,
-      decoration: InputDecoration(
-        labelText: label,
-        filled: true,
-        fillColor: Colors.grey.shade100,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
+  Widget _buildDropdown(String label, String value, List<String> items,
+      ValueChanged<String?> onChanged) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
         ),
-      ),
-      items: items
-          .map((e) => DropdownMenuItem<String>(
-        value: e,
-        child: Text(e),
-      ))
-          .toList(),
-      onChanged: onChanged,
+        const SizedBox(height: 6), // 👈 space between label and dropdown
+        DropdownButtonFormField<String>(
+          value: value,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.grey.shade100,
+            contentPadding: const EdgeInsets.symmetric(
+                vertical: 14, horizontal: 12),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+          ),
+          items: items
+              .map((e) =>
+              DropdownMenuItem<String>(
+                value: e,
+                child: Text(e),
+              ))
+              .toList(),
+          onChanged: onChanged,
+        ),
+      ],
     );
   }
 }

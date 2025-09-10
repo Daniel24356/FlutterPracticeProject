@@ -5,6 +5,8 @@ import 'OnboardingScreen.dart';
 import 'ChatListScreen.dart';
 import 'LoginScreen.dart';
 import 'SignUpScreen.dart';
+import 'AppointmentPage.dart';
+import 'PetDashboardApp.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,11 +23,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.deepPurple),
       initialRoute: '/',
       routes: {
-        '/': (context) => const OnboardingScreen(),
+        '/': (context) => const PetDashboardApp(),
         '/login': (context) => const LoginScreen(),
         '/signup': (context) => const SignUpScreen(),
         '/chat': (context) => const ChatListScreen(),
         '/chatPages': (context) => ChatPage(),
+        // '/appointmentscreen': (context) => const AppointmentPage()
       },
     );
   }

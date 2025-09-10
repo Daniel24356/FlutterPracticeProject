@@ -140,7 +140,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           onPressed: () {
-                            Navigator.pushReplacementNamed(context, '/chat');
+                            Navigator.pushReplacementNamed(context, '/petDashboardApp');
                           },
                           child: const Text(
                             "Sign In",

@@ -76,7 +76,7 @@ class _PetStorePageState extends State<PetStorePage> {
 
 
               // Category
-              const Text("Category",
+              const Text("Pets",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
               Row(
@@ -94,7 +94,7 @@ class _PetStorePageState extends State<PetStorePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: const [
-                  Text("Popular Product",
+                  Text("Shop by Category",
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   Text("See All",
                       style: TextStyle(color: greenColor, fontWeight: FontWeight.w500)),
@@ -109,8 +109,11 @@ class _PetStorePageState extends State<PetStorePage> {
                   scrollDirection: Axis.horizontal,
                   children: [
                     _buildTag("All", true),
-                    _buildTag("Cat Food", false),
-                    _buildTag("Cat Treats", false),
+                    _buildTag("Food & Treats", false),
+                    _buildTag("Health", false),
+                    _buildTag("Grooming", false),
+                    _buildTag("Beds", false),
+                    _buildTag("Toys", false),
                     _buildTag("Accessories", false),
                   ],
                 ),

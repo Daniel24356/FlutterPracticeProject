@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+// import 'package:projects/ProductDetailScreen.dart';
 import 'ChatAppScreen.dart';
 import 'OnboardingScreen.dart';
 import 'ChatListScreen.dart';
 import 'LoginScreen.dart';
 import 'SignUpScreen.dart';
+import 'AppointmentPage.dart';
+import 'PetDashboardApp.dart';
 import 'PetStorePage.dart';
 
 void main() {
@@ -21,12 +24,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.deepPurple),
       initialRoute: '/',
       routes: {
-        '/': (context) => const PetStorePage(),
+        '/': (context) => const PetDashboardApp(),
+        '/petStore': (context) => const PetStorePage(),
         '/login': (context) => const LoginScreen(),
         '/signup': (context) => const SignUpScreen(),
         '/chat': (context) => const ChatListScreen(),
         '/chatPages': (context) => ChatPage(),
-        '/petStore': (context) => PetStorePage(),
+        // '/appointmentscreen': (context) => const AppointmentPage()
       },
     );
   }

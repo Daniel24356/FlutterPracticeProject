@@ -46,6 +46,8 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
   image_picker: ^1.1.2
+  flutter_map: ^6.1.0
+  latlong2: ^0.9.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -66,6 +68,12 @@ flutter:
      - images/tokyo.jpg
      - images/onboard.png
      - images/usage.png
+     - images/avatar.jpeg
+     - images/bird.png
+     - images/dog.png
+     - images/fish.png
+     - images/cat.png
+     - images/rabbit.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-// import 'package:projects/ProductDetailScreen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
+// Screens
 import 'OnboardingScreen.dart';
 import 'LoginScreen.dart';
 import 'SignUpScreen.dart';
@@ -7,8 +10,15 @@ import 'AppointmentPage.dart';
 import 'PetDashboardApp.dart';
 import 'ForgotPasswordScreen.dart';
 
+void main() async {
+  // Make sure Flutter engine is ready
+  WidgetsFlutterBinding.ensureInitialized();
 
-void main() {
+  // Initialize Firebase with generated options
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(const MyApp());
 }
 
@@ -20,14 +30,21 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'PawfectCare',
-      theme: ThemeData(primarySwatch: Colors.deepPurple),
+      theme: ThemeData(
+        primaryColor: const Color(0xFF0db14c), // Your green
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF0db14c),
+          primary: const Color(0xFF0db14c),
+        ),
+        useMaterial3: true, // optional modern Material 3 look
+      ),
       initialRoute: '/',
       routes: {
         '/': (context) => const PetDashboardApp(),
         '/login': (context) => const LoginScreen(),
         '/signup': (context) => const SignUpScreen(),
         '/forgotPassword': (context) => const ForgotPasswordScreen(),
-        // '/appointmentscreen': (context) => const AppointmentPage()
+        // '/appointmentscreen': (context) => const AppointmentPage(),
       },
     );
   }

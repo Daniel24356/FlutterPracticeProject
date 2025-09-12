@@ -5,11 +5,12 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:math';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:projects/CareTipsWidget.dart';
+import 'package:projects/PetCareTipsPage.dart';
 import 'AppointmentPage.dart';
 import 'UserProfile.dart';
 import 'PetStorePage.dart';
-import 'HealthRecordsScreen.dart';
+import 'HealthRecordsPage.dart';
+
 
 void main() {
   runApp(const PetDashboardApp());
@@ -51,7 +52,7 @@ class _DashboardShellState extends State<DashboardShell> with TickerProviderStat
     IndexPage(),
     AppointmentListPage(),
     PetStorePage(),
-    HealthRecordsScreen(),
+    HealthRecordsPage(),
     UserProfile(),
   ];
 
@@ -168,11 +169,11 @@ class _DashboardShellState extends State<DashboardShell> with TickerProviderStat
                   _drawerItem(context, Icons.calendar_today, 'Appointments', () => _openRoute(const AppointmentListPage())),
                   _drawerItem(context, Icons.medical_services, 'Health Records', () => _openRoute(const HealthRecordsPage())),
                   _drawerItem(context, Icons.store, 'Pet Store', () => _openRoute(const PetStorePage())),
-                  _drawerItem(context, Icons.lightbulb, 'Care Tips', () => _openRoute(const CareTipsWidget())),
+                  _drawerItem(context, Icons.lightbulb, 'Care Tips', () => _openRoute(const PetCareTipsPage())),
                   _drawerItem(context, Icons.contact_mail, 'Contact', () => _openRoute(const ContactPage())),
                   const Divider(),
-                  _drawerItem(context, Icons.login, 'Login', () => _openRoute(const LoginPage())),
-                  _drawerItem(context, Icons.app_registration, 'Signup', () => _openRoute(const SignupPage())),
+                  // _drawerItem(context, Icons.login, 'Login', () => _openRoute(const LogOutPage())),
+                  // _drawerItem(context, Icons.app_registration, 'Signup', () => _openRoute(const SignupPage())),
                 ],
               ),
             )
@@ -970,12 +971,12 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
 //   Widget build(BuildContext context) => Scaffold(body: SafeArea(child: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: const [Icon(Icons.storefront, size: 56, color: Colors.green), SizedBox(height: 12), Text('Pet Store', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))]))));
 // }
 
-class HealthRecordsPage extends StatelessWidget {
-  const HealthRecordsPage({super.key});
-
-  @override
-  Widget build(BuildContext context) => Scaffold(body: SafeArea(child: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: const [Icon(Icons.medical_information, size: 56, color: Colors.green), SizedBox(height: 12), Text('Health Records', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))]))));
-}
+// class HealthRecordsPage extends StatelessWidget {
+//   const HealthRecordsPage({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) => Scaffold(body: SafeArea(child: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: const [Icon(Icons.medical_information, size: 56, color: Colors.green), SizedBox(height: 12), Text('Health Records', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))]))));
+// }
 
 class ContactPage extends StatefulWidget {
   const ContactPage({super.key});
@@ -1657,88 +1658,88 @@ class CareTipsPage extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(body: SafeArea(child: ListView(padding: const EdgeInsets.all(16), children: const [Text('Care Tips', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)), SizedBox(height: 12), Text('- Tip 1: Keep your pet hydrated.'), SizedBox(height: 6), Text('- Tip 2: Regular checkups.')])));
 }
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+// class LoginPage extends StatelessWidget {
+//   const LoginPage({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) => Scaffold(
+//     body: SafeArea(
+//       child: Center(
+//         child: Padding(
+//           padding: const EdgeInsets.all(16),
+//           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+//             const Text('Login', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+//             const SizedBox(height: 12),
+//             const TextField(decoration: InputDecoration(labelText: 'Email')),
+//             const SizedBox(height: 8),
+//             const TextField(decoration: InputDecoration(labelText: 'Password'), obscureText: true),
+//             const SizedBox(height: 12),
+//             ElevatedButton(
+//               style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+//               onPressed: () {},
+//               child: const Text('Login', style: TextStyle(color: Colors.white)),
+//             )
+//           ]),
+//         ),
+//       ),
+//     ),
+//   );
+// }
 
-  @override
-  Widget build(BuildContext context) => Scaffold(
-    body: SafeArea(
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            const Text('Login', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 12),
-            const TextField(decoration: InputDecoration(labelText: 'Email')),
-            const SizedBox(height: 8),
-            const TextField(decoration: InputDecoration(labelText: 'Password'), obscureText: true),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-              onPressed: () {},
-              child: const Text('Login', style: TextStyle(color: Colors.white)),
-            )
-          ]),
-        ),
-      ),
-    ),
-  );
-}
+// class SignupPage extends StatelessWidget {
+//   const SignupPage({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) => Scaffold(
+//     body: SafeArea(
+//       child: Center(
+//         child: Padding(
+//           padding: const EdgeInsets.all(16),
+//           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+//             const Text('Signup', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+//             const SizedBox(height: 12),
+//             const TextField(decoration: InputDecoration(labelText: 'Name')),
+//             const SizedBox(height: 8),
+//             const TextField(decoration: InputDecoration(labelText: 'Email')),
+//             const SizedBox(height: 8),
+//             const TextField(decoration: InputDecoration(labelText: 'Password'), obscureText: true),
+//             const SizedBox(height: 12),
+//             ElevatedButton(
+//               style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+//               onPressed: () {},
+//               child: const Text('Create Account', style: TextStyle(color: Colors.white)),
+//             )
+//           ]),
+//         ),
+//       ),
+//     ),
+//   );
+// }
 
-class SignupPage extends StatelessWidget {
-  const SignupPage({super.key});
-
-  @override
-  Widget build(BuildContext context) => Scaffold(
-    body: SafeArea(
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            const Text('Signup', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 12),
-            const TextField(decoration: InputDecoration(labelText: 'Name')),
-            const SizedBox(height: 8),
-            const TextField(decoration: InputDecoration(labelText: 'Email')),
-            const SizedBox(height: 8),
-            const TextField(decoration: InputDecoration(labelText: 'Password'), obscureText: true),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-              onPressed: () {},
-              child: const Text('Create Account', style: TextStyle(color: Colors.white)),
-            )
-          ]),
-        ),
-      ),
-    ),
-  );
-}
-
-class ForgotPasswordPage extends StatelessWidget {
-  const ForgotPasswordPage({super.key});
-
-  @override
-  Widget build(BuildContext context) => Scaffold(
-    body: SafeArea(
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            const Text('Forgot Password', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 12),
-            const TextField(decoration: InputDecoration(labelText: 'Email')),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-              onPressed: () {},
-              child: const Text('Reset Password', style: TextStyle(color: Colors.white)),
-            )
-          ]),
-        ),
-      ),
-    ),
-  );
-}
+// class ForgotPasswordPage extends StatelessWidget {
+//   const ForgotPasswordPage({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) => Scaffold(
+//     body: SafeArea(
+//       child: Center(
+//         child: Padding(
+//           padding: const EdgeInsets.all(16),
+//           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+//             const Text('Forgot Password', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+//             const SizedBox(height: 12),
+//             const TextField(decoration: InputDecoration(labelText: 'Email')),
+//             const SizedBox(height: 12),
+//             ElevatedButton(
+//               style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+//               onPressed: () {},
+//               child: const Text('Reset Password', style: TextStyle(color: Colors.white)),
+//             )
+//           ]),
+//         ),
+//       ),
+//     ),
+//   );
+// }
 
 // -------------------- End --------------------

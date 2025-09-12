@@ -63,6 +63,7 @@ class _VetSchedulePageState extends State<VetSchedulePage> {
         child: Container(
           padding: EdgeInsets.all(16),
           child: TableCalendar(
+
             focusedDay: _focusedDay,
             firstDay: DateTime(2020),
             lastDay: DateTime(2030),
@@ -109,112 +110,115 @@ class _VetSchedulePageState extends State<VetSchedulePage> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          // Horizontal date bar
-          Container(
-            height: 80,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: 14,
-              itemBuilder: (context, index) {
-                DateTime day = _focusedDay.add(Duration(days: index));
-                bool isSelected = isSameDay(day, _selectedDay);
+      body: 
+          SafeArea(
+        child: Column(
+          children: [
+            // Horizontal date bar
+            Container(
+              height: 80,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: 14,
+                itemBuilder: (context, index) {
+                  DateTime day = _focusedDay.add(Duration(days: index));
+                  bool isSelected = isSameDay(day, _selectedDay);
 
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _selectedDay = day;
-                    });
-                  },
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                    padding: EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: isSelected ? Colors.purple[200] : Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: isSelected ? Colors.purple : Colors.grey[300]!,
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _selectedDay = day;
+                      });
+                    },
+                    child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                      padding: EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: isSelected ? Colors.purple[200] : Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: isSelected ? Colors.purple : Colors.grey[300]!,
+                        ),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(DateFormat("E").format(day),
+                              style: TextStyle(
+                                  color: isSelected ? Colors.white : Colors.black)),
+                          SizedBox(height: 4),
+                          Text("${day.day}",
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color:
+                                  isSelected ? Colors.white : Colors.black)),
+                        ],
                       ),
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(DateFormat("E").format(day),
-                            style: TextStyle(
-                                color: isSelected ? Colors.white : Colors.black)),
-                        SizedBox(height: 4),
-                        Text("${day.day}",
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color:
-                                isSelected ? Colors.white : Colors.black)),
+                  );
+                },
+              ),
+            ),
+
+            // Appointment list
+            Expanded(
+              child: todaysAppointments.isEmpty
+                  ? Center(
+                  child: Text("No appointments",
+                      style: TextStyle(color: Colors.grey, fontSize: 16)))
+                  : ListView.builder(
+                padding: EdgeInsets.all(16),
+                itemCount: todaysAppointments.length,
+                itemBuilder: (context, index) {
+                  var appt = todaysAppointments[index];
+                  return Container(
+                    margin: EdgeInsets.only(bottom: 16),
+                    padding: EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Color(int.parse(appt["color"]!)),
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 6,
+                          offset: Offset(0, 3),
+                        )
                       ],
                     ),
-                  ),
-                );
-              },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(appt["title"]!,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16)),
+                        SizedBox(height: 4),
+                        Text(appt["time"]!,
+                            style: TextStyle(color: Colors.grey[700])),
+                        SizedBox(height: 4),
+                        Text(appt["room"]!,
+                            style: TextStyle(color: Colors.grey[600])),
+                        SizedBox(height: 8),
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              backgroundColor: Colors.grey[400],
+                              child: Icon(Icons.pets, color: Colors.white),
+                            ),
+                            SizedBox(width: 8),
+                            Text(appt["doctor"]!,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500)),
+                          ],
+                        )
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
-
-          // Appointment list
-          Expanded(
-            child: todaysAppointments.isEmpty
-                ? Center(
-                child: Text("No appointments",
-                    style: TextStyle(color: Colors.grey, fontSize: 16)))
-                : ListView.builder(
-              padding: EdgeInsets.all(16),
-              itemCount: todaysAppointments.length,
-              itemBuilder: (context, index) {
-                var appt = todaysAppointments[index];
-                return Container(
-                  margin: EdgeInsets.only(bottom: 16),
-                  padding: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Color(int.parse(appt["color"]!)),
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 6,
-                        offset: Offset(0, 3),
-                      )
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(appt["title"]!,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16)),
-                      SizedBox(height: 4),
-                      Text(appt["time"]!,
-                          style: TextStyle(color: Colors.grey[700])),
-                      SizedBox(height: 4),
-                      Text(appt["room"]!,
-                          style: TextStyle(color: Colors.grey[600])),
-                      SizedBox(height: 8),
-                      Row(
-                        children: [
-                          CircleAvatar(
-                            backgroundColor: Colors.grey[400],
-                            child: Icon(Icons.pets, color: Colors.white),
-                          ),
-                          SizedBox(width: 8),
-                          Text(appt["doctor"]!,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500)),
-                        ],
-                      )
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -5,7 +5,7 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Sign up
+  //  Sign up
   Future<User?> signUp({
     required String name,
     required String email,
@@ -26,6 +26,7 @@ class AuthService {
         'email': email,
         'phone': phone,
         'role': role,
+        'createdAt': FieldValue.serverTimestamp(),
       });
 
       return result.user;
@@ -35,7 +36,7 @@ class AuthService {
     }
   }
 
-  // Login
+  //  Login
   Future<User?> login({
     required String email,
     required String password,
@@ -52,7 +53,7 @@ class AuthService {
     }
   }
 
-  // Password reset
+  //  Password reset
   Future<void> resetPassword(String email) async {
     try {
       await _auth.sendPasswordResetEmail(email: email);
@@ -61,22 +62,27 @@ class AuthService {
     }
   }
 
-  // Sign out
+  //  Sign out
   Future<void> signOut() async {
     await _auth.signOut();
   }
 
-  // Get current user
+  //  Get current user (Auth only)
   User? get currentUser => _auth.currentUser;
 
-  // Get user profile from Firestore
+  //  Get full profile from Firestore
   Future<Map<String, dynamic>?> getUserProfile(String uid) async {
-    DocumentSnapshot doc = await _firestore.collection('users').doc(uid).get();
-    if (doc.exists) return doc.data() as Map<String, dynamic>;
-    return null;
+    try {
+      DocumentSnapshot doc = await _firestore.collection('users').doc(uid).get();
+      if (doc.exists) return doc.data() as Map<String, dynamic>;
+      return null;
+    } catch (e) {
+      print('GetUserProfile Error: $e');
+      return null;
+    }
   }
 
-  // Get user role by UID
+  //  Get role by UID
   Future<String?> getUserRole(String uid) async {
     try {
       final doc = await _firestore.collection('users').doc(uid).get();
@@ -90,4 +96,19 @@ class AuthService {
     }
   }
 
+  //  Get currently logged-in user profile
+  Future<Map<String, dynamic>?> getCurrentUserProfile() async {
+    final user = _auth.currentUser;
+    if (user == null) return null;
+
+    return await getUserProfile(user.uid);
+  }
+
+  //  Update profile
+  Future<void> updateProfile(Map<String, dynamic> data) async {
+    final user = _auth.currentUser;
+    if (user == null) throw Exception("No user logged in");
+
+    await _firestore.collection("users").doc(user.uid).update(data);
+  }
 }

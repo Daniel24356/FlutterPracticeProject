@@ -49,7 +49,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               size: 60,
             ),
             Text(
-              'furlo',
+              'Pawfect Store',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 40,

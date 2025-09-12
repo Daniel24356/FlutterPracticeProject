@@ -11,14 +11,10 @@ import 'PetDashboardApp.dart';
 import 'ForgotPasswordScreen.dart';
 
 void main() async {
-  // Make sure Flutter engine is ready
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Initialize Firebase with generated options
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
   runApp(const MyApp());
 }
 
@@ -36,11 +32,11 @@ class MyApp extends StatelessWidget {
           seedColor: const Color(0xFF0db14c),
           primary: const Color(0xFF0db14c),
         ),
-        useMaterial3: true, // optional modern Material 3 look
+        useMaterial3: true,
       ),
-      initialRoute: '/',
+      initialRoute: '/onboarding',
       routes: {
-        '/': (context) => const OnboardingScreen(),
+        '/onboarding': (context) => const OnboardingScreen(),
         '/login': (context) => const LoginScreen(),
         '/signup': (context) => const SignUpScreen(),
         '/forgotPassword': (context) => const ForgotPasswordScreen(),

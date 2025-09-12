@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:projects/PetDashboardApp.dart';
+import 'package:projects/services/authService.dart';
+
+import 'ShelterDashboard.dart';
+import 'VetDashboard.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,11 +16,12 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   String email = "";
   String password = "";
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF6FAFF), // light gradient feel
+      backgroundColor: const Color(0xFFF6FAFF),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -26,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Column(
                 children: const [
                   Icon(Icons.favorite_border,
-                      color: Colors.green, size: 48), // Blue heart logo
+                      color: Colors.green, size: 48),
                   SizedBox(height: 8),
                   Text(
                     "PawfectCare",
@@ -39,8 +45,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
               const SizedBox(height: 20),
-
-              // Welcome Text
               const Text(
                 "Welcome Back",
                 style: TextStyle(
@@ -73,7 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   key: _formKey,
                   child: Column(
                     children: [
-                      // Email field
+                      // Email
                       TextFormField(
                         decoration: InputDecoration(
                           labelText: "Email",
@@ -86,11 +90,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             borderSide: BorderSide.none,
                           ),
                         ),
+                        validator: (val) =>
+                        val!.isEmpty ? "Enter your email" : null,
                         onChanged: (val) => setState(() => email = val),
                       ),
                       const SizedBox(height: 16),
-
-                      // Password field
+                      // Password
                       TextFormField(
                         obscureText: true,
                         decoration: InputDecoration(
@@ -104,17 +109,17 @@ class _LoginScreenState extends State<LoginScreen> {
                             borderSide: BorderSide.none,
                           ),
                         ),
+                        validator: (val) =>
+                        val!.length < 6 ? "Password too short" : null,
                         onChanged: (val) => setState(() => password = val),
                       ),
-
                       const SizedBox(height: 8),
-
-                      // Forgot Password
                       Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
                           onPressed: () {
-                            Navigator.pushReplacementNamed(context, '/forgotPassword');
+                            Navigator.pushReplacementNamed(
+                                context, '/forgotPassword');
                           },
                           child: const Text(
                             "Forgot Password?",
@@ -125,9 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
-
                       const SizedBox(height: 10),
-
                       // Login Button
                       SizedBox(
                         width: double.infinity,
@@ -139,13 +142,67 @@ class _LoginScreenState extends State<LoginScreen> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          onPressed: () {
-                            Navigator.pushReplacementNamed(context, '/petDashboardApp');
+                          onPressed: isLoading
+                              ? null
+                              : () async {
+                            if (_formKey.currentState!.validate()) {
+                              setState(() => isLoading = true);
+
+                              final user = await AuthService().login(
+                                email: email.trim(),
+                                password: password,
+                              );
+
+                              setState(() => isLoading = false);
+
+                              if (user != null) {
+                                final role = await AuthService()
+                                    .getUserRole(user.uid);
+
+                                if (role == "Pet Owner") {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) =>
+                                        const PetDashboardApp()),
+                                  );
+                                } else if (role == "Veterinarian") {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) =>
+                                        const VetDashboard()),
+                                  );
+                                } else if (role == "Animal Shelter") {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) =>
+                                        const ShelterDashboard()),
+                                  );
+                                } else {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(const SnackBar(
+                                      content: Text(
+                                          'Role not found')));
+                                }
+                              } else {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(const SnackBar(
+                                    content:
+                                    Text('Login Failed')));
+                              }
+                            }
                           },
-                          child: const Text(
+                          child: isLoading
+                              ? const CircularProgressIndicator(
+                              color: Colors.white)
+                              : const Text(
                             "Sign In",
                             style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white),
                           ),
                         ),
                       ),
@@ -153,10 +210,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-
               const SizedBox(height: 16),
-
-              // Sign Up option
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

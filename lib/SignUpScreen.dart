@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:projects/PetDashboardApp.dart';
+import 'package:projects/VetDashboard.dart';
+import 'package:projects/services/authService.dart';
+
+import 'ShelterDashboard.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -23,10 +28,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
     "Animal Shelter",
   ];
 
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // matches the design bg
+      backgroundColor: Colors.white,
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -36,8 +43,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               // Logo + App Name
               Column(
                 children: const [
-                  Icon(Icons.favorite_border,
-                      color: Colors.green, size: 48),
+                  Icon(Icons.favorite_border, color: Colors.green, size: 48),
                   SizedBox(height: 8),
                   Text(
                     "PawfectCare",
@@ -50,8 +56,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ],
               ),
               const SizedBox(height: 20),
-
-              // Title
               const Text(
                 "Create Account",
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
@@ -62,8 +66,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 style: TextStyle(color: Colors.grey, fontSize: 14),
               ),
               const SizedBox(height: 30),
-
-              // Card Container
               Container(
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
@@ -94,10 +96,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             borderSide: BorderSide.none,
                           ),
                         ),
+                        validator: (val) =>
+                        val!.isEmpty ? "Enter your full name" : null,
                         onChanged: (val) => setState(() => fullName = val),
                       ),
                       const SizedBox(height: 16),
-
                       // Email
                       TextFormField(
                         decoration: InputDecoration(
@@ -111,11 +114,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             borderSide: BorderSide.none,
                           ),
                         ),
+                        validator: (val) =>
+                        val!.isEmpty ? "Enter your email" : null,
                         onChanged: (val) => setState(() => email = val),
                       ),
                       const SizedBox(height: 16),
-
-                      // Phone Number
+                      // Phone
                       TextFormField(
                         keyboardType: TextInputType.phone,
                         decoration: InputDecoration(
@@ -129,10 +133,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             borderSide: BorderSide.none,
                           ),
                         ),
+                        validator: (val) =>
+                        val!.isEmpty ? "Enter your phone number" : null,
                         onChanged: (val) => setState(() => phone = val),
                       ),
                       const SizedBox(height: 16),
-
                       // Role Dropdown
                       DropdownButtonFormField<String>(
                         value: selectedRole,
@@ -143,8 +148,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           child: Text(role),
                         ))
                             .toList(),
+                        validator: (val) => val == null ? "Select a role" : null,
                         decoration: InputDecoration(
-                          // labelText: "I am a...",
                           prefixIcon: const Icon(Icons.pets_outlined),
                           filled: true,
                           fillColor: const Color(0xFFF8F9FA),
@@ -156,7 +161,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         onChanged: (val) => setState(() => selectedRole = val),
                       ),
                       const SizedBox(height: 16),
-
                       // Password
                       TextFormField(
                         obscureText: true,
@@ -171,10 +175,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             borderSide: BorderSide.none,
                           ),
                         ),
+                        validator: (val) =>
+                        val!.length < 6 ? "Password too short" : null,
                         onChanged: (val) => setState(() => password = val),
                       ),
                       const SizedBox(height: 16),
-
                       // Confirm Password
                       TextFormField(
                         obscureText: true,
@@ -189,12 +194,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             borderSide: BorderSide.none,
                           ),
                         ),
+                        validator: (val) =>
+                        val != password ? "Passwords do not match" : null,
                         onChanged: (val) =>
                             setState(() => confirmPassword = val),
                       ),
                       const SizedBox(height: 24),
-
-                      // Create Account Button
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
@@ -205,13 +210,64 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          onPressed: () {
-                            Navigator.pushReplacementNamed(context, '/chat');
+                          onPressed: isLoading
+                              ? null
+                              : () async {
+                            if (_formKey.currentState!.validate()) {
+                              setState(() => isLoading = true);
+
+                              final user = await AuthService().signUp(
+                                name: fullName.trim(),
+                                email: email.trim(),
+                                password: password,
+                                phone: phone.trim(),
+                                role: selectedRole!,
+                              );
+
+                              setState(() => isLoading = false);
+
+                              if (user != null) {
+                                // Role-based navigation
+                                if (selectedRole == 'Pet Owner') {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) =>
+                                            PetDashboardApp()),
+                                  );
+                                } else if (selectedRole ==
+                                    'Veterinarian') {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) => VetDashboard()),
+                                  );
+                                } else if (selectedRole ==
+                                    'Animal Shelter') {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) =>
+                                            ShelterDashboard()),
+                                  );
+                                }
+                              } else {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(const SnackBar(
+                                    content:
+                                    Text('Sign Up Failed')));
+                              }
+                            }
                           },
-                          child: const Text(
+                          child: isLoading
+                              ? const CircularProgressIndicator(
+                              color: Colors.white)
+                              : const Text(
                             "Create Account",
                             style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white),
                           ),
                         ),
                       ),
@@ -219,10 +275,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
               ),
-
               const SizedBox(height: 16),
-
-              // Already have an account? Sign in
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

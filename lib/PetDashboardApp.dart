@@ -8,6 +8,7 @@ import 'package:latlong2/latlong.dart';
 import 'AppointmentPage.dart';
 import 'UserProfile.dart';
 import 'PetStorePage.dart';
+import 'HealthRecordsScreen.dart';
 
 void main() {
   runApp(const PetDashboardApp());
@@ -49,7 +50,7 @@ class _DashboardShellState extends State<DashboardShell> with TickerProviderStat
     IndexPage(),
     AppointmentListPage(),
     PetStorePage(),
-    HealthRecordsPage(),
+    HealthRecordsScreen(),
     UserProfile(),
   ];
 

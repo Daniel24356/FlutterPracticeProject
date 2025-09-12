@@ -5,7 +5,9 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:math';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'VetAppointmentPage.dart';
+import 'package:projects/VetHealthRecords.dart';
+import 'VetSchedulePage.dart';
+import 'VetHealthRecords.dart';
 import 'UserProfile.dart';
 
 void main() {
@@ -44,11 +46,11 @@ class _DashboardShellState extends State<DashboardShell> with TickerProviderStat
   late final PageController _pageController;
   late final AnimationController _fabController;
 
-  final List<Widget> _pages = const [
-    IndexPage(),
-    VetAppointmentPage(),
-    HealthRecordsPage(),
-    UserProfile(),
+  final List<Widget> _pages = [
+    const IndexPage(),
+    VetSchedulePage(),
+    const VetHealthRecords(),
+    const UserProfile(),
   ];
 
   @override
@@ -125,8 +127,8 @@ class _DashboardShellState extends State<DashboardShell> with TickerProviderStat
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.calendar_month), label: 'Appointments'),
-          BottomNavigationBarItem(icon: Icon(Icons.storefront), label: 'Store'),
-          BottomNavigationBarItem(icon: Icon(Icons.medical_information_outlined), label: 'Health'),
+          // BottomNavigationBarItem(icon: Icon(Icons.storefront), label: 'Store'),
+          BottomNavigationBarItem(icon: Icon(Icons.folder_shared_outlined), label: 'Records'),
           BottomNavigationBarItem(icon: Icon(Icons.person_outlined), label: 'Profile'),
         ],
       ),
@@ -1303,7 +1305,7 @@ class _AddPetPageState extends State<AddPetPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => VetAppointmentPage(),
+          builder: (context) => VetSchedulePage(),
         ),
       );
     }

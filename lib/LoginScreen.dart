@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projects/PetDashboardApp.dart';
 import 'package:projects/services/authService.dart';
-
+import 'ForgotPasswordScreen.dart';
 import 'ShelterDashboard.dart';
 import 'VetDashboard.dart';
 
@@ -31,8 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
               // Logo + Title
               Column(
                 children: const [
-                  Icon(Icons.favorite_border,
-                      color: Colors.green, size: 48),
+                  Icon(Icons.favorite_border, color: Colors.green, size: 48),
                   SizedBox(height: 8),
                   Text(
                     "PawfectCare",
@@ -47,10 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 20),
               const Text(
                 "Welcome Back",
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 4),
               const Text(
@@ -109,8 +105,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             borderSide: BorderSide.none,
                           ),
                         ),
-                        validator: (val) =>
-                        val!.length < 6 ? "Password too short" : null,
+                        validator: (val) => val!.length < 6
+                            ? "Password too short"
+                            : null,
                         onChanged: (val) => setState(() => password = val),
                       ),
                       const SizedBox(height: 8),
@@ -118,8 +115,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         alignment: Alignment.centerRight,
                         child: TextButton(
                           onPressed: () {
-                            Navigator.pushReplacementNamed(
-                                context, '/forgotPassword');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const ForgotPasswordScreen(),
+                              ),
+                            );
                           },
                           child: const Text(
                             "Forgot Password?",
@@ -156,8 +157,11 @@ class _LoginScreenState extends State<LoginScreen> {
                               setState(() => isLoading = false);
 
                               if (user != null) {
-                                final role = await AuthService()
-                                    .getUserRole(user.uid);
+                                final userProfile = await AuthService()
+                                    .getUserProfile(user.uid);
+
+                                final role =
+                                    userProfile?['role'] ?? 'Unknown';
 
                                 if (role == "Pet Owner") {
                                   Navigator.pushReplacement(
@@ -183,14 +187,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                 } else {
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(const SnackBar(
-                                      content: Text(
-                                          'Role not found')));
+                                      content: Text('Role not found')));
                                 }
                               } else {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(const SnackBar(
-                                    content:
-                                    Text('Login Failed')));
+                                    content: Text('Login Failed')));
                               }
                             }
                           },

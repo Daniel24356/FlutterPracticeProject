@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:projects/PetDashboardApp.dart';
-import 'package:projects/VetDashboard.dart';
 import 'package:projects/services/authService.dart';
-
+import 'PetDashboardApp.dart';
+import 'VetDashboard.dart';
 import 'ShelterDashboard.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -14,202 +13,87 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
-
-  String fullName = "";
+  String name = "";
   String email = "";
-  String phone = "";
   String password = "";
-  String confirmPassword = "";
-  String? selectedRole;
-
-  final List<String> roles = [
-    "Pet Owner",
-    "Veterinarian",
-    "Animal Shelter",
-  ];
-
+  String phone = "";
+  String role = "Pet Owner";
   bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF6FAFF),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Logo + App Name
-              Column(
-                children: const [
-                  Icon(Icons.favorite_border, color: Colors.green, size: 48),
-                  SizedBox(height: 8),
-                  Text(
-                    "PawfectCare",
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green,
-                    ),
-                  ),
-                ],
+              const Icon(Icons.favorite_border, color: Colors.green, size: 48),
+              const SizedBox(height: 8),
+              const Text(
+                "PawfectCare",
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.green),
               ),
               const SizedBox(height: 20),
-              const Text(
-                "Create Account",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(height: 4),
-              const Text(
-                "Join the PawfectCare community",
-                style: TextStyle(color: Colors.grey, fontSize: 14),
-              ),
+              const Text("Create Account", style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600)),
+              const SizedBox(height: 6),
+              const Text("Sign up to get started", style: TextStyle(color: Colors.grey, fontSize: 14)),
               const SizedBox(height: 30),
+
               Container(
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12.withOpacity(0.05),
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
+                  boxShadow: [BoxShadow(color: Colors.black12.withOpacity(0.05), blurRadius: 12, offset: const Offset(0, 4))],
                 ),
                 child: Form(
                   key: _formKey,
                   child: Column(
                     children: [
-                      // Full Name
                       TextFormField(
-                        decoration: InputDecoration(
-                          labelText: "Full Name",
-                          hintText: "Enter your full name",
-                          prefixIcon: const Icon(Icons.person_outline),
-                          filled: true,
-                          fillColor: const Color(0xFFF8F9FA),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
-                        validator: (val) =>
-                        val!.isEmpty ? "Enter your full name" : null,
-                        onChanged: (val) => setState(() => fullName = val),
+                        decoration: InputDecoration(labelText: "Full Name", prefixIcon: const Icon(Icons.person_outline), filled: true, fillColor: const Color(0xFFF8F9FA), border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none)),
+                        validator: (val) => val!.isEmpty ? "Enter your name" : null,
+                        onChanged: (val) => setState(() => name = val),
                       ),
                       const SizedBox(height: 16),
-                      // Email
                       TextFormField(
-                        decoration: InputDecoration(
-                          labelText: "Email",
-                          hintText: "Enter your email",
-                          prefixIcon: const Icon(Icons.email_outlined),
-                          filled: true,
-                          fillColor: const Color(0xFFF8F9FA),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
-                        validator: (val) =>
-                        val!.isEmpty ? "Enter your email" : null,
+                        decoration: InputDecoration(labelText: "Email", prefixIcon: const Icon(Icons.email_outlined), filled: true, fillColor: const Color(0xFFF8F9FA), border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none)),
+                        validator: (val) => val!.isEmpty ? "Enter your email" : null,
                         onChanged: (val) => setState(() => email = val),
                       ),
                       const SizedBox(height: 16),
-                      // Phone
-                      TextFormField(
-                        keyboardType: TextInputType.phone,
-                        decoration: InputDecoration(
-                          labelText: "Phone Number",
-                          hintText: "Enter your phone number",
-                          prefixIcon: const Icon(Icons.phone_outlined),
-                          filled: true,
-                          fillColor: const Color(0xFFF8F9FA),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
-                        validator: (val) =>
-                        val!.isEmpty ? "Enter your phone number" : null,
-                        onChanged: (val) => setState(() => phone = val),
-                      ),
-                      const SizedBox(height: 16),
-                      // Role Dropdown
-                      DropdownButtonFormField<String>(
-                        value: selectedRole,
-                        hint: const Text("Select your role"),
-                        items: roles
-                            .map((role) => DropdownMenuItem(
-                          value: role,
-                          child: Text(role),
-                        ))
-                            .toList(),
-                        validator: (val) => val == null ? "Select a role" : null,
-                        decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.pets_outlined),
-                          filled: true,
-                          fillColor: const Color(0xFFF8F9FA),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
-                        onChanged: (val) => setState(() => selectedRole = val),
-                      ),
-                      const SizedBox(height: 16),
-                      // Password
                       TextFormField(
                         obscureText: true,
-                        decoration: InputDecoration(
-                          labelText: "Password",
-                          hintText: "Create a password",
-                          prefixIcon: const Icon(Icons.lock_outline),
-                          filled: true,
-                          fillColor: const Color(0xFFF8F9FA),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
-                        validator: (val) =>
-                        val!.length < 6 ? "Password too short" : null,
+                        decoration: InputDecoration(labelText: "Password", prefixIcon: const Icon(Icons.lock_outline), filled: true, fillColor: const Color(0xFFF8F9FA), border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none)),
+                        validator: (val) => val!.length < 6 ? "Password too short" : null,
                         onChanged: (val) => setState(() => password = val),
                       ),
                       const SizedBox(height: 16),
-                      // Confirm Password
                       TextFormField(
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          labelText: "Confirm Password",
-                          hintText: "Confirm your password",
-                          prefixIcon: const Icon(Icons.lock_outline),
-                          filled: true,
-                          fillColor: const Color(0xFFF8F9FA),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
-                        validator: (val) =>
-                        val != password ? "Passwords do not match" : null,
-                        onChanged: (val) =>
-                            setState(() => confirmPassword = val),
+                        decoration: InputDecoration(labelText: "Phone Number", prefixIcon: const Icon(Icons.phone_outlined), filled: true, fillColor: const Color(0xFFF8F9FA), border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none)),
+                        validator: (val) => val!.isEmpty ? "Enter your phone number" : null,
+                        onChanged: (val) => setState(() => phone = val),
                       ),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 16),
+                      DropdownButtonFormField<String>(
+                        value: role,
+                        items: const [
+                          DropdownMenuItem(value: "Pet Owner", child: Text("Pet Owner")),
+                          DropdownMenuItem(value: "Veterinarian", child: Text("Veterinarian")),
+                          DropdownMenuItem(value: "Animal Shelter", child: Text("Animal Shelter")),
+                        ],
+                        onChanged: (val) => setState(() => role = val!),
+                        decoration: InputDecoration(labelText: "Select Role", filled: true, fillColor: const Color(0xFFF8F9FA), border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none)),
+                      ),
+                      const SizedBox(height: 20),
+
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green,
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
+                          style: ElevatedButton.styleFrom(backgroundColor: Colors.green, padding: const EdgeInsets.symmetric(vertical: 14), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
                           onPressed: isLoading
                               ? null
                               : () async {
@@ -217,82 +101,41 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               setState(() => isLoading = true);
 
                               final user = await AuthService().signUp(
-                                name: fullName.trim(),
-                                email: email.trim(),
-                                password: password,
-                                phone: phone.trim(),
-                                role: selectedRole!,
-                              );
+                                  name: name.trim(),
+                                  email: email.trim(),
+                                  password: password,
+                                  phone: phone.trim(),
+                                  role: role);
 
                               setState(() => isLoading = false);
 
                               if (user != null) {
-                                // Role-based navigation
-                                if (selectedRole == 'Pet Owner') {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) =>
-                                            PetDashboardApp()),
-                                  );
-                                } else if (selectedRole ==
-                                    'Veterinarian') {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) => VetDashboard()),
-                                  );
-                                } else if (selectedRole ==
-                                    'Animal Shelter') {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) =>
-                                            ShelterDashboard()),
-                                  );
+                                // Navigate based on role
+                                if (role == "Pet Owner") {
+                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const PetDashboardApp()));
+                                } else if (role == "Veterinarian") {
+                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const VetDashboard()));
+                                } else if (role == "Animal Shelter") {
+                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const ShelterDashboard()));
                                 }
                               } else {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(const SnackBar(
-                                    content:
-                                    Text('Sign Up Failed')));
+                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Sign up failed")));
                               }
                             }
                           },
-                          child: isLoading
-                              ? const CircularProgressIndicator(
-                              color: Colors.white)
-                              : const Text(
-                            "Create Account",
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white),
-                          ),
+                          child: isLoading ? const CircularProgressIndicator(color: Colors.white) : const Text("Sign Up", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white)),
                         ),
+                      ),
+                      const SizedBox(height: 16),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text("← Back to Login", style: TextStyle(fontSize: 14, color: Color(0xFF007BFF))),
                       ),
                     ],
                   ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Already have an account? "),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, '/login');
-                    },
-                    child: const Text(
-                      "Sign in",
-                      style: TextStyle(
-                        color: Colors.green,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ],
               ),
             ],
           ),

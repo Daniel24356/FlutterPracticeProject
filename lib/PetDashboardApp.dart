@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:math';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:projects/CareTipsWidget.dart';
 import 'AppointmentPage.dart';
 import 'UserProfile.dart';
 import 'PetStorePage.dart';
@@ -167,7 +168,7 @@ class _DashboardShellState extends State<DashboardShell> with TickerProviderStat
                   _drawerItem(context, Icons.calendar_today, 'Appointments', () => _openRoute(const AppointmentListPage())),
                   _drawerItem(context, Icons.medical_services, 'Health Records', () => _openRoute(const HealthRecordsPage())),
                   _drawerItem(context, Icons.store, 'Pet Store', () => _openRoute(const PetStorePage())),
-                  _drawerItem(context, Icons.lightbulb, 'Care Tips', () => _openRoute(const CareTipsPage())),
+                  _drawerItem(context, Icons.lightbulb, 'Care Tips', () => _openRoute(const CareTipsWidget())),
                   _drawerItem(context, Icons.contact_mail, 'Contact', () => _openRoute(const ContactPage())),
                   const Divider(),
                   _drawerItem(context, Icons.login, 'Login', () => _openRoute(const LoginPage())),

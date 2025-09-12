@@ -7,7 +7,6 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'VetAppointmentPage.dart';
 import 'UserProfile.dart';
-// import 'PetStorePage.dart';
 
 void main() {
   runApp(const VetDashboard());
@@ -227,7 +226,7 @@ class IndexPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 18),
-                  _SectionHeader(title: 'Store Picks', actionLabel: 'Open Store', onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PetStorePage()))),
+                  // _SectionHeader(title: 'Store Picks', actionLabel: 'Open Store', onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PetStorePage()))),
                   const SizedBox(height: 8),
                   SizedBox(height: 160, child: ListView(scrollDirection: Axis.horizontal, children: const [_StoreItem(), _StoreItem(), _StoreItem()])),
                 ],

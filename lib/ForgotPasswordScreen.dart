@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projects/services/authService.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -10,6 +11,7 @@ class ForgotPasswordScreen extends StatefulWidget {
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final _formKey = GlobalKey<FormState>();
   String email = "";
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -25,14 +27,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               Column(
                 children: const [
                   Icon(Icons.favorite_border,
-                      color: Colors.green, size: 48), // Blue heart logo
+                      color: Colors.green, size: 48),
                   SizedBox(height: 8),
                   Text(
                     "PawfectCare",
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
-                      color:Colors.green,
+                      color: Colors.green,
                     ),
                   ),
                 ],
@@ -86,6 +88,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             borderSide: BorderSide.none,
                           ),
                         ),
+                        validator: (val) =>
+                        val!.isEmpty ? "Enter your email" : null,
                         onChanged: (val) => setState(() => email = val),
                       ),
                       const SizedBox(height: 20),
@@ -101,17 +105,44 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          onPressed: () {
-                            // Send reset logic here
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text("Reset link sent to email")),
-                            );
+                          onPressed: isLoading
+                              ? null
+                              : () async {
+                            if (_formKey.currentState!.validate()) {
+                              setState(() => isLoading = true);
+
+                              try {
+                                await AuthService()
+                                    .resetPassword(email.trim());
+
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          "Reset link sent! Check your email.")),
+                                );
+                                Navigator.pop(context);
+                              } catch (e) {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(
+                                  SnackBar(
+                                      content: Text(
+                                          "Error sending reset link: $e")),
+                                );
+                              } finally {
+                                setState(() => isLoading = false);
+                              }
+                            }
                           },
-                          child: const Text(
+                          child: isLoading
+                              ? const CircularProgressIndicator(
+                              color: Colors.white)
+                              : const Text(
                             "Send Reset Link",
                             style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white),
                           ),
                         ),
                       ),

@@ -65,7 +65,7 @@ class _VetSchedulePageState extends State<VetSchedulePage>
   final ScrollController _dateScrollController = ScrollController();
 
   // For showing month indicator while scrolling
-  String? _visibleMonthLabel;
+  // String? _visibleMonthLabel;
 
   // Appointment storage by date string
   final Map<String, List<Appointment>> _appointmentsByDate = {};
@@ -81,7 +81,7 @@ class _VetSchedulePageState extends State<VetSchedulePage>
     super.initState();
     _miniTabController = TabController(length: 3, vsync: this);
     _setupDummyData();
-    _visibleMonthLabel = _monthLabel(_selectedDay);
+    // _visibleMonthLabel = _monthLabel(_selectedDay);
     _dateScrollController.addListener(_onDateScroll);
     // ensure date bar starts with selected day visible at beginning
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -162,7 +162,7 @@ class _VetSchedulePageState extends State<VetSchedulePage>
 
   String _dateKey(DateTime d) => DateFormat('yyyy-MM-dd').format(d);
 
-  String _monthLabel(DateTime d) => DateFormat('MMMM yyyy').format(d);
+  // String _monthLabel(DateTime d) => DateFormat('MMMM yyyy').format(d);
 
   // Called during date list scrolling to compute visible month label
   void _onDateScroll() {
@@ -173,16 +173,16 @@ class _VetSchedulePageState extends State<VetSchedulePage>
     if (offset < 0) return;
     final index = (offset / itemWidth).floor();
     final visibleDay = _focusedDay.add(Duration(days: index));
-    final label = _monthLabel(visibleDay);
-    if (label != _visibleMonthLabel) {
-      setState(() => _visibleMonthLabel = label);
-      // hide after 2 seconds
-      Future.delayed(const Duration(seconds: 2), () {
-        if (mounted) {
-          setState(() {});
-        }
-      });
-    }
+    // final label = _monthLabel(visibleDay);
+    // if (label != _visibleMonthLabel) {
+    //   setState(() => _visibleMonthLabel = label);
+    //   // hide after 2 seconds
+    //   Future.delayed(const Duration(seconds: 2), () {
+    //     if (mounted) {
+    //       setState(() {});
+    //     }
+    //   });
+    // }
   }
 
   Future<void> _openCompactCalendar() async {
@@ -307,102 +307,175 @@ class _VetSchedulePageState extends State<VetSchedulePage>
 
   // Schedule card for vet view (owner info + pet category)
   Widget _scheduleCard(Appointment appt) {
-    // Make card compact and avoid expansions that cause overflow
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
-      height: 130,
-      decoration: BoxDecoration(color: appt.cardColor, borderRadius: BorderRadius.circular(20)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-        child: Row(
-          children: [
-            // left time column fixed width
-            SizedBox(
-              width: 78,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.access_time, size: 18, color: Colors.black54),
-                  const SizedBox(height: 8),
-                  Text(_start(appt.timeRange), style: const TextStyle(fontWeight: FontWeight.w600)),
-                  const SizedBox(height: 6),
-                  Column(
-                    children: List.generate(3, (i) => Container(
-                      margin: const EdgeInsets.symmetric(vertical: 2),
-                      width: 3, height: 3,
-                      decoration: BoxDecoration(color: Colors.black26, borderRadius: BorderRadius.circular(2)),
-                    )),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(_end(appt.timeRange), style: const TextStyle(fontWeight: FontWeight.w600)),
-                ],
-              ),
-            ),
-
-            // center content (title, room, owner row)
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(appt.title,
-                      textAlign: TextAlign.center, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700), maxLines: 2, overflow: TextOverflow.ellipsis),
-                  const SizedBox(height: 8),
-                  Text(appt.room, style: const TextStyle(color: Colors.black54)),
-                  const SizedBox(height: 10),
-                  // Owner + pet category row
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // owner image
-                      CircleAvatar(
-                        radius: 18,
-                        backgroundColor: Colors.grey.shade100,
-                        backgroundImage: AssetImage(appt.ownerImageAsset),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: appt.cardColor,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // ROW 1
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              // Column 1: Schedule icon + times
+              SizedBox(
+                width: 70,
+                child: Column(
+                  children: [
+                    const Icon(Icons.access_time,
+                        size: 18, color: Colors.black54),
+                    const SizedBox(height: 6),
+                    Text(
+                      _start(appt.timeRange),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
                       ),
-                      const SizedBox(width: 8),
-                      Text(appt.ownerName, style: const TextStyle(fontWeight: FontWeight.w600)),
-                      const SizedBox(width: 12),
-                      // pet category (small)
-                      Image.asset(appt.petCategoryAsset, width: 28, height: 28),
-                    ],
-                  ),
-                ],
+                    ),
+                    const SizedBox(height: 4),
+                    Column(
+                      children: List.generate(
+                        3,
+                            (i) => Container(
+                          margin: const EdgeInsets.symmetric(vertical: 2),
+                          width: 3,
+                          height: 3,
+                          decoration: BoxDecoration(
+                            color: Colors.black38,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      _end(appt.timeRange),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
 
-            // right actions column
-            SizedBox(
-              width: 120,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+              const SizedBox(width: 15),
+              // Column 2: Title + Owner info
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      appt.title,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 16,
+                          backgroundImage: AssetImage(appt.ownerImageAsset),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            appt.ownerName,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+              // Column 3: Status pill + Pet category image
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // status pill
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
                       color: _statusBg(appt.status),
                       borderRadius: BorderRadius.circular(18),
                     ),
-                    child: Text(_statusText(appt.status), style: TextStyle(color: _statusColor(appt.status), fontWeight: FontWeight.w700)),
+                    child: Text(
+                      _statusText(appt.status),
+                      style: TextStyle(
+                        color: _statusColor(appt.status),
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
+                      ),
+                    ),
                   ),
-                  const SizedBox(height: 12),
-                  // action buttons stacked vertically
-                  ElevatedButton(
-                    onPressed: appt.status == ApptStatus.confirmed ? null : () => _confirmAppointment(appt),
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.green, minimumSize: const Size.fromHeight(36)),
-                    child: const Text('Confirm'),
+                  // const SizedBox(height: 30),
+                  Image.asset(
+                    appt.petCategoryAsset,
+                    width: 45,
+                    height: 45,
                   ),
-                  const SizedBox(height: 8),
-                  OutlinedButton(onPressed: () => _rescheduleAppointment(appt), child: const Text('Reschedule')),
                 ],
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
+
+          const SizedBox(height: 16),
+
+          // ROW 2: Confirm + Reschedule buttons
+          Row(
+            children: [
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: appt.status == ApptStatus.confirmed
+                      ? null
+                      : () => _confirmAppointment(appt),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: const Text('Confirm', style: TextStyle(fontSize: 13)),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => _rescheduleAppointment(appt),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    side: const BorderSide(color: Colors.blueGrey),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child:
+                  const Text('Reschedule', style: TextStyle(fontSize: 13)),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
+
+
 
   Color _statusBg(ApptStatus s) {
     switch (s) {
@@ -577,13 +650,13 @@ class _VetSchedulePageState extends State<VetSchedulePage>
                   label: Text('Availability: ${_getAvailabilityFor(_selectedDay)}'),
                 ),
               ),
-              const SizedBox(width: 8),
-              ElevatedButton(onPressed: () {
-                // toggle day-wide not available
-                final key = _dateKey(_selectedDay);
-                final cur = _getAvailabilityFor(_selectedDay);
-                setState(() => _availabilityByDate[key] = DayAvailability(isAvailable: !cur.isAvailable, slots: cur.slots, from: cur.from, to: cur.to));
-              }, child: const Text('Toggle Not Avail')),
+              // const SizedBox(width: 8),
+              // ElevatedButton(onPressed: () {
+              //   // toggle day-wide not available
+              //   final key = _dateKey(_selectedDay);
+              //   final cur = _getAvailabilityFor(_selectedDay);
+              //   setState(() => _availabilityByDate[key] = DayAvailability(isAvailable: !cur.isAvailable, slots: cur.slots, from: cur.from, to: cur.to));
+              // }, child: const Text('Toggle Not Avail')),
             ]),
           ),
 
@@ -602,42 +675,53 @@ class _VetSchedulePageState extends State<VetSchedulePage>
                 },
               ),
             ),
-            if (_visibleMonthLabel != null)
-              Positioned(
-                left: 16,
-                top: 8,
-                child: AnimatedOpacity(
-                  opacity: 1.0,
-                  duration: const Duration(milliseconds: 300),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 6)]),
-                    child: Text(_visibleMonthLabel!, style: const TextStyle(fontWeight: FontWeight.w600)),
-                  ),
-                ),
-              ),
+
           ]),
 
           // mini filter tabs
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             child: Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
+              padding: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+              ),
               child: TabBar(
                 controller: _miniTabController,
                 labelColor: Colors.white,
                 unselectedLabelColor: Colors.black87,
-                indicator: BoxDecoration(color: Colors.green, borderRadius: BorderRadius.circular(8)),
+                indicator: BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                indicatorSize: TabBarIndicatorSize.tab, // makes indicator cover full tab
+                dividerColor: Colors.transparent, // removes bottom border (Flutter 3.7+)
                 tabs: const [
-                  Tab(text: 'Pending'),
-                  Tab(text: 'Confirmed'),
-                  Tab(text: 'Rescheduled'),
+                  Tab(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 1, vertical: 2),
+                      child: Text('Pending', style: TextStyle(fontSize: 12.5),),
+                    ),
+                  ),
+                  Tab(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 1, vertical: 2),
+                      child: Text('Confirmed', style: TextStyle(fontSize: 12.5),),
+                    ),
+                  ),
+                  Tab(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 1, vertical: 2),
+                      child: Text('Rescheduled', style: TextStyle(fontSize: 12.5),),
+                    ),
+                  ),
                 ],
                 onTap: (idx) => setState(() {}),
               ),
             ),
           ),
+
 
           // appointment list (expanded to prevent flex overflow)
           Expanded(
@@ -657,11 +741,11 @@ class _VetSchedulePageState extends State<VetSchedulePage>
           ),
         ]),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _openNewAppointmentSheet(),
-        icon: const Icon(Icons.add),
-        label: const Text('New Appointment'),
-      ),
+      // floatingActionButton: FloatingActionButton.extended(
+      //   onPressed: () => _openNewAppointmentSheet(),
+      //   icon: const Icon(Icons.add),
+      //   label: const Text('New Appointment'),
+      // ),
     );
   }
 

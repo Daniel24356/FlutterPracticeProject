@@ -196,49 +196,155 @@ class _DashboardShellState extends State<DashboardShell> with TickerProviderStat
   }
 }
 
-// ---------------------- Placeholder Pages ----------------------
+
 class IndexPage extends StatelessWidget {
   const IndexPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Padding(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Greeting
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Dashboard', style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
-                _QuickStatsCard()
+                const CircleAvatar(
+                  radius: 20,
+                  backgroundImage: AssetImage('images/avatar.jpeg'), // Replace with your device image path
+                ),
+                const SizedBox(width: 12),
+                const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Hello Evelyn',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Text(
+                      'Good morning!',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                IconButton(
+                  icon: const Icon(Icons.notifications_active, color: Colors.grey,),
+                  onPressed: () {},
+                ),
               ],
             ),
-            const SizedBox(height: 18),
-            Expanded(
-              child: ListView(
-                physics: const BouncingScrollPhysics(),
-                children: [
-                  _SectionHeader(title: 'Upcoming Appointments', actionLabel: 'View all', onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AppointmentListPage()))),
-                  const SizedBox(height: 8),
-                  SizedBox(
-                    height: 140,
-                    child: PageView(
-                      controller: PageController(viewportFraction: 0.86),
-                      children: const [
-                        _MiniCard(color: Colors.green, title: 'Buddy', subtitle: 'Grooming • 12 Sept'),
-                        _MiniCard(color: Colors.green, title: 'Milo', subtitle: 'Vaccination • 15 Sept'),
-                      ],
-                    ),
+            const SizedBox(height: 24),
+            // Pets row
+            Row(
+              children: [
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _PetAvatar(
+                        name: 'Max',
+                        image: const AssetImage('images/maltese.png'), // Replace with your device image path
+                      ),
+                      _PetAvatar(
+                        name: 'Luna',
+                        image: const AssetImage('images/luna.jpg'), // Replace with your device image path
+                      ),
+                      _PetAvatar(
+                        name: 'Dash',
+                        image: const AssetImage('images/dash.jpg'), // Replace with your device image path
+                      ),
+                      _PetAvatar(
+                        name: 'Tom',
+                        image: const AssetImage('images/tom.jpg'), // Replace with your device image path
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 18),
-                  _SectionHeader(title: 'Store Picks', actionLabel: 'Open Store', onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PetStorePage()))),
-                  const SizedBox(height: 8),
-                  SizedBox(height: 160, child: ListView(scrollDirection: Axis.horizontal, children: const [_StoreItem(), _StoreItem(), _StoreItem()])),
-                ],
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.purple,
+                    shape: BoxShape.circle,
+                  ),
+                  child: IconButton(
+                    icon: const Icon(Icons.add, color: Colors.white),
+                    onPressed: () {},
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 24),
+            // Upcoming Appointments section (replacing providers from image)
+            const _SectionHeader(
+              title: 'Upcoming Appointments',
+              actionLabel: 'View all',
+              onPressed: null, // Placeholder; implement navigation as needed
+            ),
+            const SizedBox(height: 8),
+            const _AppointmentCard(
+              petName: 'Buddy',
+              type: 'Grooming',
+              date: 'Today, 2:00 PM',
+              provider: 'Dr. Cameron Williamson',
+              icon: Icons.content_cut,
+            ),
+            const SizedBox(height: 12),
+            const _AppointmentCard(
+              petName: 'Oliver',
+              type: 'Vaccination',
+              date: 'Tomorrow, 10:00 AM',
+              provider: 'Dr. Leslie Alexander',
+              icon: Icons.vaccines,
+            ),
+            const SizedBox(height: 12),
+            const _AppointmentCard(
+              petName: 'Tom',
+              type: 'Check-up',
+              date: 'Sept 15, 3:00 PM',
+              provider: 'Cameron Williamson',
+              icon: Icons.health_and_safety,
+            ),
+            const SizedBox(height: 24),
+            // Store Picks section
+            const _SectionHeader(
+              title: 'Store Picks',
+              actionLabel: 'View all',
+              onPressed: null, // Placeholder; implement navigation as needed
+            ),
+            const SizedBox(height: 8),
+            SizedBox(
+              height: 200,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: 5,
+                itemBuilder: (context, index) => const _ProductCard(),
               ),
-            )
+            ),
+            const SizedBox(height: 24),
+            // Today's Care Tips section
+            const _SectionHeader(
+              title: "Today's Care Tips",
+              actionLabel: 'View all',
+              onPressed: null, // Placeholder; implement navigation as needed
+            ),
+            const SizedBox(height: 8),
+            SizedBox(
+              height: 200,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: 3,
+                itemBuilder: (context, index) => const _ArticleCard(),
+              ),
+            ),
           ],
         ),
       ),
@@ -246,56 +352,72 @@ class IndexPage extends StatelessWidget {
   }
 }
 
-class _QuickStatsCard extends StatelessWidget {
-  const _QuickStatsCard({super.key});
+class _PetAvatar extends StatelessWidget {
+  final String name;
+  final ImageProvider image;
+  const _PetAvatar({
+    required this.name,
+    required this.image,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(color: Colors.green, borderRadius: BorderRadius.circular(12)),
-      child: Row(
-        children: const [
-          Icon(Icons.calendar_month, color: Colors.white),
-          SizedBox(width: 8),
-          Text('3 Appointments', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
-        ],
-      ),
+    return Column(
+      children: [
+        CircleAvatar(
+          radius: 30,
+          backgroundImage: image,
+        ),
+        const SizedBox(height: 4),
+        Text(
+          name,
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
     );
   }
 }
 
-class _MiniCard extends StatelessWidget {
+class _Tab extends StatelessWidget {
+  final IconData icon;
+  final String label;
   final Color color;
-  final String title;
-  final String subtitle;
-  const _MiniCard({this.color = Colors.green, required this.title, required this.subtitle, super.key});
+  const _Tab({
+    required this.icon,
+    required this.label,
+    required this.color,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8),
-      decoration: BoxDecoration(color: color.withOpacity(0.06), borderRadius: BorderRadius.circular(14)),
-      padding: const EdgeInsets.all(14),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(title, style: const TextStyle(fontWeight: FontWeight.bold)), const Icon(Icons.chevron_right, color: Colors.green)]),
-        const Spacer(),
-        Text(subtitle, style: const TextStyle(color: Colors.black54)),
-      ]),
-    );
-  }
-}
-
-class _StoreItem extends StatelessWidget {
-  const _StoreItem({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 140,
-      margin: const EdgeInsets.symmetric(horizontal: 8),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 8)]),
-      padding: const EdgeInsets.all(12),
-      child: Column(children: const [Icon(Icons.pets, size: 48, color: Colors.green), SizedBox(height: 8), Text('Premium Kibble', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.w600))]),
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            icon,
+            color: color,
+            size: 24,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
     );
   }
 }
@@ -303,12 +425,249 @@ class _StoreItem extends StatelessWidget {
 class _SectionHeader extends StatelessWidget {
   final String title;
   final String actionLabel;
-  final VoidCallback onPressed;
-  const _SectionHeader({required this.title, required this.actionLabel, required this.onPressed, super.key});
+  final VoidCallback? onPressed;
+  const _SectionHeader({
+    required this.title,
+    required this.actionLabel,
+    this.onPressed,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)), TextButton(onPressed: onPressed, child: Text(actionLabel))]);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+        ),
+        TextButton(
+          onPressed: onPressed,
+          child: Text(actionLabel),
+        ),
+      ],
+    );
+  }
+}
+
+class _AppointmentCard extends StatelessWidget {
+  final String petName;
+  final String type;
+  final String date;
+  final String provider;
+  final IconData icon;
+  const _AppointmentCard({
+    required this.petName,
+    required this.type,
+    required this.date,
+    required this.provider,
+    required this.icon,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.blue.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
+              color: Colors.blue,
+              size: 24,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '$petName $type',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  date,
+                  style: const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  provider,
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Icon(
+            Icons.arrow_forward_ios,
+            color: Colors.grey,
+            size: 16,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ProductCard extends StatelessWidget {
+  const _ProductCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 140,
+      margin: const EdgeInsets.only(right: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(12),
+              ),
+              child: Image.asset(
+                'assets/images/product.jpg', // Replace with your device image path; duplicate for 5 items or vary
+                fit: BoxFit.cover,
+                width: double.infinity,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Premium Kibble',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  ),
+                ),
+                Text(
+                  '\$19.99',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ArticleCard extends StatelessWidget {
+  const _ArticleCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 220,
+      margin: const EdgeInsets.only(right: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 3,
+            child: ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(12),
+              ),
+              child: Image.asset(
+                'assets/images/article.jpg', // Replace with your device image path; duplicate for 3 items or vary
+                fit: BoxFit.cover,
+                width: double.infinity,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Daily Exercise for Active Pups',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Keep your furry friend healthy with these tips...',
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                      fontSize: 12,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 

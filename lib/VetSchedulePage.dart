@@ -313,6 +313,13 @@ class _VetSchedulePageState extends State<VetSchedulePage>
       decoration: BoxDecoration(
         color: appt.cardColor,
         borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.07),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -627,7 +634,7 @@ class _VetSchedulePageState extends State<VetSchedulePage>
     final displayAppts = filteredAppts.isEmpty && _miniTabController.index == 0 ? allAppts : filteredAppts;
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -686,6 +693,13 @@ class _VetSchedulePageState extends State<VetSchedulePage>
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.07),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
               child: TabBar(
                 controller: _miniTabController,
@@ -694,6 +708,7 @@ class _VetSchedulePageState extends State<VetSchedulePage>
                 indicator: BoxDecoration(
                   color: Colors.green,
                   borderRadius: BorderRadius.circular(8),
+
                 ),
                 indicatorSize: TabBarIndicatorSize.tab, // makes indicator cover full tab
                 dividerColor: Colors.transparent, // removes bottom border (Flutter 3.7+)
@@ -701,7 +716,8 @@ class _VetSchedulePageState extends State<VetSchedulePage>
                   Tab(
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 1, vertical: 2),
-                      child: Text('Pending', style: TextStyle(fontSize: 12.5),),
+                      child: Text('Pending', style: TextStyle(fontSize: 12.5)),
+
                     ),
                   ),
                   Tab(

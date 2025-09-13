@@ -103,15 +103,15 @@ class _DashboardShellState extends State<DashboardShell> with TickerProviderStat
       ),
       body: PageView(controller: _pageController, physics: const BouncingScrollPhysics(), children: _pages, onPageChanged: (i) => setState(() => _selectedIndex = i)),
       bottomNavigationBar: _buildBottomNav(),
-      floatingActionButton: ScaleTransition(
-        scale: CurvedAnimation(parent: _fabController, curve: Curves.elasticOut),
-        child: FloatingActionButton.extended(
-          onPressed: () => _openRoute(const BookAppointmentPage()),
-          backgroundColor: Colors.green,
-          icon: const Icon(Icons.add, color: Colors.white),
-          label: const Text('Book', style: TextStyle(color: Colors.white)),
-        ),
-      ),
+      // floatingActionButton: ScaleTransition(
+      //   scale: CurvedAnimation(parent: _fabController, curve: Curves.elasticOut),
+      //   child: FloatingActionButton.extended(
+      //     onPressed: () => _openRoute(const BookAppointmentPage()),
+      //     backgroundColor: Colors.green,
+      //     icon: const Icon(Icons.add, color: Colors.white),
+      //     label: const Text('Book', style: TextStyle(color: Colors.white)),
+      //   ),
+      // ),
     );
   }
 

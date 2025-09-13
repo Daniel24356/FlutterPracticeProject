@@ -149,13 +149,17 @@ class _DashboardShellState extends State<DashboardShell> with TickerProviderStat
               padding: const EdgeInsets.all(16),
               decoration: const BoxDecoration(
                 color: Colors.green,
-                borderRadius: BorderRadius.only(bottomRight: Radius.circular(24)),
+                // borderRadius: BorderRadius.only(bottomRight: Radius.circular(24)),
               ),
               child: Row(
                 children: [
-                  CircleAvatar(radius: 28, backgroundColor: Colors.white, child: const Icon(Icons.pets, color: Colors.green, size: 28)),
+                  CircleAvatar(
+                    radius: 40,
+                    backgroundImage: AssetImage('images/avatar.jpeg'),
+                    backgroundColor: Colors.transparent,
+                  ),
                   const SizedBox(width: 12),
-                  const Expanded(child: Text('Hello, Alex', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16))),
+                  const Expanded(child: Text('Evelyn Parker', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16))),
                 ],
               ),
             ),
@@ -166,12 +170,15 @@ class _DashboardShellState extends State<DashboardShell> with TickerProviderStat
                 children: [
                   _drawerItem(context, Icons.person_add, 'Add Pet', () => _openRoute(const AddPetPage())),
                   _drawerItem(context, Icons.pets, 'My Pets', () => _openRoute(const PetProfileListPage())),
-                  _drawerItem(context, Icons.add_circle_outline, 'Book Appointment', () => _openRoute(const BookAppointmentPage())),
-                  _drawerItem(context, Icons.calendar_today, 'Appointments', () => _openRoute(const AppointmentListPage())),
-                  _drawerItem(context, Icons.medical_services, 'Health Records', () => _openRoute(const HealthRecordsPage())),
+                  // _drawerItem(context, Icons.add_circle_outline, 'Book Appointment', () => _openRoute(const BookAppointmentPage())),
+                  // _drawerItem(context, Icons.calendar_today, 'Appointments', () => _openRoute(const AppointmentListPage())),
+                  // _drawerItem(context, Icons.medical_services, 'Health Records', () => _openRoute(const HealthRecordsPage())),
                   _drawerItem(context, Icons.store, 'Pet Store', () => _openRoute(const PetStorePage())),
+                  _drawerItem(context, Icons.pets, 'Adopt a Pet', () => _openRoute(const PetCareTipsPage())),
+                  SizedBox(height: 20),
                   _drawerItem(context, Icons.lightbulb, 'Care Tips', () => _openRoute(const PetCareTipsPage())),
                   _drawerItem(context, Icons.contact_mail, 'Contact', () => _openRoute(const ContactPage())),
+                  _drawerItem(context, Icons.logout, 'Log Out', () => _openRoute(const ContactPage())),
                   const Divider(),
                   // _drawerItem(context, Icons.login, 'Login', () => _openRoute(const LogOutPage())),
                   // _drawerItem(context, Icons.app_registration, 'Signup', () => _openRoute(const SignupPage())),
@@ -249,39 +256,60 @@ class IndexPage extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      _PetAvatar(
-                        name: 'Max',
-                        image: const AssetImage('images/maltese.png'), // Replace with your device image path
-                      ),
-                      _PetAvatar(
-                        name: 'Luna',
-                        image: const AssetImage('images/luna.jpg'), // Replace with your device image path
-                      ),
-                      _PetAvatar(
-                        name: 'Dash',
-                        image: const AssetImage('images/dash.jpg'), // Replace with your device image path
-                      ),
-                      _PetAvatar(
-                        name: 'Tom',
-                        image: const AssetImage('images/tom.jpg'), // Replace with your device image path
-                      ),
-                    ],
-                  ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start, // Align header to the left
+                      children: [
+                        // First row: Section header
+                        const _SectionHeader(
+                          title: 'My Pets',
+                          actionLabel: 'View all',
+                          onPressed: null, // Placeholder; implement navigation
+                        ),
+
+                        const SizedBox(height: 8), // Space between header and pets row
+
+                        // Second row: pets
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _PetAvatar(
+                              name: 'Max',
+                              image: const AssetImage('images/maltese.png'),
+                            ),
+                            _PetAvatar(
+                              name: 'Luna',
+                              image: const AssetImage('images/luna.jpg'),
+                            ),
+                            _PetAvatar(
+                              name: 'Dash',
+                              image: const AssetImage('images/dash.jpg'),
+                            ),
+                            _PetAvatar(
+                              name: 'Tom',
+                              image: const AssetImage('images/tom.jpg'),
+                            ),
+
+                            // Add button aligned with pets
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children:[
+                                  const SizedBox(height: 5),
+                                  IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(Icons.add_circle, size: 36, color: Colors.green),
+                                ),
+                              ],
+                            ),
+
+
+                          ],
+                        ),
+                      ],
+                    )
+
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: greenColor,
-                    shape: BoxShape.circle,
-                  ),
-                  child: IconButton(
-                    icon: const Icon(Icons.add, color: Colors.white),
-                    onPressed: () {},
-                  ),
-                ),
+
               ],
             ),
 
@@ -328,7 +356,7 @@ class IndexPage extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             SizedBox(
-              height: 200,
+              height: 170,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: 5,
@@ -486,7 +514,7 @@ class _AppointmentCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.09),
+            color: Colors.black.withOpacity(0.07),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -517,7 +545,7 @@ class _AppointmentCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '$petName $type',
+                  "$petName's $type",
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
@@ -566,8 +594,9 @@ class _ProductCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withOpacity(0.07),
             blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -821,7 +850,7 @@ class _AppointmentListPageState extends State<AppointmentListPage>
             Text(appointment["clinic"]),
           ]),
           const SizedBox(height: 8),
-          Text("Dr: ${appointment["veterinarian"]}",
+          Text("${appointment["veterinarian"]}",
               style: const TextStyle(fontWeight: FontWeight.w500)),
           Text("Type: ${appointment["type"]}"),
           if (appointment["phone"] != null)
@@ -873,24 +902,28 @@ class _AppointmentListPageState extends State<AppointmentListPage>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(color: Colors.grey.shade300)),
               color: Colors.white,
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(children: const [
-                  Icon(Icons.calendar_month, color: Colors.green),
-                  SizedBox(width: 8),
-                  Text("My Appointments",
-                      style:
-                      TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                ]),
+                Row(
+                    children: const [
+                    Icon(Icons.arrow_back),
+                    SizedBox(width: 8),
+                    Text(
+                      "Appointments",
+                       style: TextStyle(
+                       fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    ]
+                ),
                 ElevatedButton.icon(
                   onPressed: () {},
-                  icon: const Icon(Icons.add, size: 16),
-                  label: const Text("Book New"),
+                  icon: const Icon(Icons.add, size: 18, color: Colors.white,),
+                  label: const Text("Book New", style: TextStyle(color: Colors.white),),
                   style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.all(10.0),
                     backgroundColor: Colors.green,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
@@ -901,28 +934,72 @@ class _AppointmentListPageState extends State<AppointmentListPage>
           ),
 
           // Search box
-          Padding(
-            padding: const EdgeInsets.all(16),
+          FractionallySizedBox(
+            widthFactor: 0.92, // 90% of parent width
             child: TextField(
-              decoration: InputDecoration(
-                hintText: "Search appointments...",
-                prefixIcon: const Icon(Icons.search),
-                border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-              ),
               onChanged: (val) => setState(() => searchTerm = val),
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                hintText: "Search appointments...",
+                filled: true,
+                fillColor: Colors.grey.shade100,
+                contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+              ),
             ),
           ),
 
+
+
           // Tabs
-          TabBar(
-            controller: _tabController,
-            tabs: [
-              Tab(text: "Upcoming (${upcomingAppointments.length})"),
-              Tab(text: "Past (${pastAppointments.length})"),
-            ],
-            labelColor: Colors.green,
-            unselectedLabelColor: Colors.black,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: Container(
+              padding: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.07),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: TabBar(
+                controller: _tabController,
+                labelColor: Colors.white,
+                unselectedLabelColor: Colors.black87,
+                indicator: BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: BorderRadius.circular(8),
+
+                ),
+                indicatorSize: TabBarIndicatorSize.tab, // makes indicator cover full tab
+                dividerColor: Colors.transparent, // removes bottom border (Flutter 3.7+)
+                tabs: [
+                  Tab(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 1, vertical: 2),
+                      child: Text('Upcoming (${upcomingAppointments.length})', style: TextStyle(fontSize: 12.5)),
+
+                    ),
+                  ),
+                  Tab(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 1, vertical: 2),
+                      child: Text("Past (${pastAppointments.length})", style: TextStyle(fontSize: 12.5),),
+                    ),
+                  ),
+
+                ],
+                onTap: (idx) => setState(() {}),
+              ),
+            ),
           ),
 
           // Tab Content
@@ -954,6 +1031,7 @@ class _AppointmentListPageState extends State<AppointmentListPage>
               ],
             ),
           ),
+
         ]),
       ),
     );

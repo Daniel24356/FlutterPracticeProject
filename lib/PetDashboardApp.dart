@@ -202,6 +202,8 @@ class IndexPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const greenColor = Color(0xFF0DB14C);
+
     return SafeArea(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -237,7 +239,7 @@ class IndexPage extends StatelessWidget {
                 ),
                 const Spacer(),
                 IconButton(
-                  icon: const Icon(Icons.notifications_active, color: Colors.grey,),
+                  icon: const Icon(Icons.notifications_outlined, color: Colors.grey, size: 30),
                   onPressed: () {},
                 ),
               ],
@@ -249,6 +251,7 @@ class IndexPage extends StatelessWidget {
                 Expanded(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       _PetAvatar(
                         name: 'Max',
@@ -271,7 +274,7 @@ class IndexPage extends StatelessWidget {
                 ),
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.purple,
+                    color: greenColor,
                     shape: BoxShape.circle,
                   ),
                   child: IconButton(
@@ -296,6 +299,7 @@ class IndexPage extends StatelessWidget {
               date: 'Today, 2:00 PM',
               provider: 'Dr. Cameron Williamson',
               icon: Icons.content_cut,
+              color: Colors.purple,
             ),
             const SizedBox(height: 12),
             const _AppointmentCard(
@@ -304,6 +308,7 @@ class IndexPage extends StatelessWidget {
               date: 'Tomorrow, 10:00 AM',
               provider: 'Dr. Leslie Alexander',
               icon: Icons.vaccines,
+              color: Colors.orange,
             ),
             const SizedBox(height: 12),
             const _AppointmentCard(
@@ -312,6 +317,7 @@ class IndexPage extends StatelessWidget {
               date: 'Sept 15, 3:00 PM',
               provider: 'Cameron Williamson',
               icon: Icons.health_and_safety,
+              color: Colors.blue
             ),
             const SizedBox(height: 24),
             // Store Picks section
@@ -460,12 +466,14 @@ class _AppointmentCard extends StatelessWidget {
   final String date;
   final String provider;
   final IconData icon;
+  final Color color;
   const _AppointmentCard({
     required this.petName,
     required this.type,
     required this.date,
     required this.provider,
     required this.icon,
+    required this.color,
     super.key,
   });
 
@@ -478,7 +486,7 @@ class _AppointmentCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withOpacity(0.09),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -488,15 +496,20 @@ class _AppointmentCard extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.blue.withOpacity(0.1),
-              shape: BoxShape.circle,
+            // decoration: BoxDecoration(
+            //   color: Colors.blue.withOpacity(0.1),
+            //   shape: BoxShape.circle,
+            // ),
+            child: CircleAvatar(
+              radius: 28,
+              backgroundColor: color.withOpacity(0.15),
+              child: Icon(icon, color: color, size: 24),
             ),
-            child: Icon(
-              icon,
-              color: Colors.blue,
-              size: 24,
-            ),
+            // child: Icon(
+            //   icon,
+            //   color: Colors.blue,
+            //   size: 24,
+            // ),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -567,7 +580,7 @@ class _ProductCard extends StatelessWidget {
                 top: Radius.circular(12),
               ),
               child: Image.asset(
-                'assets/images/product.jpg', // Replace with your device image path; duplicate for 5 items or vary
+                'images/petFood.jpg', // Replace with your device image path; duplicate for 5 items or vary
                 fit: BoxFit.cover,
                 width: double.infinity,
               ),
@@ -629,7 +642,7 @@ class _ArticleCard extends StatelessWidget {
                 top: Radius.circular(12),
               ),
               child: Image.asset(
-                'assets/images/article.jpg', // Replace with your device image path; duplicate for 3 items or vary
+                'images/hygiene.png', // Replace with your device image path; duplicate for 3 items or vary
                 fit: BoxFit.cover,
                 width: double.infinity,
               ),

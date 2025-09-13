@@ -88,6 +88,7 @@ flutter:
      - images/maltese.png
      - images/tom.jpg
      - images/dash.jpg
+     - images/hygiene.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

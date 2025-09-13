@@ -31,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
               // Logo + Title
               Column(
                 children: const [
-                  Icon(Icons.favorite_border, color: Colors.green, size: 48),
+                  Icon(Icons.pets, color: Colors.green, size: 48),
                   SizedBox(height: 8),
                   Text(
                     "PawfectCare",

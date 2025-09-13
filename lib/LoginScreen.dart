@@ -161,7 +161,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     .getUserProfile(user.uid);
 
                                 final role =
-                                    userProfile?['role'] ?? 'Unknown';
+                                    userProfile?.role ?? 'Unknown';
 
                                 if (role == "Pet Owner") {
                                   Navigator.pushReplacement(

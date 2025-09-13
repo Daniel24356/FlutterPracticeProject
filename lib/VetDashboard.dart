@@ -49,7 +49,7 @@ class _DashboardShellState extends State<DashboardShell> with TickerProviderStat
   final List<Widget> _pages = [
     const IndexPage(),
     VetSchedulePage(),
-    const VetHealthRecords(),
+    VetHealthRecords(),
     const UserProfile(),
   ];
 

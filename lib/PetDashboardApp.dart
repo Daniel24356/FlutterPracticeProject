@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:math';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:projects/services/petService.dart';
 import 'package:projects/PetCareTipsPage.dart';
 import 'AppointmentPage.dart';
 import 'UserProfile.dart';
@@ -1272,19 +1273,14 @@ class AddPetPage extends StatefulWidget {
 class _AddPetPageState extends State<AddPetPage> {
   final _formKey = GlobalKey<FormState>();
 
-  // Pet data
   String name = "";
   String species = "";
   String breed = "";
   String age = "";
-  String gender = "";
-  String weight = "";
-  String color = "";
-  String microchipId = "";
-  String description = "";
   File? photo;
 
   final ImagePicker _picker = ImagePicker();
+  final PetService _petService = PetService();
 
   Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -1295,23 +1291,29 @@ class _AddPetPageState extends State<AddPetPage> {
     }
   }
 
-  void _handleSubmit() {
+  Future<void> _handleSubmit() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      debugPrint("Adding pet: $name, $species");
+      try {
+        await _petService.addPet(
+          name: name,
+          species: species,
+          breed: breed,
+          age: age,
+          photo: photo,
+        );
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Pet added successfully!")),
-      );
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Pet added successfully ✅")),
+        );
 
-      // Navigate to AppointmentPage with petName
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => AppointmentPage(petName: name),
-        ),
-      );
+        Navigator.pop(context);
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error: $e")),
+        );
+      }
     }
   }
 
@@ -1332,7 +1334,6 @@ class _AddPetPageState extends State<AddPetPage> {
         child: Form(
           key: _formKey,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextFormField(
                 decoration: const InputDecoration(labelText: "Pet Name *"),
@@ -1363,36 +1364,10 @@ class _AddPetPageState extends State<AddPetPage> {
               const SizedBox(height: 12),
               TextFormField(
                 decoration:
-                const InputDecoration(labelText: "Age * (e.g., 2 years)"),
+                const InputDecoration(labelText: "Age * (e.g., 2)"),
                 validator: (value) =>
                 value == null || value.isEmpty ? "Required" : null,
                 onSaved: (value) => age = value!,
-              ),
-              const SizedBox(height: 12),
-              DropdownButtonFormField<String>(
-                decoration: const InputDecoration(labelText: "Gender *"),
-                items: const [
-                  DropdownMenuItem(value: "male", child: Text("Male")),
-                  DropdownMenuItem(value: "female", child: Text("Female")),
-                ],
-                onChanged: (value) => gender = value!,
-                validator: (value) =>
-                value == null || value.isEmpty ? "Required" : null,
-              ),
-              const SizedBox(height: 12),
-              TextFormField(
-                decoration: const InputDecoration(labelText: "Weight (e.g., 5kg)"),
-                onSaved: (value) => weight = value ?? "",
-              ),
-              const SizedBox(height: 12),
-              TextFormField(
-                decoration: const InputDecoration(labelText: "Color"),
-                onSaved: (value) => color = value ?? "",
-              ),
-              const SizedBox(height: 12),
-              TextFormField(
-                decoration: const InputDecoration(labelText: "Microchip ID"),
-                onSaved: (value) => microchipId = value ?? "",
               ),
               const SizedBox(height: 12),
               GestureDetector(
@@ -1400,7 +1375,10 @@ class _AddPetPageState extends State<AddPetPage> {
                 child: Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade400, style: BorderStyle.solid),
+                    border: Border.all(
+                      color: Colors.grey.shade400,
+                      style: BorderStyle.solid,
+                    ),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Center(
@@ -1409,12 +1387,6 @@ class _AddPetPageState extends State<AddPetPage> {
                         : Image.file(photo!, height: 100),
                   ),
                 ),
-              ),
-              const SizedBox(height: 12),
-              TextFormField(
-                decoration: const InputDecoration(labelText: "Additional Notes"),
-                maxLines: 3,
-                onSaved: (value) => description = value ?? "",
               ),
               const SizedBox(height: 20),
               Row(

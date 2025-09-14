@@ -52,8 +52,7 @@ class AppSidebar extends StatelessWidget {
                 ],
               ),
             ),
-
-            const SizedBox(height: 12),
+            // const Divider(thickness: 1, height: 30),
 
             // ✅ Sidebar Links
             Expanded(
@@ -62,64 +61,93 @@ class AppSidebar extends StatelessWidget {
                 children: [
                   // 👉 Group 1: Pet Management
                   _sectionHeading("Pet Management"),
-                  _drawerItem(
-                    context,
-                    Icons.person_add,
-                    'Add Pet',
-                        () => _openRoute(context, const Placeholder()),
-                    color: Colors.pink,
+                  Padding(
+                    padding: EdgeInsetsGeometry.fromLTRB(12, 0, 0, 0),
+                    child:_drawerItem(
+                      context,
+                      Icons.person_add,
+                      'Add Pet',
+                          () => _openRoute(context, const ShelterDashboard()),
+                      color: Colors.pink,
+                    ),
                   ),
-                  _drawerItem(
-                    context,
-                    Icons.pets,
-                    'My Pets',
-                        () => _openRoute(context, const PetProfileListPage()),
-                    color: Colors.blue,
+                  SizedBox(height: 3),
+                  Padding(
+                    padding: EdgeInsetsGeometry.fromLTRB(12, 0, 0, 0),
+                      child:_drawerItem(
+                        context,
+                        Icons.pets,
+                        'My Pets',
+                            () => _openRoute(context, const PetProfileListPage()),
+                        color: Colors.blue,
+                      ),
                   ),
-                  _drawerItem(
-                    context,
-                    Icons.volunteer_activism,
-                    'Adopt a Pet',
-                        () => _openRoute(context, const AdoptionListingsPage()),
-                    color: Colors.orange,
+                  SizedBox(height: 3),
+                  Padding(
+                    padding: EdgeInsetsGeometry.fromLTRB(12, 0, 0, 0),
+                    child:_drawerItem(
+                      context,
+                      Icons.volunteer_activism,
+                      'Adopt a Pet',
+                          () => _openRoute(context, const AdoptionListingsPage()),
+                      color: Colors.orange,
+                    ),
                   ),
-
-                  const Divider(thickness: 1, height: 30),
+                  SizedBox(height: 30,),
+                  // const Divider(thickness: 1, height: 30),
 
                   // 👉 Group 2: Info & Support
                   _sectionHeading("Info & Support"),
-                  _drawerItem(
-                    context,
-                    Icons.lightbulb,
-                    'Care Tips',
-                        () => _openRoute(context, const PetCareTipsPage()),
-                    color: Colors.green,
-                  ),
-                  _drawerItem(
-                    context,
-                    Icons.phone_iphone,
-                    'Contact',
-                        () => _openRoute(context, const ContactPage()),
-                    color: Colors.purple,
+                  Padding(
+                    padding: EdgeInsetsGeometry.fromLTRB(12, 0, 0, 0),
+                    child: _drawerItem(
+                      context,
+                      Icons.lightbulb,
+                      'Care Tips',
+                          () => _openRoute(context, const PetCareTipsPage()),
+                      color: Colors.green,
+                    ),
                   ),
 
-                  const Divider(thickness: 1, height: 30),
+                  SizedBox(height: 3),
+                  Padding(
+                    padding: EdgeInsetsGeometry.fromLTRB(12, 0, 0, 0),
+                    child: _drawerItem(
+                      context,
+                      Icons.phone_iphone,
+                      'Contact',
+                          () => _openRoute(context, const ContactPage()),
+                      color: Colors.purple,
+                    ),
+                  ),
+
+                  SizedBox(height: 30,),
+                  // const Divider(thickness: 1, height: 30),
 
                   // 👉 Group 3: Account
                   _sectionHeading("Account"),
-                  _drawerItem(
-                    context,
-                    Icons.settings,
-                    'Settings',
-                        () {}, // hook your logout logic here
-                    color: Colors.teal,
+                  Padding(
+                      padding: EdgeInsetsGeometry.fromLTRB(12, 0, 0, 0),
+                    child: _drawerItem(
+
+                      context,
+                      Icons.settings,
+                      'Settings',
+                          () {}, // hook your logout logic here
+                      color: Colors.teal,
+                    ),
                   ),
-                  _drawerItem(
-                    context,
-                    Icons.logout,
-                    'Log Out',
-                        () {}, // hook your logout logic here
-                    color: Colors.red,
+
+                  SizedBox(height: 3),
+                  Padding(
+                    padding: EdgeInsetsGeometry.fromLTRB(12, 0, 0, 0),
+                    child: _drawerItem(
+                      context,
+                      Icons.logout,
+                      'Log Out',
+                          () {}, // hook your logout logic here
+                      color: Colors.red,
+                    ),
                   ),
                 ],
               ),

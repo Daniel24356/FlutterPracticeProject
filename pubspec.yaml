@@ -79,6 +79,9 @@ flutter:
      - images/fish.png
      - images/cat.png
      - images/rabbit.png
+     - images/onboardImage-1.png
+     - images/onboardImage-2.png
+     - images/onboardImage-3.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

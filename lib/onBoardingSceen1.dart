@@ -13,19 +13,19 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
 
   final List<Map<String, String>> _pages = [
     {
-      "image": "assets/onboarding1.png",
+      "image": "images/onboardImage-1.png",
       "title": "Care for Your Pets",
       "subtitle":
       "Discover the best tips and practices to keep your furry friends healthy and happy every day.",
     },
     {
-      "image": "assets/onboarding2.png",
+      "image": "images/onboardImage-2.png",
       "title": "Track Health Records",
       "subtitle":
       "Easily manage vaccinations, medications, and vet visits to ensure your pet’s wellbeing.",
     },
     {
-      "image": "assets/onboarding3.png",
+      "image": "images/onboardImage-3.png",
       "title": "Nutrition & Wellness",
       "subtitle":
       "Learn about balanced diets, exercise, and care routines tailored to your pet’s needs.",

@@ -21,6 +21,9 @@ class HealthRecordsPage extends StatefulWidget {
 }
 
 class _HealthRecordsPageState extends State<HealthRecordsPage> {
+  final TextEditingController _searchController = TextEditingController();
+  String searchQuery = "";
+
   final List<Pet> pets = [
     Pet("Max", "images/maltese.png"),
     Pet("Luna", "images/luna.jpg"),
@@ -28,7 +31,7 @@ class _HealthRecordsPageState extends State<HealthRecordsPage> {
     Pet("Tom", "images/tom.jpg"),
   ];
 
-  int selectedPetIndex = 0; // Default: first pet
+  Pet? selectedPet; // New: currently picked pet
   String? selectedCategory; // null = show grid, not null = show records
 
   final Map<String, List<Map<String, String>>> exampleRecords = {
@@ -42,8 +45,7 @@ class _HealthRecordsPageState extends State<HealthRecordsPage> {
       {
         "date": "2023-11-15",
         "title": "Dental Surgery",
-        "details":
-        "Teeth cleaning under anesthesia.\nDoctor: Dr. Brown."
+        "details": "Teeth cleaning under anesthesia.\nDoctor: Dr. Brown."
       },
     ],
     "Vaccinations": [
@@ -57,9 +59,58 @@ class _HealthRecordsPageState extends State<HealthRecordsPage> {
     "Allergies": [],
   };
 
+  void _showPetDropdown(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // so we can control height
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (_) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.4, // reduce modal height
+          padding: const EdgeInsets.all(16.0),
+          child: ListView.builder(
+            itemCount: pets.length,
+            itemBuilder: (context, index) {
+              final pet = pets[index];
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: CircleAvatar(
+                    radius: 28, // increase image size
+                    backgroundImage: AssetImage(pet.image),
+                  ),
+                  title: Text(
+                    pet.name,
+                    style: const TextStyle(
+                      fontSize: 18, // bigger text
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  onTap: () {
+                    setState(() {
+                      selectedPet = pet;
+                      searchQuery = pet.name;
+                      _searchController.clear();
+                    });
+                    Navigator.pop(context);
+                  },
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
-    final currentPet = pets[selectedPetIndex];
+    final currentPet = selectedPet;
 
     return Scaffold(
       appBar: const CustomAppBar(
@@ -70,78 +121,78 @@ class _HealthRecordsPageState extends State<HealthRecordsPage> {
       drawer: const AppSidebar(),
       body: SafeArea(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header
+            const SizedBox(height: 12),
+
+            // 🔍 Search bar
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  ElevatedButton.icon(
-                    onPressed: () {},
-                    icon: const Icon(Icons.add, size: 18),
-                    label: const Text("Add Record"),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.all(10.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: TextField(
+                controller: _searchController,
+                onChanged: (value) {
+                  setState(() => searchQuery = value);
+                },
+                decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                  hintText: "Filter records by pet...",
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.tune, color: Colors.grey),
+                    onPressed: () => _showPetDropdown(context),
                   ),
-                ],
+                  filled: true,
+                  fillColor: Colors.grey.shade100,
+                  contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
               ),
             ),
 
-            // Pets Row
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Row(
-                children: [
-                  for (int i = 0; i < pets.length; i++)
-                    GestureDetector(
-                      onTap: () => setState(() => selectedPetIndex = i),
-                      child: Column(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 8),
-                            padding: const EdgeInsets.all(3),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: selectedPetIndex == i
-                                    ? Colors.green
-                                    : Colors.transparent,
-                                width: 3,
-                              ),
-                              shape: BoxShape.circle,
-                            ),
-                            child: CircleAvatar(
-                              radius: 30,
-                              backgroundImage: AssetImage(pets[i].image),
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            pets[i].name,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
+            const SizedBox(height: 10),
+
+            // 🟢 Selected pet pill
+            if (currentPet != null)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    Chip(
+                      avatar: CircleAvatar(
+                        backgroundImage: AssetImage(currentPet.image),
                       ),
+                      label: Text(currentPet.name),
+                      deleteIcon: const Icon(Icons.close),
+                      onDeleted: () {
+                        setState(() => selectedPet = null);
+                      },
                     ),
-                  // Add Pet Button
-
-                ],
+                  ],
+                ),
               ),
-            ),
+
+            // 📝 Context message
+            if (currentPet != null)
+              Padding(
+                padding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Text(
+                  "Currently viewing ${currentPet.name}'s Records",
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.green,
+                  ),
+                ),
+              ),
 
             const SizedBox(height: 12),
 
-            // Toggle between Category Grid and Records View
+            // Category / Records area
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -196,8 +247,8 @@ class _HealthRecordsPageState extends State<HealthRecordsPage> {
             const SizedBox(height: 8),
             Text(
               title,
-              style: const TextStyle(
-                  fontWeight: FontWeight.w600, fontSize: 14),
+              style:
+              const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
             ),
           ],
         ),
@@ -213,31 +264,49 @@ class _HealthRecordsPageState extends State<HealthRecordsPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Breadcrumb
-        Row(
-          children: [
-            GestureDetector(
-              onTap: () => setState(() => selectedCategory = null),
-              child: const Text(
-                "Records",
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.green,
-                  fontWeight: FontWeight.bold,
+        Container(
+          // margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.08),
+                blurRadius: 6,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              GestureDetector(
+                onTap: () => setState(() => selectedCategory = null),
+                child: const Text(
+                  "Records",
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.green,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ),
-            const Text("  >  "),
-            Text(
-              category,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
+              const Text(
+                "  >  ",
+                style: TextStyle(fontSize: 20),
               ),
-            ),
-          ],
+              Text(
+                category,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+            ],
+          ),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
 
         // Records list
         Expanded(

@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:math';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'dart:math' as math;
 import 'package:projects/services/petService.dart';
 import 'package:projects/PetCareTipsPage.dart';
 import 'AppointmentPage.dart';
@@ -1581,20 +1582,6 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
 }
 
 
-// class PetStorePage extends StatelessWidget {
-//   const PetStorePage({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) => Scaffold(body: SafeArea(child: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: const [Icon(Icons.storefront, size: 56, color: Colors.green), SizedBox(height: 12), Text('Pet Store', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))]))));
-// }
-
-// class HealthRecordsPage extends StatelessWidget {
-//   const HealthRecordsPage({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) => Scaffold(body: SafeArea(child: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: const [Icon(Icons.medical_information, size: 56, color: Colors.green), SizedBox(height: 12), Text('Health Records', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))]))));
-// }
-
 class ContactPage extends StatefulWidget {
   const ContactPage({super.key});
 
@@ -1614,28 +1601,31 @@ class _ContactPageState extends State<ContactPage> {
     "message": "",
   };
 
-  // Mock locations
   final List<Map<String, String>> locations = [
     {
       "name": "Downtown Veterinary Clinic",
       "address": "123 Main Street, Downtown, City 12345",
       "phone": "+1 (555) 123-4567",
       "email": "downtown@pawfectcare.com",
-      "hours": "Mon-Fri: 8AM-6PM, Sat: 9AM-4PM, Sun: 10AM-2PM"
+      "hours1": "Mon-Fri: 8AM-6PM",
+      "hours2": "Sat: 9AM-4PM",
+      "hours3":"Sun: 10AM-2PM",
     },
     {
       "name": "Suburban Pet Hospital",
       "address": "456 Oak Avenue, Suburbs, City 67890",
       "phone": "+1 (555) 987-6543",
       "email": "suburban@pawfectcare.com",
-      "hours": "Mon-Fri: 7AM-7PM, Sat-Sun: 9AM-5PM"
+      "hours1": "Mon-Fri: 8AM-6PM",
+      "hours2": "Sat: 9AM-4PM",
+      "hours3":"Sun: 10AM-2PM",
     },
     {
       "name": "Emergency Pet Care Center",
       "address": "789 Emergency Blvd, Medical District, City 11111",
       "phone": "+1 (555) 911-PETS",
       "email": "emergency@pawfectcare.com",
-      "hours": "24/7 Emergency Services"
+      "hours1": "24/7 Emergency Services",
     },
   ];
 
@@ -1662,7 +1652,6 @@ class _ContactPageState extends State<ContactPage> {
     },
   ];
 
-  // Random pet store coordinates
   final List<LatLng> petStores = [
     LatLng(37.7749, -122.4194), // San Francisco
     LatLng(40.7128, -74.0060),  // New York
@@ -1674,7 +1663,7 @@ class _ContactPageState extends State<ContactPage> {
   @override
   void initState() {
     super.initState();
-    selectedStore = petStores[Random().nextInt(petStores.length)];
+    selectedStore = petStores[math.Random().nextInt(petStores.length)];
   }
 
   void _submitForm() {
@@ -1691,193 +1680,410 @@ class _ContactPageState extends State<ContactPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Contact Us", style: TextStyle(color: Colors.green)),
+        title: const Text("Contact Us", style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 18)),
         backgroundColor: Colors.white,
-        iconTheme: const IconThemeData(color: Colors.green),
-        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.black87),
+        elevation: 1,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.help_outline, size: 20),
+            onPressed: () {},
+          ),
+        ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Contact form
+            // Contact Form Section
             Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              elevation: 3,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              elevation: 0,
+              color: Colors.grey.shade100,
               child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      const Text("Send us a Message",
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 12),
-                      TextFormField(
-                        decoration: const InputDecoration(labelText: "Full Name *"),
-                        onSaved: (val) => formData["name"] = val!,
-                        validator: (val) => val!.isEmpty ? "Required" : null,
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Row(
+                      children: [
+                        Icon(Icons.message, size: 20, color: Colors.black87),
+                        SizedBox(width: 8),
+                        Text(
+                          "Send us a Message",
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: "Full Name *",
+                        filled: true,
+                        fillColor: Colors.white,
+                        contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                        border: InputBorder.none,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
                       ),
-                      TextFormField(
-                        decoration: const InputDecoration(labelText: "Email *"),
-                        onSaved: (val) => formData["email"] = val!,
-                        validator: (val) => val!.isEmpty ? "Required" : null,
+                      onSaved: (val) => formData["name"] = val!,
+                      validator: (val) => val!.isEmpty ? "Required" : null,
+                    ),
+                    const SizedBox(height: 12),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: "Email *",
+                        filled: true,
+                        fillColor: Colors.white,
+                        contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                        border: InputBorder.none,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
                       ),
-                      TextFormField(
-                        decoration: const InputDecoration(labelText: "Phone"),
-                        onSaved: (val) => formData["phone"] = val!,
+                      onSaved: (val) => formData["email"] = val!,
+                      validator: (val) => val!.isEmpty ? "Required" : null,
+                    ),
+                    const SizedBox(height: 12),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: "Phone",
+                        filled: true,
+                        fillColor: Colors.white,
+                        contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                        border: InputBorder.none,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
                       ),
-                      DropdownButtonFormField<String>(
-                        decoration: const InputDecoration(labelText: "Category *"),
-                        items: const [
-                          DropdownMenuItem(value: "appointment", child: Text("Appointment")),
-                          DropdownMenuItem(value: "medical", child: Text("Medical Question")),
-                          DropdownMenuItem(value: "billing", child: Text("Billing")),
-                          DropdownMenuItem(value: "emergency", child: Text("Emergency")),
-                          DropdownMenuItem(value: "general", child: Text("General Inquiry")),
-                          DropdownMenuItem(value: "feedback", child: Text("Feedback")),
-                        ],
-                        onChanged: (val) => formData["category"] = val!,
-                        validator: (val) => val == null ? "Required" : null,
+                      onSaved: (val) => formData["phone"] = val!,
+                    ),
+                    const SizedBox(height: 12),
+                    DropdownButtonFormField<String>(
+                      decoration: InputDecoration(
+                        labelText: "Category *",
+                        filled: true,
+                        fillColor: Colors.white,
+                        contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                        border: InputBorder.none,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
                       ),
-                      TextFormField(
-                        decoration: const InputDecoration(labelText: "Subject *"),
-                        onSaved: (val) => formData["subject"] = val!,
-                        validator: (val) => val!.isEmpty ? "Required" : null,
+                      items: const [
+                        DropdownMenuItem(value: "appointment", child: Text("Appointment")),
+                        DropdownMenuItem(value: "medical", child: Text("Medical Question")),
+                        DropdownMenuItem(value: "billing", child: Text("Billing")),
+                        DropdownMenuItem(value: "emergency", child: Text("Emergency")),
+                        DropdownMenuItem(value: "general", child: Text("General Inquiry")),
+                        DropdownMenuItem(value: "feedback", child: Text("Feedback")),
+                      ],
+                      onChanged: (val) => formData["category"] = val!,
+                      validator: (val) => val == null ? "Required" : null,
+                    ),
+                    const SizedBox(height: 12),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: "Subject *",
+                        filled: true,
+                        fillColor: Colors.white,
+                        contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                        border: InputBorder.none,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
                       ),
-                      TextFormField(
-                        decoration: const InputDecoration(labelText: "Message *"),
-                        maxLines: 5,
-                        onSaved: (val) => formData["message"] = val!,
-                        validator: (val) => val!.isEmpty ? "Required" : null,
+                      onSaved: (val) => formData["subject"] = val!,
+                      validator: (val) => val!.isEmpty ? "Required" : null,
+                    ),
+                    const SizedBox(height: 12),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: "Message *",
+                        filled: true,
+                        fillColor: Colors.white,
+                        contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                        border: InputBorder.none,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
                       ),
-                      const SizedBox(height: 16),
-                      ElevatedButton.icon(
-                        icon: const Icon(Icons.send),
-                        label: const Text("Send Message"),
+                      maxLines: 5,
+                      onSaved: (val) => formData["message"] = val!,
+                      validator: (val) => val!.isEmpty ? "Required" : null,
+                    ),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
                         onPressed: _submitForm,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12)),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        ),
+                        child: const Text(
+                          "Send Message",
+                          style: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            // Quick Contact Section
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("+1 (555) 123-PETS", style: TextStyle(fontSize: 14, color: Colors.grey.shade600)),
+                IconButton(
+                  icon: const Icon(Icons.phone, size: 20, color: Colors.teal),
+                  onPressed: () {},
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("support@pawfectcare.com", style: TextStyle(fontSize: 14, color: Colors.grey.shade600)),
+                IconButton(
+                  icon: const Icon(Icons.email, size: 20, color: Colors.blueAccent),
+                  onPressed: () {},
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("Within 24 hours", style: TextStyle(fontSize: 14, color: Colors.grey.shade600)),
+                IconButton(
+                  icon: const Icon(Icons.access_time, size: 20, color: Colors.orangeAccent),
+                  onPressed: () {},
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 20),
+
+            // Emergency Section
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Emergency Contact",
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.redAccent),
+                    ),
+                    Text("+1 (555) 911-PETS", style: TextStyle(fontSize: 14, color: Colors.grey.shade600)),
+                  ],
+                ),
+
+                IconButton(
+                  icon: const Icon(Icons.emergency, size: 20, color: Colors.redAccent),
+                  onPressed: () {},
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 20),
+
+            // Locations Section
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Our Locations",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+                ),
+                Icon(Icons.location_on, size: 20, color: Colors.green),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: locations.map((loc) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Icon(Icons.location_on, size: 20, color: Colors.green),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(loc["name"]!, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16)),
+                            Text(loc["address"]!, style: TextStyle(color: Colors.grey.shade600, fontSize: 14)),
+                            const SizedBox(height: 4),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (loc["hours1"] != null && loc["hours1"]!.isNotEmpty)
+                                  Text(loc["hours1"]!, style: TextStyle(color: Colors.grey.shade600, fontSize: 13)),
+                                if (loc["hours2"] != null && loc["hours2"]!.isNotEmpty)
+                                  Text(loc["hours2"]!, style: TextStyle(color: Colors.grey.shade600, fontSize: 13)),
+                                if (loc["hours3"] != null && loc["hours3"]!.isNotEmpty)
+                                  Text(loc["hours3"]!, style: TextStyle(color: Colors.grey.shade600, fontSize: 13)),
+                              ],
+                            )
+                          ],
                         ),
                       ),
                     ],
                   ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            // Quick Contact
-            Card(
-              child: ListTile(
-                leading: const Icon(Icons.phone, color: Colors.green),
-                title: const Text("Phone"),
-                subtitle: const Text("+1 (555) 123-PETS"),
-              ),
-            ),
-            Card(
-              child: ListTile(
-                leading: const Icon(Icons.email, color: Colors.blue),
-                title: const Text("Email"),
-                subtitle: const Text("support@pawfectcare.com"),
-              ),
-            ),
-            Card(
-              child: ListTile(
-                leading: const Icon(Icons.access_time, color: Colors.orange),
-                title: const Text("Response Time"),
-                subtitle: const Text("Within 24 hours"),
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            // Emergency
-            Card(
-              color: Colors.red[50],
-              child: ListTile(
-                leading: const Icon(Icons.emergency, color: Colors.red),
-                title: const Text("Emergency Contact", style: TextStyle(color: Colors.red)),
-                subtitle: const Text("+1 (555) 911-PETS\n24/7 Emergency Line"),
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            // Locations
-            const Text("Our Locations",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 12),
-            Column(
-              children: locations.map((loc) {
-                return Card(
-                  child: ListTile(
-                    leading: const Icon(Icons.location_on, color: Colors.green),
-                    title: Text(loc["name"]!),
-                    subtitle: Text("${loc["address"]}\n${loc["hours"]}"),
-                  ),
                 );
               }).toList(),
             ),
             const SizedBox(height: 20),
 
-            // Map (OpenStreetMap)
-            const Text("Find a Pet Store",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 12),
-            SizedBox(
-              height: 200,
-              child: FlutterMap(
-                options: MapOptions(
-                  center: selectedStore!,
-                  zoom: 12.0,
+            // Map Section
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Find a Pet Store",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
                 ),
-                children: [
-                  TileLayer(
-                    urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-                    userAgentPackageName: 'com.example.app',
-                  ),
-                  MarkerLayer(
-                    markers: [
-                    Marker(
-                    point: selectedStore!,
-                    width: 60,
-                    height: 60,
-                    child: const Icon(
-                      Icons.location_pin,
-                      color: Colors.red,
-                      size: 40,
-                    ),
-                  ),
-                    ],
+                Icon(Icons.map, size: 20, color: Colors.green),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Container(
+              height: 200,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.07),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
                   ),
                 ],
               ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: FlutterMap(
+                  options: MapOptions(
+                    center: selectedStore!,
+                    zoom: 12.0,
+                  ),
+                  children: [
+                    TileLayer(
+                      urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                      userAgentPackageName: 'com.example.app',
+                    ),
+                    MarkerLayer(
+                      markers: [
+                        Marker(
+                          point: selectedStore!,
+                          width: 60,
+                          height: 60,
+                          child: const Icon(
+                            Icons.location_pin,
+                            color: Colors.redAccent,
+                            size: 40,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ),
             const SizedBox(height: 20),
 
-            // FAQs
-            const Text("Frequently Asked Questions",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            // FAQs Section
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Frequently Asked Questions",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+                ),
+                Icon(Icons.question_answer, size: 20, color: Colors.green),
+              ],
+            ),
             const SizedBox(height: 12),
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: faqs.map((faq) {
-                return ExpansionTile(
-                  title: Text(faq["question"]!),
-                  children: [Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(faq["answer"]!),
-                  )],
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Card(
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    elevation: 0,
+                    color: Colors.white,
+                    child: ExpansionTile(
+                      title: Row(
+                        children: [
+                          const Icon(Icons.help_outline, size: 20, color: Colors.green),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(faq["question"]!, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
+                          ),
+                        ],
+                      ),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Text(faq["answer"]!, style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
+                        ),
+                      ],
+                    ),
+                  ),
                 );
               }).toList(),
             ),
+            const SizedBox(height: 20),
           ],
         ),
       ),
     );
   }
 }
+
 
 class AddPetPage extends StatefulWidget {
   const AddPetPage({super.key});

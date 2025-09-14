@@ -33,6 +33,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+  table_calendar: ^3.0.9
   firebase_core: ^4.1.0
   firebase_auth: ^6.0.2
   cloud_firestore: ^6.0.1
@@ -74,11 +75,26 @@ flutter:
      - images/onboard.png
      - images/usage.png
      - images/avatar.jpeg
+     - images/avatar2.jpeg
+     - images/eren.jpg
      - images/bird.png
      - images/dog.png
      - images/fish.png
      - images/cat.png
      - images/rabbit.png
+     - images/petFood.jpg
+     - images/training.png
+     - images/luna.jpg
+     - images/maltese.png
+     - images/tom.jpg
+     - images/dash.jpg
+     - images/hygiene.png
+     - images/vaccine.png
+     - images/surgery.jpg
+     - images/surgery.png
+     - images/medicine.png
+     - images/allergy.png
+     - images/surgery.webp
      - images/onboardImage-1.png
      - images/onboardImage-2.png
      - images/onboardImage-3.png

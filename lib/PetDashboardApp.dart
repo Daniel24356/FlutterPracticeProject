@@ -49,12 +49,12 @@ class _DashboardShellState extends State<DashboardShell> with TickerProviderStat
   late final PageController _pageController;
   late final AnimationController _fabController;
 
-  final List<Widget> _pages = const [
-    IndexPage(),
-    AppointmentListPage(),
-    PetStorePage(),
+  final List<Widget> _pages = [
+    const IndexPage(),
+    const AppointmentListPage(),
+    const PetStorePage(),
     HealthRecordsPage(),
-    UserProfile(),
+    const UserProfile(),
   ];
 
   @override
@@ -149,13 +149,17 @@ class _DashboardShellState extends State<DashboardShell> with TickerProviderStat
               padding: const EdgeInsets.all(16),
               decoration: const BoxDecoration(
                 color: Colors.green,
-                borderRadius: BorderRadius.only(bottomRight: Radius.circular(24)),
+                // borderRadius: BorderRadius.only(bottomRight: Radius.circular(24)),
               ),
               child: Row(
                 children: [
-                  CircleAvatar(radius: 28, backgroundColor: Colors.white, child: const Icon(Icons.pets, color: Colors.green, size: 28)),
+                  CircleAvatar(
+                    radius: 40,
+                    backgroundImage: AssetImage('images/avatar.jpeg'),
+                    backgroundColor: Colors.transparent,
+                  ),
                   const SizedBox(width: 12),
-                  const Expanded(child: Text('Hello, Alex', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16))),
+                  const Expanded(child: Text('Evelyn Parker', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16))),
                 ],
               ),
             ),
@@ -166,12 +170,15 @@ class _DashboardShellState extends State<DashboardShell> with TickerProviderStat
                 children: [
                   _drawerItem(context, Icons.person_add, 'Add Pet', () => _openRoute(const AddPetPage())),
                   _drawerItem(context, Icons.pets, 'My Pets', () => _openRoute(const PetProfileListPage())),
-                  _drawerItem(context, Icons.add_circle_outline, 'Book Appointment', () => _openRoute(const BookAppointmentPage())),
-                  _drawerItem(context, Icons.calendar_today, 'Appointments', () => _openRoute(const AppointmentListPage())),
-                  _drawerItem(context, Icons.medical_services, 'Health Records', () => _openRoute(const HealthRecordsPage())),
+                  // _drawerItem(context, Icons.add_circle_outline, 'Book Appointment', () => _openRoute(const BookAppointmentPage())),
+                  // _drawerItem(context, Icons.calendar_today, 'Appointments', () => _openRoute(const AppointmentListPage())),
+                  // _drawerItem(context, Icons.medical_services, 'Health Records', () => _openRoute(const HealthRecordsPage())),
                   _drawerItem(context, Icons.store, 'Pet Store', () => _openRoute(const PetStorePage())),
+                  _drawerItem(context, Icons.pets, 'Adopt a Pet', () => _openRoute(const PetCareTipsPage())),
+                  SizedBox(height: 20),
                   _drawerItem(context, Icons.lightbulb, 'Care Tips', () => _openRoute(const PetCareTipsPage())),
                   _drawerItem(context, Icons.contact_mail, 'Contact', () => _openRoute(const ContactPage())),
+                  _drawerItem(context, Icons.logout, 'Log Out', () => _openRoute(const ContactPage())),
                   const Divider(),
                   // _drawerItem(context, Icons.login, 'Login', () => _openRoute(const LogOutPage())),
                   // _drawerItem(context, Icons.app_registration, 'Signup', () => _openRoute(const SignupPage())),
@@ -196,49 +203,182 @@ class _DashboardShellState extends State<DashboardShell> with TickerProviderStat
   }
 }
 
-// ---------------------- Placeholder Pages ----------------------
+
 class IndexPage extends StatelessWidget {
   const IndexPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    const greenColor = Color(0xFF0DB14C);
+
     return SafeArea(
-      child: Padding(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Greeting
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Dashboard', style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
-                _QuickStatsCard()
+                const CircleAvatar(
+                  radius: 20,
+                  backgroundImage: AssetImage('images/avatar.jpeg'), // Replace with your device image path
+                ),
+                const SizedBox(width: 12),
+                const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Hello Evelyn',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Text(
+                      'Good morning!',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                IconButton(
+                  icon: const Icon(Icons.notifications_outlined, color: Colors.grey, size: 30),
+                  onPressed: () {},
+                ),
               ],
             ),
-            const SizedBox(height: 18),
-            Expanded(
-              child: ListView(
-                physics: const BouncingScrollPhysics(),
-                children: [
-                  _SectionHeader(title: 'Upcoming Appointments', actionLabel: 'View all', onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AppointmentListPage()))),
-                  const SizedBox(height: 8),
-                  SizedBox(
-                    height: 140,
-                    child: PageView(
-                      controller: PageController(viewportFraction: 0.86),
-                      children: const [
-                        _MiniCard(color: Colors.green, title: 'Buddy', subtitle: 'Grooming • 12 Sept'),
-                        _MiniCard(color: Colors.green, title: 'Milo', subtitle: 'Vaccination • 15 Sept'),
+            const SizedBox(height: 24),
+            // Pets row
+            Row(
+              children: [
+                Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start, // Align header to the left
+                      children: [
+                        // First row: Section header
+                        const _SectionHeader(
+                          title: 'My Pets',
+                          actionLabel: 'View all',
+                          onPressed: null, // Placeholder; implement navigation
+                        ),
+
+                        const SizedBox(height: 8), // Space between header and pets row
+
+                        // Second row: pets
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _PetAvatar(
+                              name: 'Max',
+                              image: const AssetImage('images/maltese.png'),
+                            ),
+                            _PetAvatar(
+                              name: 'Luna',
+                              image: const AssetImage('images/luna.jpg'),
+                            ),
+                            _PetAvatar(
+                              name: 'Dash',
+                              image: const AssetImage('images/dash.jpg'),
+                            ),
+                            _PetAvatar(
+                              name: 'Tom',
+                              image: const AssetImage('images/tom.jpg'),
+                            ),
+
+                            // Add button aligned with pets
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children:[
+                                  const SizedBox(height: 5),
+                                  IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(Icons.add_circle, size: 36, color: Colors.green),
+                                ),
+                              ],
+                            ),
+
+
+                          ],
+                        ),
                       ],
-                    ),
-                  ),
-                  const SizedBox(height: 18),
-                  _SectionHeader(title: 'Store Picks', actionLabel: 'Open Store', onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PetStorePage()))),
-                  const SizedBox(height: 8),
-                  SizedBox(height: 160, child: ListView(scrollDirection: Axis.horizontal, children: const [_StoreItem(), _StoreItem(), _StoreItem()])),
-                ],
+                    )
+
+                ),
+
+              ],
+            ),
+
+            const SizedBox(height: 24),
+            // Upcoming Appointments section (replacing providers from image)
+            const _SectionHeader(
+              title: 'Upcoming Appointments',
+              actionLabel: 'View all',
+              onPressed: null, // Placeholder; implement navigation as needed
+            ),
+            const SizedBox(height: 8),
+            const _AppointmentCard(
+              petName: 'Max',
+              type: 'Grooming',
+              date: 'Today, 2:00 PM',
+              provider: 'Dr. Cameron Williamson',
+              icon: Icons.content_cut,
+              color: Colors.purple,
+            ),
+            const SizedBox(height: 12),
+            const _AppointmentCard(
+              petName: 'Luna',
+              type: 'Vaccination',
+              date: 'Tomorrow, 10:00 AM',
+              provider: 'Dr. Leslie Alexander',
+              icon: Icons.vaccines,
+              color: Colors.orange,
+            ),
+            const SizedBox(height: 12),
+            const _AppointmentCard(
+              petName: 'Dash',
+              type: 'Check-up',
+              date: 'Sept 15, 3:00 PM',
+              provider: 'Cameron Williamson',
+              icon: Icons.health_and_safety,
+              color: Colors.blue
+            ),
+            const SizedBox(height: 24),
+            // Store Picks section
+            const _SectionHeader(
+              title: 'Store Picks',
+              actionLabel: 'View all',
+              onPressed: null, // Placeholder; implement navigation as needed
+            ),
+            const SizedBox(height: 8),
+            SizedBox(
+              height: 170,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: 5,
+                itemBuilder: (context, index) => const _ProductCard(),
               ),
-            )
+            ),
+            const SizedBox(height: 24),
+            // Today's Care Tips section
+            const _SectionHeader(
+              title: "Today's Care Tips",
+              actionLabel: 'View all',
+              onPressed: null, // Placeholder; implement navigation as needed
+            ),
+            const SizedBox(height: 8),
+            SizedBox(
+              height: 200,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: 3,
+                itemBuilder: (context, index) => const _ArticleCard(),
+              ),
+            ),
           ],
         ),
       ),
@@ -246,56 +386,72 @@ class IndexPage extends StatelessWidget {
   }
 }
 
-class _QuickStatsCard extends StatelessWidget {
-  const _QuickStatsCard({super.key});
+class _PetAvatar extends StatelessWidget {
+  final String name;
+  final ImageProvider image;
+  const _PetAvatar({
+    required this.name,
+    required this.image,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(color: Colors.green, borderRadius: BorderRadius.circular(12)),
-      child: Row(
-        children: const [
-          Icon(Icons.calendar_month, color: Colors.white),
-          SizedBox(width: 8),
-          Text('3 Appointments', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
-        ],
-      ),
+    return Column(
+      children: [
+        CircleAvatar(
+          radius: 30,
+          backgroundImage: image,
+        ),
+        const SizedBox(height: 4),
+        Text(
+          name,
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
     );
   }
 }
 
-class _MiniCard extends StatelessWidget {
+class _Tab extends StatelessWidget {
+  final IconData icon;
+  final String label;
   final Color color;
-  final String title;
-  final String subtitle;
-  const _MiniCard({this.color = Colors.green, required this.title, required this.subtitle, super.key});
+  const _Tab({
+    required this.icon,
+    required this.label,
+    required this.color,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8),
-      decoration: BoxDecoration(color: color.withOpacity(0.06), borderRadius: BorderRadius.circular(14)),
-      padding: const EdgeInsets.all(14),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(title, style: const TextStyle(fontWeight: FontWeight.bold)), const Icon(Icons.chevron_right, color: Colors.green)]),
-        const Spacer(),
-        Text(subtitle, style: const TextStyle(color: Colors.black54)),
-      ]),
-    );
-  }
-}
-
-class _StoreItem extends StatelessWidget {
-  const _StoreItem({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 140,
-      margin: const EdgeInsets.symmetric(horizontal: 8),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 8)]),
-      padding: const EdgeInsets.all(12),
-      child: Column(children: const [Icon(Icons.pets, size: 48, color: Colors.green), SizedBox(height: 8), Text('Premium Kibble', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.w600))]),
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            icon,
+            color: color,
+            size: 24,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
     );
   }
 }
@@ -303,12 +459,257 @@ class _StoreItem extends StatelessWidget {
 class _SectionHeader extends StatelessWidget {
   final String title;
   final String actionLabel;
-  final VoidCallback onPressed;
-  const _SectionHeader({required this.title, required this.actionLabel, required this.onPressed, super.key});
+  final VoidCallback? onPressed;
+  const _SectionHeader({
+    required this.title,
+    required this.actionLabel,
+    this.onPressed,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)), TextButton(onPressed: onPressed, child: Text(actionLabel))]);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+        ),
+        TextButton(
+          onPressed: onPressed,
+          child: Text(actionLabel),
+        ),
+      ],
+    );
+  }
+}
+
+class _AppointmentCard extends StatelessWidget {
+  final String petName;
+  final String type;
+  final String date;
+  final String provider;
+  final IconData icon;
+  final Color color;
+  const _AppointmentCard({
+    required this.petName,
+    required this.type,
+    required this.date,
+    required this.provider,
+    required this.icon,
+    required this.color,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.07),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            // decoration: BoxDecoration(
+            //   color: Colors.blue.withOpacity(0.1),
+            //   shape: BoxShape.circle,
+            // ),
+            child: CircleAvatar(
+              radius: 28,
+              backgroundColor: color.withOpacity(0.15),
+              child: Icon(icon, color: color, size: 24),
+            ),
+            // child: Icon(
+            //   icon,
+            //   color: Colors.blue,
+            //   size: 24,
+            // ),
+          ),
+          const SizedBox(width: 4),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "$petName's $type",
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  date,
+                  style: const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  provider,
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Icon(
+            Icons.arrow_forward_ios,
+            color: Colors.grey,
+            size: 16,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ProductCard extends StatelessWidget {
+  const _ProductCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 140,
+      margin: const EdgeInsets.only(right: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.07),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(12),
+              ),
+              child: Image.asset(
+                'images/petFood.jpg', // Replace with your device image path; duplicate for 5 items or vary
+                fit: BoxFit.cover,
+                width: double.infinity,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Premium Kibble',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  ),
+                ),
+                Text(
+                  '\$19.99',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ArticleCard extends StatelessWidget {
+  const _ArticleCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 220,
+      margin: const EdgeInsets.only(right: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 3,
+            child: ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(12),
+              ),
+              child: Image.asset(
+                'images/hygiene.png', // Replace with your device image path; duplicate for 3 items or vary
+                fit: BoxFit.contain,
+                width: double.infinity,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Daily Hygiene for Active Pups',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Keep your furry friend clean with these tips...',
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                      fontSize: 12,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -328,7 +729,7 @@ class _AppointmentListPageState extends State<AppointmentListPage>
   final List<Map<String, dynamic>> upcomingAppointments = [
     {
       "id": "1",
-      "pet": {"name": "Max", "species": "Dog", "emoji": "🐕"},
+      "pet": {"name": "Max", "species": "Dog", "image": "maltese.png"},
       "veterinarian": "Dr. Sarah Smith",
       "clinic": "Downtown Pet Clinic",
       "date": "2024-09-15",
@@ -339,7 +740,7 @@ class _AppointmentListPageState extends State<AppointmentListPage>
     },
     {
       "id": "2",
-      "pet": {"name": "Luna", "species": "Cat", "emoji": "🐱"},
+      "pet": {"name": "Luna", "species": "Cat", "image": "luna.jpg"},
       "veterinarian": "Dr. Michael Johnson",
       "clinic": "Pet Hospital",
       "date": "2024-09-18",
@@ -353,7 +754,7 @@ class _AppointmentListPageState extends State<AppointmentListPage>
   final List<Map<String, dynamic>> pastAppointments = [
     {
       "id": "3",
-      "pet": {"name": "Coco", "species": "Rabbit", "emoji": "🐰"},
+      "pet": {"name": "Dash", "species": "Rabbit", "image": "dash.jpg"},
       "veterinarian": "Dr. Emily Brown",
       "clinic": "Animal Care Center",
       "date": "2024-08-10",
@@ -363,7 +764,7 @@ class _AppointmentListPageState extends State<AppointmentListPage>
     },
     {
       "id": "4",
-      "pet": {"name": "Max", "species": "Dog", "emoji": "🐕"},
+      "pet": {"name": "Tom", "species": "Bird", "image": "tom.jpg"},
       "veterinarian": "Dr. Sarah Smith",
       "clinic": "Downtown Pet Clinic",
       "date": "2024-07-15",
@@ -403,94 +804,266 @@ class _AppointmentListPageState extends State<AppointmentListPage>
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Row(children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: Colors.green.shade100,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Center(
-                  child: Text(appointment["pet"]["emoji"],
-                      style: const TextStyle(fontSize: 24)),
+          // Top Row: Pet Info + Status
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  // Replace emoji with pet image from assets
+                  Container(
+                    width: 52,
+                    height: 52,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      // color: Colors.grey.shade200,
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.asset(
+                        "images/${appointment["pet"]["image"]}",
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        appointment["pet"]["name"],
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                      Text(
+                        appointment["pet"]["species"],
+                        style: const TextStyle(color: Colors.grey, fontSize: 13),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Chip(
+                label: Text(appointment["status"].toString().toUpperCase()),
+                backgroundColor:
+                _statusColor(appointment["status"]).withOpacity(0.15),
+                labelStyle: TextStyle(
+                  color: _statusColor(appointment["status"]),
+                  fontWeight: FontWeight.w600,
+                  fontSize: 12,
                 ),
               ),
-              const SizedBox(width: 12),
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(appointment["pet"]["name"],
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 16)),
-                Text(appointment["pet"]["species"],
-                    style: const TextStyle(color: Colors.grey)),
-              ]),
-            ]),
-            Chip(
-              label: Text(appointment["status"].toString().toUpperCase()),
-              backgroundColor: _statusColor(appointment["status"]).withOpacity(0.2),
-              labelStyle: TextStyle(color: _statusColor(appointment["status"])),
-            ),
-          ]),
-          const SizedBox(height: 12),
-          Row(children: [
-            const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
-            const SizedBox(width: 4),
-            Text(appointment["date"]),
-            const SizedBox(width: 16),
-            const Icon(Icons.access_time, size: 16, color: Colors.grey),
-            const SizedBox(width: 4),
-            Text(appointment["time"]),
-          ]),
-          const SizedBox(height: 8),
-          Row(children: [
-            const Icon(Icons.location_on, size: 16, color: Colors.grey),
-            const SizedBox(width: 4),
-            Text(appointment["clinic"]),
-          ]),
-          const SizedBox(height: 8),
-          Text("Dr: ${appointment["veterinarian"]}",
-              style: const TextStyle(fontWeight: FontWeight.w500)),
-          Text("Type: ${appointment["type"]}"),
-          if (appointment["phone"] != null)
-            Row(children: [
-              const Icon(Icons.phone, size: 16, color: Colors.grey),
-              const SizedBox(width: 4),
-              Text(appointment["phone"]),
-            ]),
-          if (showActions) ...[
-            const Divider(height: 24),
-            Row(children: [
+            ],
+          ),
+
+          const SizedBox(height: 14),
+
+          // Date + Time Row
+          Row(
+            children: [
+              const Icon(Icons.calendar_today,
+                  size: 18, color: Colors.deepPurple),
+              const SizedBox(width: 6),
+              Text(appointment["date"], style: const TextStyle(fontSize: 14)),
+              const SizedBox(width: 16),
+              const Icon(Icons.access_time, size: 18, color: Colors.blue),
+              const SizedBox(width: 6),
+              Text(appointment["time"], style: const TextStyle(fontSize: 14)),
+            ],
+          ),
+
+          const SizedBox(height: 10),
+
+          // Clinic Row
+          Row(
+            children: [
+              const Icon(Icons.location_on, size: 18, color: Colors.redAccent),
+              const SizedBox(width: 6),
               Expanded(
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => RescheduleAppointmentPage(
-                            appointment: appointment)));
-                  },
-                  style: ElevatedButton.styleFrom(
+                child: Text(
+                  appointment["clinic"],
+                  style: const TextStyle(fontSize: 14),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 10),
+
+          // Vet Row
+          Row(
+            children: [
+              const Icon(Icons.person, size: 18, color: Colors.teal),
+              const SizedBox(width: 6),
+              Text(appointment["veterinarian"],
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w500, fontSize: 14)),
+            ],
+          ),
+
+          const SizedBox(height: 6),
+
+          // Type Row
+          Row(
+            children: [
+              const Icon(Icons.pets, size: 18, color: Colors.blueGrey),
+              const SizedBox(width: 6),
+              Text("Type: ${appointment["type"]}",
+                  style: const TextStyle(fontSize: 14)),
+            ],
+          ),
+
+          if (appointment["phone"] != null) ...[
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                const Icon(Icons.phone, size: 18, color: Colors.green),
+                const SizedBox(width: 6),
+                Text(appointment["phone"],
+                    style: const TextStyle(fontSize: 14)),
+              ],
+            ),
+          ],
+
+          // Action Buttons
+          if (showActions) ...[
+            const Divider(height: 28),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => RescheduleAppointmentPage(
+                              appointment: appointment)));
+                    },
+                    icon: const Icon(Icons.edit_calendar, size: 18, color: Colors.white,),
+                    label: const Text("Reschedule", style: TextStyle(color: Colors.white),),
+                    style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12))),
-                  child: const Text("Reschedule"),
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+                  ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: () {},
-                  style: OutlinedButton.styleFrom(
+                const SizedBox(width: 12),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () {},
+                    icon: const Icon(Icons.cancel, size: 18),
+                    label: const Text("Cancel"),
+                    style: OutlinedButton.styleFrom(
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12))),
-                  child: const Text("Cancel"),
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+                  ),
                 ),
-              ),
-            ]),
+              ],
+            ),
           ]
         ]),
       ),
     );
   }
+
+  // Widget _appointmentCard(Map<String, dynamic> appointment,
+  //     {bool showActions = false}) {
+  //   return Card(
+  //     margin: const EdgeInsets.only(bottom: 16),
+  //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+  //     elevation: 3,
+  //     child: Padding(
+  //       padding: const EdgeInsets.all(16),
+  //       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+  //         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+  //           Row(children: [
+  //             Container(
+  //               width: 48,
+  //               height: 48,
+  //               decoration: BoxDecoration(
+  //                 color: Colors.green.shade100,
+  //                 borderRadius: BorderRadius.circular(12),
+  //               ),
+  //               child: Center(
+  //                 child: Text(appointment["pet"]["emoji"],
+  //                     style: const TextStyle(fontSize: 24)),
+  //               ),
+  //             ),
+  //             const SizedBox(width: 12),
+  //             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+  //               Text(appointment["pet"]["name"],
+  //                   style: const TextStyle(
+  //                       fontWeight: FontWeight.bold, fontSize: 16)),
+  //               Text(appointment["pet"]["species"],
+  //                   style: const TextStyle(color: Colors.grey)),
+  //             ]),
+  //           ]),
+  //           Chip(
+  //             label: Text(appointment["status"].toString().toUpperCase()),
+  //             backgroundColor: _statusColor(appointment["status"]).withOpacity(0.2),
+  //             labelStyle: TextStyle(color: _statusColor(appointment["status"])),
+  //           ),
+  //         ]),
+  //         const SizedBox(height: 12),
+  //         Row(children: [
+  //           const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
+  //           const SizedBox(width: 4),
+  //           Text(appointment["date"]),
+  //           const SizedBox(width: 16),
+  //           const Icon(Icons.access_time, size: 16, color: Colors.grey),
+  //           const SizedBox(width: 4),
+  //           Text(appointment["time"]),
+  //         ]),
+  //         const SizedBox(height: 8),
+  //         Row(children: [
+  //           const Icon(Icons.location_on, size: 16, color: Colors.grey),
+  //           const SizedBox(width: 4),
+  //           Text(appointment["clinic"]),
+  //         ]),
+  //         const SizedBox(height: 8),
+  //         Text("${appointment["veterinarian"]}",
+  //             style: const TextStyle(fontWeight: FontWeight.w500)),
+  //         Text("Type: ${appointment["type"]}"),
+  //         if (appointment["phone"] != null)
+  //           Row(children: [
+  //             const Icon(Icons.phone, size: 16, color: Colors.grey),
+  //             const SizedBox(width: 4),
+  //             Text(appointment["phone"]),
+  //           ]),
+  //         if (showActions) ...[
+  //           const Divider(height: 24),
+  //           Row(children: [
+  //             Expanded(
+  //               child: ElevatedButton(
+  //                 onPressed: () {
+  //                   Navigator.of(context).push(MaterialPageRoute(
+  //                       builder: (_) => RescheduleAppointmentPage(
+  //                           appointment: appointment)));
+  //                 },
+  //                 style: ElevatedButton.styleFrom(
+  //                     backgroundColor: Colors.green,
+  //                     shape: RoundedRectangleBorder(
+  //                         borderRadius: BorderRadius.circular(12))),
+  //                 child: const Text("Reschedule"),
+  //               ),
+  //             ),
+  //             const SizedBox(width: 8),
+  //             Expanded(
+  //               child: OutlinedButton(
+  //                 onPressed: () {},
+  //                 style: OutlinedButton.styleFrom(
+  //                     shape: RoundedRectangleBorder(
+  //                         borderRadius: BorderRadius.circular(12))),
+  //                 child: const Text("Cancel"),
+  //               ),
+  //             ),
+  //           ]),
+  //         ]
+  //       ]),
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -501,24 +1074,28 @@ class _AppointmentListPageState extends State<AppointmentListPage>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(color: Colors.grey.shade300)),
               color: Colors.white,
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(children: const [
-                  Icon(Icons.calendar_month, color: Colors.green),
-                  SizedBox(width: 8),
-                  Text("My Appointments",
-                      style:
-                      TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                ]),
+                Row(
+                    children: const [
+                    Icon(Icons.arrow_back),
+                    SizedBox(width: 8),
+                    Text(
+                      "Appointments",
+                       style: TextStyle(
+                       fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    ]
+                ),
                 ElevatedButton.icon(
                   onPressed: () {},
-                  icon: const Icon(Icons.add, size: 16),
-                  label: const Text("Book New"),
+                  icon: const Icon(Icons.add, size: 18, color: Colors.white,),
+                  label: const Text("Book New", style: TextStyle(color: Colors.white),),
                   style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.all(10.0),
                     backgroundColor: Colors.green,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
@@ -529,28 +1106,72 @@ class _AppointmentListPageState extends State<AppointmentListPage>
           ),
 
           // Search box
-          Padding(
-            padding: const EdgeInsets.all(16),
+          FractionallySizedBox(
+            widthFactor: 0.92, // 90% of parent width
             child: TextField(
-              decoration: InputDecoration(
-                hintText: "Search appointments...",
-                prefixIcon: const Icon(Icons.search),
-                border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-              ),
               onChanged: (val) => setState(() => searchTerm = val),
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                hintText: "Search appointments...",
+                filled: true,
+                fillColor: Colors.grey.shade100,
+                contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+              ),
             ),
           ),
 
+
+
           // Tabs
-          TabBar(
-            controller: _tabController,
-            tabs: [
-              Tab(text: "Upcoming (${upcomingAppointments.length})"),
-              Tab(text: "Past (${pastAppointments.length})"),
-            ],
-            labelColor: Colors.green,
-            unselectedLabelColor: Colors.black,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: Container(
+              padding: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.07),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: TabBar(
+                controller: _tabController,
+                labelColor: Colors.white,
+                unselectedLabelColor: Colors.black87,
+                indicator: BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: BorderRadius.circular(8),
+
+                ),
+                indicatorSize: TabBarIndicatorSize.tab, // makes indicator cover full tab
+                dividerColor: Colors.transparent, // removes bottom border (Flutter 3.7+)
+                tabs: [
+                  Tab(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 1, vertical: 2),
+                      child: Text('Upcoming (${upcomingAppointments.length})', style: TextStyle(fontSize: 12.5)),
+
+                    ),
+                  ),
+                  Tab(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 1, vertical: 2),
+                      child: Text("Past (${pastAppointments.length})", style: TextStyle(fontSize: 12.5),),
+                    ),
+                  ),
+
+                ],
+                onTap: (idx) => setState(() {}),
+              ),
+            ),
           ),
 
           // Tab Content
@@ -582,6 +1203,7 @@ class _AppointmentListPageState extends State<AppointmentListPage>
               ],
             ),
           ),
+
         ]),
       ),
     );

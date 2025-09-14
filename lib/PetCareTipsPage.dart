@@ -5,6 +5,8 @@ class PetCareTipsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const greenColor = Color(0xFF0DB14C);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -126,25 +128,28 @@ class PetCareTipsPage extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
+                        backgroundColor: greenColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
                       onPressed: () {},
-                      child: const Text("Read Full Article"),
+                      child: const Text(
+                          "Read Full Article",
+                          style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 20),
 
-                  // Bottom Icon
-                  Center(
-                    child: Icon(
-                      Icons.pets,
-                      size: 48,
-                      color: Colors.deepPurpleAccent,
-                    ),
-                  ),
+                  // // Bottom Icon
+                  // Center(
+                  //   child: Icon(
+                  //     Icons.pets,
+                  //     size: 48,
+                  //     color: greenColor,
+                  //   ),
+                  // ),
                 ],
               ),
             ),
@@ -164,8 +169,8 @@ class PetCareTipsPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildTopicCard("Nutrition", "1 article"),
-                _buildTopicCard("Training", "1 article"),
+                _buildTopicCard("Nutrition", "3 articles"),
+                _buildTopicCard("Training", "2 articles"),
               ],
             ),
           ],
@@ -214,7 +219,7 @@ class PetCareTipsPage extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: Image.asset(
-              "assets/images/care-2.png", // <--- your image here
+              "images/training.png", // <--- your image here
               height: 80,
               width: double.infinity,
               fit: BoxFit.cover,

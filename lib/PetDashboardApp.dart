@@ -8,6 +8,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:projects/services/petService.dart';
 import 'package:projects/PetCareTipsPage.dart';
 import 'AppointmentPage.dart';
+import 'PetStorePage.dart';
 import 'UserProfile.dart';
 import 'PetStorePage.dart';
 import 'HealthRecordsPage.dart';
@@ -54,7 +55,7 @@ class _DashboardShellState extends State<DashboardShell> with TickerProviderStat
   final List<Widget> _pages = [
     const IndexPage(),
     const AppointmentListPage(),
-    const PetStorePage(),
+    PetStorePage(),
     HealthRecordsPage(),
     const UserProfile(),
   ];

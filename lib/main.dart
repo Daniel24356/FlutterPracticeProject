@@ -4,11 +4,14 @@ import 'firebase_options.dart';
 
 // Screens
 import 'OnboardingScreen.dart';
+import 'onBoardingScreen1.dart';
 import 'LoginScreen.dart';
 import 'SignUpScreen.dart';
 import 'AppointmentPage.dart';
 import 'PetDashboardApp.dart';
 import 'ForgotPasswordScreen.dart';
+import 'ResetPasswordScreen.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,9 +40,11 @@ class MyApp extends StatelessWidget {
       initialRoute: '/onboarding',
       routes: {
         '/onboarding': (context) => const OnboardingScreen(),
+        '/onboarding1': (context) => const OnboardingFlow(),
         '/login': (context) => const LoginScreen(),
         '/signup': (context) => const SignUpScreen(),
         '/forgotPassword': (context) => const ForgotPasswordScreen(),
+        '/resetPassword': (context) => const ResetPasswordScreen(),
         '/petDashboardApp': (context) => const PetDashboardApp(),
         // '/appointmentscreen': (context) => const AppointmentPage(),
       },

@@ -30,7 +30,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.favorite_border, color: Colors.green, size: 48),
+              const Icon(Icons.pets, color: Colors.green, size: 48),
               const SizedBox(height: 8),
               const Text(
                 "PawfectCare",

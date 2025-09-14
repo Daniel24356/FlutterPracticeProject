@@ -103,7 +103,7 @@ class AppSidebar extends StatelessWidget {
                     child: _drawerItem(
                       context,
                       Icons.lightbulb,
-                      'Care Tips',
+                      'Blog & Tips',
                           () => _openRoute(context, const PetCareTipsPage()),
                       color: Colors.green,
                     ),

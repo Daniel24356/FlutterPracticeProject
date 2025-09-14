@@ -22,8 +22,8 @@ class ShelterDashboard extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
-        primaryColor: Colors.orange,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
+        primaryColor: Colors.green,
         useMaterial3: true,
       ),
       home: const ShelterShell(),
@@ -97,7 +97,7 @@ class _ShelterShellState extends State<ShelterShell> with TickerProviderStateMix
               _openRoute(const AddStoryPage());
             }
           },
-          backgroundColor: Colors.orange,
+          backgroundColor: Colors.green,
           icon: const Icon(Icons.add, color: Colors.white),
           label: const Text('Add', style: TextStyle(color: Colors.white)),
         ),
@@ -111,7 +111,7 @@ class _ShelterShellState extends State<ShelterShell> with TickerProviderStateMix
       child: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onNavTap,
-        selectedItemColor: Colors.orange,
+        selectedItemColor: Colors.green,
         unselectedItemColor: Colors.grey.shade600,
         showUnselectedLabels: true,
         items: const [
@@ -134,12 +134,12 @@ class _ShelterShellState extends State<ShelterShell> with TickerProviderStateMix
             Container(
               padding: const EdgeInsets.all(16),
               decoration: const BoxDecoration(
-                color: Colors.orange,
+                color: Colors.green,
                 borderRadius: BorderRadius.only(bottomRight: Radius.circular(24)),
               ),
               child: Row(
                 children: [
-                  CircleAvatar(radius: 28, backgroundColor: Colors.white, child: const Icon(Icons.pets, color: Colors.orange, size: 28)),
+                  CircleAvatar(radius: 28, backgroundColor: Colors.white, child: const Icon(Icons.pets, color: Colors.green, size: 28)),
                   const SizedBox(width: 12),
                   const Expanded(child: Text('Hello, Shelter Admin', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16))),
                 ],
@@ -155,7 +155,7 @@ class _ShelterShellState extends State<ShelterShell> with TickerProviderStateMix
 
   Widget _drawerItem(BuildContext c, IconData icon, String title, VoidCallback onTap) {
     return ListTile(
-      leading: Icon(icon, color: Colors.orange),
+      leading: Icon(icon, color: Colors.green),
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
       onTap: onTap,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -272,12 +272,12 @@ class _StatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.orange.shade50,
+      color: Colors.green.shade50,
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
           children: [
-            Icon(icon, color: Colors.orange, size: 32),
+            Icon(icon, color: Colors.green, size: 32),
             const SizedBox(height: 4),
             Text(value, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             Text(title, style: const TextStyle(color: Colors.grey)),
@@ -349,7 +349,7 @@ class _RequestMiniCard extends StatelessWidget {
                 ],
               ),
               const Spacer(),
-              const Icon(Icons.chevron_right, color: Colors.orange),
+              const Icon(Icons.chevron_right, color: Colors.green),
             ],
           ),
           const SizedBox(height: 14),
@@ -360,11 +360,11 @@ class _RequestMiniCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: Colors.orange.withOpacity(0.15),
+                  color: Colors.green.withOpacity(0.15),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(Icons.calendar_today,
-                    size: 16, color: Colors.orange),
+                    size: 16, color: Colors.green),
               ),
               const SizedBox(width: 6),
               Text(
@@ -708,7 +708,7 @@ class _AnimalDetailPageState extends State<AnimalDetailPage> {
                         Expanded(
                           child: ElevatedButton(
                             onPressed: _saveChanges,
-                            style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+                            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
                             child: const Text('Save'),
                           ),
                         ),
@@ -738,7 +738,7 @@ class _AnimalDetailPageState extends State<AnimalDetailPage> {
                           ),
                         );
                       },
-                      style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
                       child: const Text('View Requests'),
                     ),
                 ],
@@ -886,7 +886,7 @@ class _AddAnimalPageState extends State<AddAnimalPage> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _handleSubmit,
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
                 child: const Text('Add Animal'),
               ),
             ],
@@ -1192,7 +1192,7 @@ class _AddStoryPageState extends State<AddStoryPage> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _handleSubmit,
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
                 child: const Text('Add Story'),
               ),
             ],
@@ -1289,7 +1289,7 @@ class _ContactVolunteerPageState extends State<ContactVolunteerPage> {
                   ),
                   ElevatedButton(
                     onPressed: _submitContact,
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
                     child: const Text('Send Message'),
                   ),
                 ],
@@ -1322,7 +1322,7 @@ class _ContactVolunteerPageState extends State<ContactVolunteerPage> {
                   ),
                   ElevatedButton(
                     onPressed: _submitVolunteer,
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
                     child: const Text('Sign Up'),
                   ),
                 ],
@@ -1361,7 +1361,7 @@ class _ContactVolunteerPageState extends State<ContactVolunteerPage> {
                   ),
                   ElevatedButton(
                     onPressed: _submitDonation,
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
                     child: const Text('Submit Donation Intent'),
                   ),
                 ],

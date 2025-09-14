@@ -102,7 +102,11 @@ flutter:
      - images/onboardImage-2.png
      - images/onboardImage-3.png
      - images/doctor.png
-
+     - images/grooming.png
+     - images/dogPlay.jpg
+     - images/nutrition.jpg
+     - images/training.jpg
+     - images/health.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

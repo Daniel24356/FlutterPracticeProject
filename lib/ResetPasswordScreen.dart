@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:projects/services/authService.dart';
 
-class ForgotPasswordScreen extends StatefulWidget {
-  const ForgotPasswordScreen({super.key});
+class ResetPasswordScreen extends StatefulWidget {
+  const ResetPasswordScreen({super.key});
 
   @override
-  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+  State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
 }
 
-class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final _formKey = GlobalKey<FormState>();
-  String email = "";
+  String otp = "";
+  String oldPassword = "";
+  String newPassword = "";
   bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF6FAFF), // same background as login
+      backgroundColor: const Color(0xFFF6FAFF),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -41,9 +42,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               ),
               const SizedBox(height: 20),
 
-              // Reset Password Title
+              // Page Title
               const Text(
-                "Reset Password",
+                "Reset Your Password",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
@@ -51,13 +52,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               ),
               const SizedBox(height: 6),
               const Text(
-                "Enter your email to receive reset instructions",
+                "Enter the OTP you received and set a new password",
                 style: TextStyle(color: Colors.grey, fontSize: 14),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 30),
 
-              // Card Container
+              // Card
               Container(
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
@@ -75,12 +76,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   key: _formKey,
                   child: Column(
                     children: [
-                      // Email field
+                      // OTP
                       TextFormField(
                         decoration: InputDecoration(
-                          labelText: "Email Address",
-                          hintText: "Enter your email",
-                          prefixIcon: const Icon(Icons.email_outlined),
+                          labelText: "OTP",
+                          hintText: "Enter the code sent to your email",
+                          prefixIcon: const Icon(Icons.verified_outlined),
                           filled: true,
                           fillColor: const Color(0xFFF8F9FA),
                           border: OutlineInputBorder(
@@ -89,10 +90,52 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           ),
                         ),
                         validator: (val) =>
-                        val!.isEmpty ? "Enter your email" : null,
-                        onChanged: (val) => setState(() => email = val),
+                        val!.isEmpty ? "Enter the OTP" : null,
+                        onChanged: (val) => setState(() => otp = val),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 16),
+
+                      // Old Password
+                      TextFormField(
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          labelText: "Old Password",
+                          hintText: "Enter your old password",
+                          prefixIcon: const Icon(Icons.lock_outline),
+                          filled: true,
+                          fillColor: const Color(0xFFF8F9FA),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                        validator: (val) => val!.isEmpty
+                            ? "Enter your old password"
+                            : null,
+                        onChanged: (val) => setState(() => oldPassword = val),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // New Password
+                      TextFormField(
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          labelText: "New Password",
+                          hintText: "Enter your new password",
+                          prefixIcon: const Icon(Icons.lock_reset_outlined),
+                          filled: true,
+                          fillColor: const Color(0xFFF8F9FA),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                        validator: (val) => val!.length < 6
+                            ? "Password must be at least 6 characters"
+                            : null,
+                        onChanged: (val) => setState(() => newPassword = val),
+                      ),
+                      const SizedBox(height: 24),
 
                       // Reset Button
                       SizedBox(
@@ -112,23 +155,24 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               setState(() => isLoading = true);
 
                               try {
-                                await AuthService()
-                                    .resetPassword(email.trim());
+                                // Call your API here
+                                await Future.delayed(
+                                    const Duration(seconds: 2));
 
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(
                                   const SnackBar(
                                       content: Text(
-                                          "Reset link sent! Check your email.")),
+                                          "Password reset successfully!")),
                                 );
                                 // Navigator.pop(context);
-
+                                Navigator.pushNamed(context, '/');
                               } catch (e) {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(
                                   SnackBar(
                                       content: Text(
-                                          "Error sending reset link: $e")),
+                                          "Error resetting password: $e")),
                                 );
                               } finally {
                                 setState(() => isLoading = false);
@@ -139,7 +183,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               ? const CircularProgressIndicator(
                               color: Colors.white)
                               : const Text(
-                            "Send Reset Link",
+                            "Reset Password",
                             style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,

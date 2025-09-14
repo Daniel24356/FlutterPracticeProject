@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'LoginScreen.dart';
+// import 'LoginScreen.dart';
+import 'onBoardingScreen1.dart';
 
 void main() => runApp(const OnboardingApp());
 
@@ -13,7 +14,7 @@ class OnboardingApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: const OnboardingScreen(),
       routes: {
-        '/login': (context) => const LoginScreen(), // 👈 your real login screen
+        '/onboarding1': (context) => const OnboardingFlow(), // 👈 your real login screen
       },
     );
   }
@@ -31,7 +32,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 3), () {
-      Navigator.pushNamed(context, '/login');
+      Navigator.pushNamed(context, '/onboarding1');
     });
   }
 

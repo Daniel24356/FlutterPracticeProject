@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'components/AppSidebar.dart';
+import 'components/CustomAppBar.dart';
+
 void main() {
   runApp(const MaterialApp(home: HealthRecordsPage()));
 }
@@ -59,6 +62,12 @@ class _HealthRecordsPageState extends State<HealthRecordsPage> {
     final currentPet = pets[selectedPetIndex];
 
     return Scaffold(
+      appBar: const CustomAppBar(
+        title: "Health Records",
+        showMenu: true,
+        actionIcon: Icons.notifications_outlined,
+      ),
+      drawer: const AppSidebar(),
       body: SafeArea(
         child: Column(
           children: [
@@ -66,21 +75,8 @@ class _HealthRecordsPageState extends State<HealthRecordsPage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.arrow_back),
-                        onPressed: () {},
-                      ),
-                      const Text(
-                        "Health Records ",
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
                   ElevatedButton.icon(
                     onPressed: () {},
                     icon: const Icon(Icons.add, size: 18),
@@ -138,17 +134,7 @@ class _HealthRecordsPageState extends State<HealthRecordsPage> {
                       ),
                     ),
                   // Add Pet Button
-                  Column(
-                    children: [
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.add_circle,
-                            size: 40, color: Colors.green),
-                      ),
-                      const SizedBox(height: 6),
-                      const Text("Add"),
-                    ],
-                  ),
+
                 ],
               ),
             ),

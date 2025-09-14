@@ -286,8 +286,6 @@ class IndexPage extends StatelessWidget {
                   SizedBox(
                     height: 330, // adjust depending on how tall you want it
                     child: ListView(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
                       padding: const EdgeInsets.all(1),
                       children: const [
                         DailyScheduleCard(
@@ -367,7 +365,15 @@ class DailyScheduleCard extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: Colors.grey.shade100,
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.07),
+            blurRadius: 8,
+            spreadRadius: 2,
+            offset: const Offset(0, 2),
+          )
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -375,7 +381,7 @@ class DailyScheduleCard extends StatelessWidget {
           // Row 1: Date
           Row(
             children: [
-              const Icon(Icons.calendar_today, color: Colors.blue, size: 20),
+              const Icon(Icons.calendar_today, color: Colors.green, size: 20),
               const SizedBox(width: 8),
               Text(
                 date,
@@ -403,7 +409,7 @@ class DailyScheduleCard extends StatelessWidget {
           // Row 3: Reschedule note (as a pill too)
           if (rescheduledNote != null) ...[
             const SizedBox(height: 10),
-            _buildPill(Icons.flag, Colors.green, rescheduledNote!),
+            _buildPill(Icons.edit_calendar, Colors.cyan, rescheduledNote!),
           ],
         ],
       ),

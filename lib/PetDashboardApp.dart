@@ -11,6 +11,8 @@ import 'AppointmentPage.dart';
 import 'UserProfile.dart';
 import 'PetStorePage.dart';
 import 'HealthRecordsPage.dart';
+import 'components/AppSidebar.dart';
+import 'components/CustomAppBar.dart';
 
 
 void main() {
@@ -91,31 +93,9 @@ class _DashboardShellState extends State<DashboardShell> with TickerProviderStat
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: _buildDrawer(context),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
-        title: const Text('Pawfect Care', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
-        leading: Builder(builder: (c) => IconButton(icon: const Icon(Icons.menu, color: Colors.green), onPressed: () => Scaffold.of(c).openDrawer())),
-        actions: [
-          IconButton(
-            onPressed: () => _openRoute(const BookAppointmentPage()),
-            icon: const Icon(Icons.add_circle_outline, color: Colors.green),
-            tooltip: 'Quick Book',
-          )
-        ],
-      ),
+
       body: PageView(controller: _pageController, physics: const BouncingScrollPhysics(), children: _pages, onPageChanged: (i) => setState(() => _selectedIndex = i)),
       bottomNavigationBar: _buildBottomNav(),
-      floatingActionButton: ScaleTransition(
-        scale: CurvedAnimation(parent: _fabController, curve: Curves.elasticOut),
-        child: FloatingActionButton.extended(
-          onPressed: () => _openRoute(const BookAppointmentPage()),
-          backgroundColor: Colors.green,
-          icon: const Icon(Icons.add, color: Colors.white),
-          label: const Text('Book', style: TextStyle(color: Colors.white)),
-        ),
-      ),
     );
   }
 
@@ -211,8 +191,15 @@ class IndexPage extends StatelessWidget {
   Widget build(BuildContext context) {
     const greenColor = Color(0xFF0DB14C);
 
-    return SafeArea(
-      child: SingleChildScrollView(
+    return Scaffold(
+      appBar: const CustomAppBar(
+        title: "PawfectCare",
+        showMenu: true,
+        actionIcon: Icons.notifications_outlined,
+      ),
+      drawer: const AppSidebar(),
+      body: SingleChildScrollView(
+
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -227,6 +214,7 @@ class IndexPage extends StatelessWidget {
                 const SizedBox(width: 12),
                 const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+
                   children: [
                     Text(
                       'Hello Evelyn',
@@ -244,11 +232,11 @@ class IndexPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                const Spacer(),
-                IconButton(
-                  icon: const Icon(Icons.notifications_outlined, color: Colors.grey, size: 30),
-                  onPressed: () {},
-                ),
+                // const Spacer(),
+                // IconButton(
+                //   icon: const Icon(Icons.notifications_outlined, color: Colors.grey, size: 30),
+                //   onPressed: () {},
+                // ),
               ],
             ),
             const SizedBox(height: 24),
@@ -1087,44 +1075,30 @@ class _AppointmentListPageState extends State<AppointmentListPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const CustomAppBar(
+        title: "Appointments",
+        showMenu: true,
+        actionIcon: Icons.notifications_outlined,
+      ),
+      drawer: const AppSidebar(),
+      floatingActionButton: ElevatedButton.icon(
+        onPressed: () {},
+        icon: const Icon(Icons.add, size: 18, color: Colors.white),
+        label: const Text("Book New", style: TextStyle(color: Colors.white)),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.green,
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: SafeArea(
         child: Column(children: [
           // Header
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                    children: const [
-                    Icon(Icons.arrow_back),
-                    SizedBox(width: 8),
-                    Text(
-                      "Appointments",
-                       style: TextStyle(
-                       fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    ]
-                ),
-                ElevatedButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.add, size: 18, color: Colors.white,),
-                  label: const Text("Book New", style: TextStyle(color: Colors.white),),
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.all(10.0),
-                    backgroundColor: Colors.green,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
-                  ),
-                ),
-              ],
-            ),
-          ),
-
           // Search box
+          SizedBox(height: 20,),
           FractionallySizedBox(
             widthFactor: 0.92, // 90% of parent width
             child: TextField(

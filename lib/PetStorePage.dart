@@ -1,6 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
+import 'components/AppSidebar.dart';
+import 'components/CustomAppBar.dart';
+
 class PetStorePage extends StatefulWidget {
   const PetStorePage({super.key});
 
@@ -115,6 +118,13 @@ class _PetStorePageState extends State<PetStorePage> {
 
     return Scaffold(
       backgroundColor: Colors.white,
+
+      appBar: const CustomAppBar(
+        title: "Pet Store",
+        showMenu: true,
+        actionIcon: Icons.notifications_outlined,
+      ),
+      drawer: const AppSidebar(),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -123,22 +133,26 @@ class _PetStorePageState extends State<PetStorePage> {
             children: [
               // Header
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      IconButton(
-                        icon: const Icon(Icons.arrow_back),
+                      ElevatedButton.icon(
                         onPressed: () {},
-                      ),
-                      const Text(
-                        "Pet Store",
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                        icon: const Icon(Icons.favorite_border, size: 18),
+                        label: const Text("Wishlist"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.all(10.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                  const Icon(Icons.shopping_cart, size: 28)
                 ],
               ),
               const SizedBox(height: 20),

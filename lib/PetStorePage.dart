@@ -127,24 +127,18 @@ class _PetStorePageState extends State<PetStorePage> {
                 children: [
                   Row(
                     children: [
-                      const CircleAvatar(
-                          radius: 22,
-                          backgroundImage: AssetImage('images/avatar.jpeg')),
-                      const SizedBox(width: 10),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text("Hi, Welcome!",
-                              style:
-                              TextStyle(color: Colors.grey, fontSize: 12)),
-                          Text("Evelyn Parker",
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold)),
-                        ],
-                      )
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back),
+                        onPressed: () {},
+                      ),
+                      const Text(
+                        "Pet Store",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
                     ],
                   ),
-                  const Icon(Icons.notifications_none, size: 28)
+                  const Icon(Icons.shopping_cart, size: 28)
                 ],
               ),
               const SizedBox(height: 20),

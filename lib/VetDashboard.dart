@@ -204,10 +204,36 @@ class IndexPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Dashboard', style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
-                _QuickStatsCard()
+                const CircleAvatar(
+                  radius: 20,
+                  backgroundImage: AssetImage('images/avatar.jpeg'), // Replace with your device image path
+                ),
+                const SizedBox(width: 12),
+                const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Hello Evelyn',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Text(
+                      'Good morning!',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                IconButton(
+                  icon: const Icon(Icons.notifications_outlined, color: Colors.grey, size: 30),
+                  onPressed: () {},
+                ),
               ],
             ),
             const SizedBox(height: 18),

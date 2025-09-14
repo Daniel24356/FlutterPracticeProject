@@ -1,39 +1,57 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-// import 'LoginScreen.dart';
-import 'onBoardingScreen1.dart';
+// import your Login screen here
+import 'onBoardingScreen1.dart'; // onboarding flow
+import 'LoginScreen.dart'; // replace with your login screen
 
-void main() => runApp(const OnboardingApp());
+void main() => runApp(const OnboardingScreen());
 
-class OnboardingApp extends StatelessWidget {
-  const OnboardingApp({super.key});
+class OnboardingScreen extends StatelessWidget {
+  const OnboardingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const OnboardingScreen(),
-      routes: {
-        '/onboarding1': (context) => const OnboardingFlow(), // 👈 your real login screen
-      },
+      home: const SplashScreen(),
     );
   }
 }
 
-class OnboardingScreen extends StatefulWidget {
-  const OnboardingScreen({super.key});
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
 
   @override
-  State<OnboardingScreen> createState() => _OnboardingScreenState();
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> {
+class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 3), () {
-      Navigator.pushNamed(context, '/onboarding1');
-    });
+    _checkOnboarding();
+  }
+
+  Future<void> _checkOnboarding() async {
+    final prefs = await SharedPreferences.getInstance();
+    final hasSeenOnboarding = prefs.getBool('hasSeenOnboarding') ?? false;
+
+    await Future.delayed(const Duration(seconds: 3)); // splash delay
+
+    if (hasSeenOnboarding) {
+      // User has already onboarded → go to login
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
+      );
+    } else {
+      // First time → go to onboarding
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const OnboardingFlow()),
+      );
+    }
   }
 
   @override
@@ -44,11 +62,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.pets,
-              color: Colors.white,
-              size: 60,
-            ),
+            Icon(Icons.pets, color: Colors.white, size: 60),
+            SizedBox(width: 8),
             Text(
               'PawfectCare',
               style: TextStyle(
@@ -63,3 +78,70 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 }
+
+
+// import 'package:flutter/material.dart';
+//
+// // import 'LoginScreen.dart';
+// import 'onBoardingScreen1.dart';
+//
+// void main() => runApp(const OnboardingApp());
+//
+// class OnboardingApp extends StatelessWidget {
+//   const OnboardingApp({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       debugShowCheckedModeBanner: false,
+//       home: const OnboardingScreen(),
+//       routes: {
+//         '/onboarding1': (context) => const OnboardingFlow(), // 👈 your real login screen
+//       },
+//     );
+//   }
+// }
+//
+// class OnboardingScreen extends StatefulWidget {
+//   const OnboardingScreen({super.key});
+//
+//   @override
+//   State<OnboardingScreen> createState() => _OnboardingScreenState();
+// }
+//
+// class _OnboardingScreenState extends State<OnboardingScreen> {
+//   @override
+//   void initState() {
+//     super.initState();
+//     Future.delayed(const Duration(seconds: 3), () {
+//       Navigator.pushNamed(context, '/onboarding1');
+//     });
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: const Color(0xFF4CAF50),
+//       body: const Center(
+//         child: Row(
+//           mainAxisSize: MainAxisSize.min,
+//           children: [
+//             Icon(
+//               Icons.pets,
+//               color: Colors.white,
+//               size: 60,
+//             ),
+//             Text(
+//               'PawfectCare',
+//               style: TextStyle(
+//                 color: Colors.white,
+//                 fontSize: 40,
+//                 fontWeight: FontWeight.bold,
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }

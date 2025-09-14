@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:projects/ResetPasswordScreen.dart';
 import 'firebase_options.dart';
 
 // Screens
@@ -9,6 +10,7 @@ import 'SignUpScreen.dart';
 import 'AppointmentPage.dart';
 import 'PetDashboardApp.dart';
 import 'ForgotPasswordScreen.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,6 +42,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const LoginScreen(),
         '/signup': (context) => const SignUpScreen(),
         '/forgotPassword': (context) => const ForgotPasswordScreen(),
+        '/resetPassword': (context) => const ResetPasswordScreen(),
         '/petDashboardApp': (context) => const PetDashboardApp(),
         // '/appointmentscreen': (context) => const AppointmentPage(),
       },

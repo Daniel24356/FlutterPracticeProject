@@ -165,7 +165,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                                       content: Text(
                                           "Password reset successfully!")),
                                 );
-                                Navigator.pop(context);
+                                // Navigator.pop(context);
+                                Navigator.pushNamed(context, '/');
                               } catch (e) {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(

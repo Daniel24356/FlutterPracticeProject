@@ -8,12 +8,13 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:projects/services/petService.dart';
 import 'package:projects/PetCareTipsPage.dart';
-import 'AppointmentPage.dart';
 import 'UserProfile.dart';
 import 'PetStorePage.dart';
 import 'HealthRecordsPage.dart';
 import 'components/AppSidebar.dart';
 import 'components/CustomAppBar.dart';
+import '../services/authService.dart' as auth;
+
 
 
 void main() {
@@ -22,6 +23,7 @@ void main() {
 
 class PetDashboardApp extends StatelessWidget {
   const PetDashboardApp({super.key});
+
 
   @override
   Widget build(BuildContext context) {
@@ -184,7 +186,6 @@ class _DashboardShellState extends State<DashboardShell> with TickerProviderStat
   }
 }
 
-
 class IndexPage extends StatelessWidget {
   const IndexPage({super.key});
 
@@ -200,172 +201,195 @@ class IndexPage extends StatelessWidget {
       ),
       drawer: const AppSidebar(),
       body: SingleChildScrollView(
-
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Greeting
-            Row(
-              children: [
-                const CircleAvatar(
-                  radius: 30,
-                  backgroundImage: AssetImage('images/avatar.jpeg'), // Replace with your device image path
-                ),
-                const SizedBox(width: 12),
-                const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+            // Greeting with user's first name
+            FutureBuilder<auth.UserProfile?>(
+              future: auth.AuthService().getCurrentUserProfile(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Text(
+                    "Hello ...",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  );
+                }
+                if (!snapshot.hasData || snapshot.data == null) {
+                  return const Text(
+                    "Hello Guest",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  );
+                }
 
+                final user = snapshot.data!;
+                final firstName = user.name.split(" ").first;
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Hello Evelyn',
-                      style: TextStyle(
+                      "Hello $firstName",
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    Text(
-                      'Welcome!',
+                    const Text(
+                      "Welcome!",
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey,
                       ),
                     ),
                   ],
-                ),
-                // const Spacer(),
-                // IconButton(
-                //   icon: const Icon(Icons.notifications_outlined, color: Colors.grey, size: 30),
-                //   onPressed: () {},
-                // ),
-              ],
+                );
+              },
             ),
+
             const SizedBox(height: 24),
+
             // Pets row
-            Row(
-              children: [
-                Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start, // Align header to the left
+            // ---------------- My Pets Section ----------------
+            SizedBox(
+              height: 100,
+              child: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection("users")
+                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                    .collection("pets")
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // First row: Section header
-                        const _SectionHeader(
-                          title: 'My Pets',
-                          actionLabel: 'View all',
-                          onPressed: null, // Placeholder; implement navigation
-                        ),
-
-                        const SizedBox(height: 8), // Space between header and pets row
-
-                        // Second row: pets
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _PetAvatar(
-                              name: 'Max',
-                              image: const AssetImage('images/maltese.png'),
-                            ),
-                            _PetAvatar(
-                              name: 'Luna',
-                              image: const AssetImage('images/luna.jpg'),
-                            ),
-                            _PetAvatar(
-                              name: 'Dash',
-                              image: const AssetImage('images/dash.jpg'),
-                            ),
-                            _PetAvatar(
-                              name: 'Tom',
-                              image: const AssetImage('images/tom.jpg'),
-                            ),
-
-                            // Add button aligned with pets
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children:[
-                                  const SizedBox(height: 5),
-                                  IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(Icons.add_circle, size: 36, color: Colors.green),
-                                ),
-                              ],
-                            ),
-
-
-                          ],
+                        const Text("No pets yet"),
+                        IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (_) => const AddPetPage()),
+                            );
+                          },
+                          icon: const Icon(Icons.add_circle,
+                              size: 36, color: Colors.green),
                         ),
                       ],
-                    )
+                    );
+                  }
 
-                ),
+                  // ✅ pets is defined here
+                  final pets = snapshot.data!.docs;
 
-              ],
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: pets.length + 1, // pets + plus button
+                    itemBuilder: (context, index) {
+                      if (index == pets.length) {
+                        // ➕ Add button
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const SizedBox(height: 5),
+                            IconButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (_) => const AddPetPage()),
+                                );
+                              },
+                              icon: const Icon(Icons.add_circle,
+                                  size: 36, color: Colors.green),
+                            ),
+                          ],
+                        );
+                      }
+
+                      // ✅ pet data and id
+                      final pet = pets[index].data() as Map<String, dynamic>? ?? {};
+                      final petId = pets[index].id;
+
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => PetDetailsPage(
+                                petId: petId,
+                                petData: pet,
+                              ),
+                            ),
+                          );
+                        },
+                        child: _PetAvatar(
+                          name: pet["name"] ?? "Unnamed",
+                          image: pet["photoUrl"] != null &&
+                              pet["photoUrl"].toString().isNotEmpty
+                              ? NetworkImage(pet["photoUrl"])
+                              : const AssetImage("images/avatar.jpeg")
+                          as ImageProvider,
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
             ),
 
+
             const SizedBox(height: 24),
-            // Upcoming Appointments section (replacing providers from image)
+
+            // Upcoming Appointments section
             const _SectionHeader(
               title: 'Upcoming Appointments',
               actionLabel: 'View all',
-              onPressed: null, // Placeholder; implement navigation as needed
+              onPressed: null, // you can later navigate to full AppointmentPage
             ),
             const SizedBox(height: 8),
-            const _AppointmentCard(
-              petName: 'Max',
-              type: 'Grooming',
-              date: 'Today, 2:00 PM',
-              provider: 'Dr. Cameron Williamson',
-              icon: Icons.content_cut,
-              color: Colors.purple,
-            ),
-            const SizedBox(height: 12),
-            const _AppointmentCard(
-              petName: 'Luna',
-              type: 'Vaccination',
-              date: 'Tomorrow, 10:00 AM',
-              provider: 'Dr. Leslie Alexander',
-              icon: Icons.vaccines,
-              color: Colors.orange,
-            ),
-            const SizedBox(height: 12),
-            const _AppointmentCard(
-              petName: 'Dash',
-              type: 'Check-up',
-              date: 'Sept 15, 3:00 PM',
-              provider: 'Cameron Williamson',
-              icon: Icons.health_and_safety,
-              color: Colors.blue
-            ),
-            const SizedBox(height: 24),
-            // Store Picks section
-            const _SectionHeader(
-              title: 'Store Picks',
-              actionLabel: 'View all',
-              onPressed: null, // Placeholder; implement navigation as needed
-            ),
-            const SizedBox(height: 8),
+
             SizedBox(
-              height: 170,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: 5,
-                itemBuilder: (context, index) => const _ProductCard(),
-              ),
-            ),
-            const SizedBox(height: 24),
-            // Today's Care Tips section
-            const _SectionHeader(
-              title: "Today's Care Tips",
-              actionLabel: 'View all',
-              onPressed: null, // Placeholder; implement navigation as needed
-            ),
-            const SizedBox(height: 8),
-            SizedBox(
-              height: 200,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: 3,
-                itemBuilder: (context, index) => const _ArticleCard(),
+              height: 180,
+              child: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection("users")
+                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                    .collection("appointments")
+                    .orderBy("dateTime")
+                    .limit(3) // only show next 3
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                    return const Center(child: Text("No upcoming appointments"));
+                  }
+
+                  final docs = snapshot.data!.docs;
+
+                  return ListView.separated(
+                    itemCount: docs.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 12),
+                    itemBuilder: (context, index) {
+                      final data = docs[index].data() as Map<String, dynamic>;
+                      final dt = (data["dateTime"] as Timestamp).toDate();
+
+                      return _AppointmentCard(
+                        petName: data["petName"] ?? "Unknown",
+                        type: data["reason"] ?? "Checkup",
+                        date: "${dt.day}/${dt.month}/${dt.year}, "
+                            "${dt.hour}:${dt.minute.toString().padLeft(2, '0')}",
+                        provider: data["vetName"] ?? "Vet",
+                        icon: Icons.medical_information,
+                        color: Colors.green,
+                      );
+                    },
+                  );
+                },
               ),
             ),
           ],
@@ -374,6 +398,7 @@ class IndexPage extends StatelessWidget {
     );
   }
 }
+
 
 class _PetAvatar extends StatelessWidget {
   final String name;
@@ -974,104 +999,6 @@ class _AppointmentListPageState extends State<AppointmentListPage>
       ),
     );
   }
-
-  // Widget _appointmentCard(Map<String, dynamic> appointment,
-  //     {bool showActions = false}) {
-  //   return Card(
-  //     margin: const EdgeInsets.only(bottom: 16),
-  //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-  //     elevation: 3,
-  //     child: Padding(
-  //       padding: const EdgeInsets.all(16),
-  //       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-  //         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-  //           Row(children: [
-  //             Container(
-  //               width: 48,
-  //               height: 48,
-  //               decoration: BoxDecoration(
-  //                 color: Colors.green.shade100,
-  //                 borderRadius: BorderRadius.circular(12),
-  //               ),
-  //               child: Center(
-  //                 child: Text(appointment["pet"]["emoji"],
-  //                     style: const TextStyle(fontSize: 24)),
-  //               ),
-  //             ),
-  //             const SizedBox(width: 12),
-  //             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-  //               Text(appointment["pet"]["name"],
-  //                   style: const TextStyle(
-  //                       fontWeight: FontWeight.bold, fontSize: 16)),
-  //               Text(appointment["pet"]["species"],
-  //                   style: const TextStyle(color: Colors.grey)),
-  //             ]),
-  //           ]),
-  //           Chip(
-  //             label: Text(appointment["status"].toString().toUpperCase()),
-  //             backgroundColor: _statusColor(appointment["status"]).withOpacity(0.2),
-  //             labelStyle: TextStyle(color: _statusColor(appointment["status"])),
-  //           ),
-  //         ]),
-  //         const SizedBox(height: 12),
-  //         Row(children: [
-  //           const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
-  //           const SizedBox(width: 4),
-  //           Text(appointment["date"]),
-  //           const SizedBox(width: 16),
-  //           const Icon(Icons.access_time, size: 16, color: Colors.grey),
-  //           const SizedBox(width: 4),
-  //           Text(appointment["time"]),
-  //         ]),
-  //         const SizedBox(height: 8),
-  //         Row(children: [
-  //           const Icon(Icons.location_on, size: 16, color: Colors.grey),
-  //           const SizedBox(width: 4),
-  //           Text(appointment["clinic"]),
-  //         ]),
-  //         const SizedBox(height: 8),
-  //         Text("${appointment["veterinarian"]}",
-  //             style: const TextStyle(fontWeight: FontWeight.w500)),
-  //         Text("Type: ${appointment["type"]}"),
-  //         if (appointment["phone"] != null)
-  //           Row(children: [
-  //             const Icon(Icons.phone, size: 16, color: Colors.grey),
-  //             const SizedBox(width: 4),
-  //             Text(appointment["phone"]),
-  //           ]),
-  //         if (showActions) ...[
-  //           const Divider(height: 24),
-  //           Row(children: [
-  //             Expanded(
-  //               child: ElevatedButton(
-  //                 onPressed: () {
-  //                   Navigator.of(context).push(MaterialPageRoute(
-  //                       builder: (_) => RescheduleAppointmentPage(
-  //                           appointment: appointment)));
-  //                 },
-  //                 style: ElevatedButton.styleFrom(
-  //                     backgroundColor: Colors.green,
-  //                     shape: RoundedRectangleBorder(
-  //                         borderRadius: BorderRadius.circular(12))),
-  //                 child: const Text("Reschedule"),
-  //               ),
-  //             ),
-  //             const SizedBox(width: 8),
-  //             Expanded(
-  //               child: OutlinedButton(
-  //                 onPressed: () {},
-  //                 style: OutlinedButton.styleFrom(
-  //                     shape: RoundedRectangleBorder(
-  //                         borderRadius: BorderRadius.circular(12))),
-  //                 child: const Text("Cancel"),
-  //               ),
-  //             ),
-  //           ]),
-  //         ]
-  //       ]),
-  //     ),
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -2357,6 +2284,61 @@ class PetProfileListPage extends StatelessWidget {
                 },
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class PetDetailsPage extends StatelessWidget {
+  final String petId;
+  final Map<String, dynamic> petData;
+
+  const PetDetailsPage({
+    super.key,
+    required this.petId,
+    required this.petData,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(petData["name"] ?? "Pet Details"),
+        backgroundColor: Colors.green,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: CircleAvatar(
+                radius: 60,
+                backgroundImage: petData["photoUrl"] != null &&
+                    petData["photoUrl"].toString().isNotEmpty
+                    ? NetworkImage(petData["photoUrl"])
+                    : const AssetImage("images/avatar.jpeg") as ImageProvider,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text("Species: ${petData["species"] ?? "-"}",
+                style: const TextStyle(fontSize: 16)),
+            Text("Breed: ${petData["breed"] ?? "-"}",
+                style: const TextStyle(fontSize: 16)),
+            Text("Age: ${petData["age"] ?? "-"} years",
+                style: const TextStyle(fontSize: 16)),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                // you can navigate to edit or health records here
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+              ),
+              child: const Text("View Health Records"),
+            )
           ],
         ),
       ),

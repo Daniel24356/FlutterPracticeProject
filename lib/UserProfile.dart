@@ -2,16 +2,40 @@ import 'package:flutter/material.dart';
 import 'EditProfilePage.dart';
 import 'components/AppSidebar.dart';
 import 'components/CustomAppBar.dart';
+import '../services/authService.dart' as auth; // adjust path as needed
 
-class UserProfile extends StatelessWidget {
+class UserProfile extends StatefulWidget {
   const UserProfile({super.key});
 
+  @override
+  State<UserProfile> createState() => _UserProfileState();
+}
 
-  Widget _buildMenuItem(
-      {required IconData icon,
-        required Color bgColor,
-        required String title,
-        VoidCallback? onTap}) {
+class _UserProfileState extends State<UserProfile> {
+  final auth.AuthService _authService = auth.AuthService();
+  auth.UserProfile? _userProfile;
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserProfile();
+  }
+
+  Future<void> _loadUserProfile() async {
+    final profile = await _authService.getCurrentUserProfile();
+    setState(() {
+      _userProfile = profile;
+      _loading = false;
+    });
+  }
+
+  Widget _buildMenuItem({
+    required IconData icon,
+    required Color bgColor,
+    required String title,
+    VoidCallback? onTap,
+  }) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
@@ -63,24 +87,42 @@ class UserProfile extends StatelessWidget {
         actionIcon: Icons.notifications_outlined,
       ),
       drawer: const AppSidebar(),
-      body: SingleChildScrollView(
+      body: _loading
+          ? const Center(child: CircularProgressIndicator())
+          : _userProfile == null
+          ? const Center(child: Text("No profile found"))
+          : SingleChildScrollView(
         child: Column(
           children: [
             const SizedBox(height: 20),
+
             // Profile Avatar
-            const CircleAvatar(
+            CircleAvatar(
               radius: 50,
-              backgroundImage: AssetImage("images/avatar.jpeg"), // your image
+              backgroundImage: _userProfile!.profilePicUrl.isNotEmpty
+                  ? NetworkImage(_userProfile!.profilePicUrl)
+                  : const AssetImage("images/avatar.jpeg")
+              as ImageProvider,
             ),
             const SizedBox(height: 12),
-            const Text(
-              "Evelyn Parker",
-              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+
+            // Name
+            Text(
+              _userProfile!.name,
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 18,
+              ),
             ),
             const SizedBox(height: 4),
-            const Text(
-              "evelynparker17@gmail.com",
-              style: TextStyle(color: Colors.grey, fontSize: 14),
+
+            // Email
+            Text(
+              _userProfile!.email,
+              style: const TextStyle(
+                color: Colors.grey,
+                fontSize: 14,
+              ),
             ),
             const SizedBox(height: 20),
 
@@ -92,7 +134,9 @@ class UserProfile extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => const EditProfilePage()),
+                  MaterialPageRoute(
+                    builder: (_) => const EditProfilePage(),
+                  ),
                 );
               },
             ),
@@ -100,14 +144,6 @@ class UserProfile extends StatelessWidget {
                 icon: Icons.lock,
                 bgColor: Colors.red,
                 title: "Password Manager"),
-            // _buildMenuItem(
-            //     icon: Icons.location_on,
-            //     bgColor: Colors.red,
-            //     title: "Manage Address"),
-            // _buildMenuItem(
-            //     icon: Icons.account_balance_wallet,
-            //     bgColor: Colors.purple,
-            //     title: "My Wallet"),
             _buildMenuItem(
                 icon: Icons.settings,
                 bgColor: Colors.orange,

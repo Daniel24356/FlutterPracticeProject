@@ -89,6 +89,12 @@ flutter:
      - images/tom.jpg
      - images/dash.jpg
      - images/hygiene.png
+     - images/vaccine.png
+     - images/surgery.jpg
+     - images/surgery.png
+     - images/medicine.png
+     - images/allergy.png
+     - images/surgery.webp
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

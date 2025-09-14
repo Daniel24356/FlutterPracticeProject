@@ -49,12 +49,12 @@ class _DashboardShellState extends State<DashboardShell> with TickerProviderStat
   late final PageController _pageController;
   late final AnimationController _fabController;
 
-  final List<Widget> _pages = const [
-    IndexPage(),
-    AppointmentListPage(),
-    PetStorePage(),
+  final List<Widget> _pages = [
+    const IndexPage(),
+    const AppointmentListPage(),
+    const PetStorePage(),
     HealthRecordsPage(),
-    UserProfile(),
+    const UserProfile(),
   ];
 
   @override
@@ -322,7 +322,7 @@ class IndexPage extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             const _AppointmentCard(
-              petName: 'Buddy',
+              petName: 'Max',
               type: 'Grooming',
               date: 'Today, 2:00 PM',
               provider: 'Dr. Cameron Williamson',
@@ -331,7 +331,7 @@ class IndexPage extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             const _AppointmentCard(
-              petName: 'Oliver',
+              petName: 'Luna',
               type: 'Vaccination',
               date: 'Tomorrow, 10:00 AM',
               provider: 'Dr. Leslie Alexander',
@@ -340,7 +340,7 @@ class IndexPage extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             const _AppointmentCard(
-              petName: 'Tom',
+              petName: 'Dash',
               type: 'Check-up',
               date: 'Sept 15, 3:00 PM',
               provider: 'Cameron Williamson',
@@ -729,7 +729,7 @@ class _AppointmentListPageState extends State<AppointmentListPage>
   final List<Map<String, dynamic>> upcomingAppointments = [
     {
       "id": "1",
-      "pet": {"name": "Max", "species": "Dog", "emoji": "🐕"},
+      "pet": {"name": "Max", "species": "Dog", "image": "maltese.png"},
       "veterinarian": "Dr. Sarah Smith",
       "clinic": "Downtown Pet Clinic",
       "date": "2024-09-15",
@@ -740,7 +740,7 @@ class _AppointmentListPageState extends State<AppointmentListPage>
     },
     {
       "id": "2",
-      "pet": {"name": "Luna", "species": "Cat", "emoji": "🐱"},
+      "pet": {"name": "Luna", "species": "Cat", "image": "luna.jpg"},
       "veterinarian": "Dr. Michael Johnson",
       "clinic": "Pet Hospital",
       "date": "2024-09-18",
@@ -754,7 +754,7 @@ class _AppointmentListPageState extends State<AppointmentListPage>
   final List<Map<String, dynamic>> pastAppointments = [
     {
       "id": "3",
-      "pet": {"name": "Coco", "species": "Rabbit", "emoji": "🐰"},
+      "pet": {"name": "Dash", "species": "Rabbit", "image": "dash.jpg"},
       "veterinarian": "Dr. Emily Brown",
       "clinic": "Animal Care Center",
       "date": "2024-08-10",
@@ -764,7 +764,7 @@ class _AppointmentListPageState extends State<AppointmentListPage>
     },
     {
       "id": "4",
-      "pet": {"name": "Max", "species": "Dog", "emoji": "🐕"},
+      "pet": {"name": "Tom", "species": "Bird", "image": "tom.jpg"},
       "veterinarian": "Dr. Sarah Smith",
       "clinic": "Downtown Pet Clinic",
       "date": "2024-07-15",
@@ -804,94 +804,266 @@ class _AppointmentListPageState extends State<AppointmentListPage>
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Row(children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: Colors.green.shade100,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Center(
-                  child: Text(appointment["pet"]["emoji"],
-                      style: const TextStyle(fontSize: 24)),
+          // Top Row: Pet Info + Status
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  // Replace emoji with pet image from assets
+                  Container(
+                    width: 52,
+                    height: 52,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      // color: Colors.grey.shade200,
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.asset(
+                        "images/${appointment["pet"]["image"]}",
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        appointment["pet"]["name"],
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                      Text(
+                        appointment["pet"]["species"],
+                        style: const TextStyle(color: Colors.grey, fontSize: 13),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Chip(
+                label: Text(appointment["status"].toString().toUpperCase()),
+                backgroundColor:
+                _statusColor(appointment["status"]).withOpacity(0.15),
+                labelStyle: TextStyle(
+                  color: _statusColor(appointment["status"]),
+                  fontWeight: FontWeight.w600,
+                  fontSize: 12,
                 ),
               ),
-              const SizedBox(width: 12),
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(appointment["pet"]["name"],
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 16)),
-                Text(appointment["pet"]["species"],
-                    style: const TextStyle(color: Colors.grey)),
-              ]),
-            ]),
-            Chip(
-              label: Text(appointment["status"].toString().toUpperCase()),
-              backgroundColor: _statusColor(appointment["status"]).withOpacity(0.2),
-              labelStyle: TextStyle(color: _statusColor(appointment["status"])),
-            ),
-          ]),
-          const SizedBox(height: 12),
-          Row(children: [
-            const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
-            const SizedBox(width: 4),
-            Text(appointment["date"]),
-            const SizedBox(width: 16),
-            const Icon(Icons.access_time, size: 16, color: Colors.grey),
-            const SizedBox(width: 4),
-            Text(appointment["time"]),
-          ]),
-          const SizedBox(height: 8),
-          Row(children: [
-            const Icon(Icons.location_on, size: 16, color: Colors.grey),
-            const SizedBox(width: 4),
-            Text(appointment["clinic"]),
-          ]),
-          const SizedBox(height: 8),
-          Text("${appointment["veterinarian"]}",
-              style: const TextStyle(fontWeight: FontWeight.w500)),
-          Text("Type: ${appointment["type"]}"),
-          if (appointment["phone"] != null)
-            Row(children: [
-              const Icon(Icons.phone, size: 16, color: Colors.grey),
-              const SizedBox(width: 4),
-              Text(appointment["phone"]),
-            ]),
-          if (showActions) ...[
-            const Divider(height: 24),
-            Row(children: [
+            ],
+          ),
+
+          const SizedBox(height: 14),
+
+          // Date + Time Row
+          Row(
+            children: [
+              const Icon(Icons.calendar_today,
+                  size: 18, color: Colors.deepPurple),
+              const SizedBox(width: 6),
+              Text(appointment["date"], style: const TextStyle(fontSize: 14)),
+              const SizedBox(width: 16),
+              const Icon(Icons.access_time, size: 18, color: Colors.blue),
+              const SizedBox(width: 6),
+              Text(appointment["time"], style: const TextStyle(fontSize: 14)),
+            ],
+          ),
+
+          const SizedBox(height: 10),
+
+          // Clinic Row
+          Row(
+            children: [
+              const Icon(Icons.location_on, size: 18, color: Colors.redAccent),
+              const SizedBox(width: 6),
               Expanded(
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => RescheduleAppointmentPage(
-                            appointment: appointment)));
-                  },
-                  style: ElevatedButton.styleFrom(
+                child: Text(
+                  appointment["clinic"],
+                  style: const TextStyle(fontSize: 14),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 10),
+
+          // Vet Row
+          Row(
+            children: [
+              const Icon(Icons.person, size: 18, color: Colors.teal),
+              const SizedBox(width: 6),
+              Text(appointment["veterinarian"],
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w500, fontSize: 14)),
+            ],
+          ),
+
+          const SizedBox(height: 6),
+
+          // Type Row
+          Row(
+            children: [
+              const Icon(Icons.pets, size: 18, color: Colors.blueGrey),
+              const SizedBox(width: 6),
+              Text("Type: ${appointment["type"]}",
+                  style: const TextStyle(fontSize: 14)),
+            ],
+          ),
+
+          if (appointment["phone"] != null) ...[
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                const Icon(Icons.phone, size: 18, color: Colors.green),
+                const SizedBox(width: 6),
+                Text(appointment["phone"],
+                    style: const TextStyle(fontSize: 14)),
+              ],
+            ),
+          ],
+
+          // Action Buttons
+          if (showActions) ...[
+            const Divider(height: 28),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => RescheduleAppointmentPage(
+                              appointment: appointment)));
+                    },
+                    icon: const Icon(Icons.edit_calendar, size: 18, color: Colors.white,),
+                    label: const Text("Reschedule", style: TextStyle(color: Colors.white),),
+                    style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12))),
-                  child: const Text("Reschedule"),
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+                  ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: () {},
-                  style: OutlinedButton.styleFrom(
+                const SizedBox(width: 12),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () {},
+                    icon: const Icon(Icons.cancel, size: 18),
+                    label: const Text("Cancel"),
+                    style: OutlinedButton.styleFrom(
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12))),
-                  child: const Text("Cancel"),
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+                  ),
                 ),
-              ),
-            ]),
+              ],
+            ),
           ]
         ]),
       ),
     );
   }
+
+  // Widget _appointmentCard(Map<String, dynamic> appointment,
+  //     {bool showActions = false}) {
+  //   return Card(
+  //     margin: const EdgeInsets.only(bottom: 16),
+  //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+  //     elevation: 3,
+  //     child: Padding(
+  //       padding: const EdgeInsets.all(16),
+  //       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+  //         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+  //           Row(children: [
+  //             Container(
+  //               width: 48,
+  //               height: 48,
+  //               decoration: BoxDecoration(
+  //                 color: Colors.green.shade100,
+  //                 borderRadius: BorderRadius.circular(12),
+  //               ),
+  //               child: Center(
+  //                 child: Text(appointment["pet"]["emoji"],
+  //                     style: const TextStyle(fontSize: 24)),
+  //               ),
+  //             ),
+  //             const SizedBox(width: 12),
+  //             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+  //               Text(appointment["pet"]["name"],
+  //                   style: const TextStyle(
+  //                       fontWeight: FontWeight.bold, fontSize: 16)),
+  //               Text(appointment["pet"]["species"],
+  //                   style: const TextStyle(color: Colors.grey)),
+  //             ]),
+  //           ]),
+  //           Chip(
+  //             label: Text(appointment["status"].toString().toUpperCase()),
+  //             backgroundColor: _statusColor(appointment["status"]).withOpacity(0.2),
+  //             labelStyle: TextStyle(color: _statusColor(appointment["status"])),
+  //           ),
+  //         ]),
+  //         const SizedBox(height: 12),
+  //         Row(children: [
+  //           const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
+  //           const SizedBox(width: 4),
+  //           Text(appointment["date"]),
+  //           const SizedBox(width: 16),
+  //           const Icon(Icons.access_time, size: 16, color: Colors.grey),
+  //           const SizedBox(width: 4),
+  //           Text(appointment["time"]),
+  //         ]),
+  //         const SizedBox(height: 8),
+  //         Row(children: [
+  //           const Icon(Icons.location_on, size: 16, color: Colors.grey),
+  //           const SizedBox(width: 4),
+  //           Text(appointment["clinic"]),
+  //         ]),
+  //         const SizedBox(height: 8),
+  //         Text("${appointment["veterinarian"]}",
+  //             style: const TextStyle(fontWeight: FontWeight.w500)),
+  //         Text("Type: ${appointment["type"]}"),
+  //         if (appointment["phone"] != null)
+  //           Row(children: [
+  //             const Icon(Icons.phone, size: 16, color: Colors.grey),
+  //             const SizedBox(width: 4),
+  //             Text(appointment["phone"]),
+  //           ]),
+  //         if (showActions) ...[
+  //           const Divider(height: 24),
+  //           Row(children: [
+  //             Expanded(
+  //               child: ElevatedButton(
+  //                 onPressed: () {
+  //                   Navigator.of(context).push(MaterialPageRoute(
+  //                       builder: (_) => RescheduleAppointmentPage(
+  //                           appointment: appointment)));
+  //                 },
+  //                 style: ElevatedButton.styleFrom(
+  //                     backgroundColor: Colors.green,
+  //                     shape: RoundedRectangleBorder(
+  //                         borderRadius: BorderRadius.circular(12))),
+  //                 child: const Text("Reschedule"),
+  //               ),
+  //             ),
+  //             const SizedBox(width: 8),
+  //             Expanded(
+  //               child: OutlinedButton(
+  //                 onPressed: () {},
+  //                 style: OutlinedButton.styleFrom(
+  //                     shape: RoundedRectangleBorder(
+  //                         borderRadius: BorderRadius.circular(12))),
+  //                 child: const Text("Cancel"),
+  //               ),
+  //             ),
+  //           ]),
+  //         ]
+  //       ]),
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {

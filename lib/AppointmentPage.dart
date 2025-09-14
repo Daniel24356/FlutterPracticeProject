@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../services/appointment_service.dart';
+import '../services/appointmentService.dart';
 
 enum AppointmentStatus { Upcoming, Completed, Cancelled }
 

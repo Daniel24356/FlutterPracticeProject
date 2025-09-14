@@ -188,7 +188,7 @@ class ShelterIndexPage extends StatelessWidget {
               children: [
                 const CircleAvatar(
                   radius: 30,
-                  backgroundImage: AssetImage('images/shelter_admin.png'), // Assume asset
+                  backgroundImage: AssetImage('images/avatar3.jpeg'), // Assume asset
                 ),
                 const SizedBox(width: 12),
                 const Column(
@@ -225,18 +225,18 @@ class ShelterIndexPage extends StatelessWidget {
                       controller: PageController(viewportFraction: 0.86),
                       children: [
                         _RequestMiniCard(
-                          petName: 'Rocky',
+                          petName: 'Max',
                           species: 'Dog',
-                          applicant: 'John Doe',
+                          applicant: 'Evelyn Parker',
                           dateTime: DateTime(2025, 9, 14, 10, 0),
-                          imageUrl: 'images/rocky.jpg',
+                          imageUrl: 'images/maltese.png',
                         ),
                         _RequestMiniCard(
-                          petName: 'Gnocchi',
-                          species: 'Dog',
+                          petName: 'Luna',
+                          species: 'Cat',
                           applicant: 'Jane Smith',
                           dateTime: DateTime(2025, 9, 14, 12, 30),
-                          imageUrl: 'images/gnocchi.jpg',
+                          imageUrl: 'images/luna.jpg',
                         ),
                       ],
                     ),
@@ -416,51 +416,51 @@ class PetListingsPage extends StatefulWidget {
 
 class _PetListingsPageState extends State<PetListingsPage> {
   String searchQuery = "";
-  String selectedCategory = "Dogs";
+  String selectedCategory = "";
 
   final List<Map<String, dynamic>> animals = [
     {
-      "name": "Rocky",
-      "breed": "Beagle",
+      "name": "Max",
+      "breed": "Maltese",
       "age": "2 years",
       "gender": "Male",
       "health": "Fit",
       "location": "Zurich, CH",
       "distance": "2km",
-      "donation": "\$100.00",
-      "imageUrl": "images/rocky.jpg",
+      "donation": "\$100",
+      "imageUrl": "images/maltese.png",
       "category": "Dogs",
       "status": "Available",
-      "description": "Rocky is playful and friendly.",
+      "description": "Max is playful and friendly.",
     },
     {
-      "name": "Gnocchi",
-      "breed": "Golden Retriever",
+      "name": "Luna",
+      "breed": "Manx",
       "age": "4 months",
       "gender": "Female",
       "health": "Fit",
       "location": "Kastanienallee, Berlin",
       "distance": "23km",
-      "donation": "\$100.00",
-      "imageUrl": "images/gnocchi.jpg",
-      "category": "Dogs",
+      "donation": "\$53",
+      "imageUrl": "images/luna.jpg",
+      "category": "Cats",
       "status": "Available",
-      "description": "Gnocchi is lovely and well trained. She loves to pull a little bit when she sees other dogs.",
+      "description": "Luna is lovely and well trained. She loves to pull a little bit when she sees other dogs.",
     },
     // Add more hardcoded animals
     {
-      "name": "Tiger",
-      "breed": "Bengal",
+      "name": "Dash",
+      "breed": "Giant Flemming",
       "age": "1 year",
       "gender": "Male",
       "health": "Fit",
       "location": "Zurich, CH",
       "distance": "5km",
-      "donation": "\$100.00",
-      "imageUrl": "images/tiger.jpg",
-      "category": "Cats",
+      "donation": "\$15",
+      "imageUrl": "images/dash.jpg",
+      "category": "Rabbits",
       "status": "Available",
-      "description": "Tiger is energetic and curious.",
+      "description": "Dash is energetic and curious.",
     },
   ];
 
@@ -913,14 +913,14 @@ class _AdoptionRequestsPageState extends State<AdoptionRequestsPage> with Single
   final List<Map<String, dynamic>> requests = [
     {
       "id": "1",
-      "petName": "Rocky",
+      "petName": "Max",
       "applicant": {"name": "John Doe", "email": "john@example.com", "phone": "+123456789", "address": "123 Street"},
       "date": "2025-09-14",
       "status": "Pending",
     },
     {
       "id": "2",
-      "petName": "Gnocchi",
+      "petName": "Luna",
       "applicant": {"name": "Jane Smith", "email": "jane@example.com", "phone": "+987654321", "address": "456 Avenue"},
       "date": "2025-09-13",
       "status": "Approved",
@@ -1051,11 +1051,11 @@ class SuccessStoriesPage extends StatefulWidget {
 class _SuccessStoriesPageState extends State<SuccessStoriesPage> {
   final List<Map<String, dynamic>> stories = [
     {
-      "petName": "Rocky",
+      "petName": "Max",
       "adopterName": "John Doe",
       "date": "2025-08-01",
-      "description": "Rocky found a loving home with John!",
-      "photo": "images/rocky_adopted.jpg",
+      "description": "Max found a loving home with John!",
+      "photo": "images/maltese.png",
     },
     // Add more
   ];

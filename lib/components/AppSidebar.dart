@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projects/AdoptionListingsPage.dart';
 import 'package:projects/PetDashboardApp.dart';
 import 'package:projects/ShelterDashboard.dart';
 import '../PetCareTipsPage.dart';
@@ -79,7 +80,7 @@ class AppSidebar extends StatelessWidget {
                     context,
                     Icons.volunteer_activism,
                     'Adopt a Pet',
-                        () => _openRoute(context, const ShelterDashboard()),
+                        () => _openRoute(context, const AdoptionListingsPage()),
                     color: Colors.orange,
                   ),
 

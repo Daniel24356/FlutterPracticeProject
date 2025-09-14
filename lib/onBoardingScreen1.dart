@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+import 'LoginScreen.dart'; // replace with your login screen
+
+
 class OnboardingFlow extends StatefulWidget {
   const OnboardingFlow({super.key});
 
@@ -84,7 +88,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
                 Icon(Icons.pets, color: Colors.green, size: 28),
                 const SizedBox(width: 6),
                 const Text(
-                  "PawfectCare",
+                  "PetCare",
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w600,
@@ -147,14 +151,20 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
-
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                onPressed: () {
+                onPressed: () async {
                   if (isLast) {
-                    Navigator.restorablePushReplacementNamed(context, '/login');
+                    final prefs = await SharedPreferences.getInstance();
+                    await prefs.setBool('hasSeenOnboarding', true);
+
+                    // Navigate to Login
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (_) => const LoginScreen()),
+                    );
                   } else {
                     _controller.nextPage(
                       duration: const Duration(milliseconds: 400),
@@ -165,7 +175,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
                 child: Text(
                   isLast ? "Get Started" : "Next",
                   style: const TextStyle(
-                      fontSize: 16, color: Colors.white, fontWeight: FontWeight.w600),
+                      fontSize: 16, fontWeight: FontWeight.w600),
                 ),
               ),
             ),

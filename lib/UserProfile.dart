@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'EditProfilePage.dart';
+import 'components/AppSidebar.dart';
+import 'components/CustomAppBar.dart';
 
 class UserProfile extends StatelessWidget {
   const UserProfile({super.key});
+
 
   Widget _buildMenuItem(
       {required IconData icon,
@@ -20,9 +23,9 @@ class UserProfile extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.08),
+              color: Colors.black.withOpacity(0.08),
               blurRadius: 6,
-              offset: const Offset(0, 3),
+              offset: const Offset(0, 2),
             ),
           ],
         ),
@@ -53,21 +56,13 @@ class UserProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text(
-          "Profile",
-          style: TextStyle(
-              fontWeight: FontWeight.w600, fontSize: 18, color: Colors.black),
-        ),
+      backgroundColor: Colors.white,
+      appBar: const CustomAppBar(
+        title: "Profile",
+        showMenu: true,
+        actionIcon: Icons.notifications_outlined,
       ),
+      drawer: const AppSidebar(),
       body: SingleChildScrollView(
         child: Column(
           children: [

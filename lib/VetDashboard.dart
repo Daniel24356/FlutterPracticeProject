@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:math';
+import 'package:intl/intl.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:projects/VetHealthRecords.dart';
@@ -204,10 +205,36 @@ class IndexPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Dashboard', style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
-                _QuickStatsCard()
+                const CircleAvatar(
+                  radius: 30,
+                  backgroundImage: AssetImage('images/doctor.png'), // Replace with your device image path
+                ),
+                const SizedBox(width: 12),
+                const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Hello Dr. Williams',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Text(
+                      'Welcome!',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                IconButton(
+                  icon: const Icon(Icons.notifications_outlined, color: Colors.grey, size: 30),
+                  onPressed: () {},
+                ),
               ],
             ),
             const SizedBox(height: 18),
@@ -215,22 +242,76 @@ class IndexPage extends StatelessWidget {
               child: ListView(
                 physics: const BouncingScrollPhysics(),
                 children: [
-                  _SectionHeader(title: 'Upcoming Appointments', actionLabel: 'View all', onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AppointmentListPage()))),
+                  _SectionHeader(title: "Today's Appointments", actionLabel: 'View all', onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AppointmentListPage()))),
                   const SizedBox(height: 8),
                   SizedBox(
-                    height: 140,
+                    height: 170,
                     child: PageView(
                       controller: PageController(viewportFraction: 0.86),
-                      children: const [
-                        _MiniCard(color: Colors.green, title: 'Buddy', subtitle: 'Grooming • 12 Sept'),
-                        _MiniCard(color: Colors.green, title: 'Milo', subtitle: 'Vaccination • 15 Sept'),
+                      children: [
+                        _MiniCard(
+                          petName: 'Max',
+                          species: 'Dog',
+                          category: 'CheckUp',
+                          dateTime: DateTime(2025, 9, 14, 10, 0),
+                          imageUrl: 'images/maltese.png',
+                        ),
+                        _MiniCard(
+                          petName: 'Luna',
+                          species: 'Cat',
+                          category: 'Vaccination',
+                          dateTime: DateTime(2025, 9, 14, 12, 30),
+                          imageUrl: 'images/luna.jpg',
+                        ),
+
+                        _MiniCard(
+                          petName: 'Dash',
+                          species: 'Rabbit',
+                          category: 'Emergency',
+                          dateTime: DateTime(2025, 9, 14, 13, 15),
+                          imageUrl: 'images/dash.jpg',
+                        ),
+                        _MiniCard(
+                          petName: 'Tom',
+                          species: 'Bird',
+                          category: 'Consultation',
+                          dateTime: DateTime(2025, 9, 14, 15, 45),
+                          imageUrl: 'images/tom.jpg',
+                        ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 18),
-                  // _SectionHeader(title: 'Store Picks', actionLabel: 'Open Store', onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PetStorePage()))),
+                  _SectionHeader(title: "Upcoming Schedule", actionLabel: 'View all', onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AppointmentListPage()))),
+                  SizedBox(
+                    height: 330, // adjust depending on how tall you want it
+                    child: ListView(
+                      padding: const EdgeInsets.all(1),
+                      children: const [
+                        DailyScheduleCard(
+                          date: "14 Sept",
+                          confirmed: 3,
+                          pending: 2,
+                          rescheduled: 1,
+                          rescheduledNote: "2 rescheduled from 12th Sept",
+                        ),
+                        DailyScheduleCard(
+                          date: "15 Sept",
+                          confirmed: 5,
+                          pending: 1,
+                          rescheduled: 0,
+                        ),
+                        DailyScheduleCard(
+                          date: "16 Sept",
+                          confirmed: 2,
+                          pending: 3,
+                          rescheduled: 1,
+                          rescheduledNote: "1 rescheduled from 14th Sept",
+                        ),
+                      ],
+                    ),
+                  ),
                   const SizedBox(height: 8),
-                  SizedBox(height: 160, child: ListView(scrollDirection: Axis.horizontal, children: const [_StoreItem(), _StoreItem(), _StoreItem()])),
                 ],
               ),
             )
@@ -260,40 +341,300 @@ class _QuickStatsCard extends StatelessWidget {
   }
 }
 
-class _MiniCard extends StatelessWidget {
-  final Color color;
-  final String title;
-  final String subtitle;
-  const _MiniCard({this.color = Colors.green, required this.title, required this.subtitle, super.key});
+
+class DailyScheduleCard extends StatelessWidget {
+  final String date;
+  final int confirmed;
+  final int pending;
+  final int rescheduled;
+  final String? rescheduledNote;
+
+  const DailyScheduleCard({
+    super.key,
+    required this.date,
+    required this.confirmed,
+    required this.pending,
+    required this.rescheduled,
+    this.rescheduledNote,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8),
-      decoration: BoxDecoration(color: color.withOpacity(0.06), borderRadius: BorderRadius.circular(14)),
-      padding: const EdgeInsets.all(14),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(title, style: const TextStyle(fontWeight: FontWeight.bold)), const Icon(Icons.chevron_right, color: Colors.green)]),
-        const Spacer(),
-        Text(subtitle, style: const TextStyle(color: Colors.black54)),
-      ]),
-    );
-  }
-}
-
-class _StoreItem extends StatelessWidget {
-  const _StoreItem({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 140,
-      margin: const EdgeInsets.symmetric(horizontal: 8),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 8)]),
+      margin: const EdgeInsets.symmetric(vertical: 6),
       padding: const EdgeInsets.all(12),
-      child: Column(children: const [Icon(Icons.pets, size: 48, color: Colors.green), SizedBox(height: 8), Text('Premium Kibble', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.w600))]),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.07),
+            blurRadius: 8,
+            spreadRadius: 2,
+            offset: const Offset(0, 2),
+          )
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Row 1: Date
+          Row(
+            children: [
+              const Icon(Icons.calendar_today, color: Colors.green, size: 20),
+              const SizedBox(width: 8),
+              Text(
+                date,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 10),
+
+          // Row 2: Pills
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              _buildPill(Icons.flag, Colors.green, "$confirmed confirmed"),
+              _buildPill(Icons.flag, Colors.orange, "$pending pending"),
+              _buildPill(Icons.flag, Colors.red, "$rescheduled rescheduled"),
+            ],
+          ),
+
+          // Row 3: Reschedule note (as a pill too)
+          if (rescheduledNote != null) ...[
+            const SizedBox(height: 10),
+            _buildPill(Icons.edit_calendar, Colors.cyan, rescheduledNote!),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPill(IconData icon, Color color, String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.12), // lighter bg
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: color, size: 18),
+          const SizedBox(width: 6),
+          Text(
+            text,
+            style: TextStyle(
+              color: color,
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
+
+
+class _MiniCard extends StatelessWidget {
+  final String petName;
+  final String species;
+  final String category;
+  final DateTime dateTime;
+  final String imageUrl;
+
+  const _MiniCard({
+    required this.petName,
+    required this.species,
+    required this.category,
+    required this.dateTime,
+    required this.imageUrl,
+    super.key,
+  });
+
+  // ✅ Map category to colors & icons
+  Map<String, dynamic> _categoryStyle(String category) {
+    switch (category.toLowerCase()) {
+      case 'vaccination':
+        return {
+          'icon': Icons.vaccines,
+          'color': Colors.blue,
+        };
+      case 'checkup':
+        return {
+          'icon': Icons.medical_services,
+          'color': Colors.purple,
+        };
+      case 'consultation':
+        return {
+          'icon': Icons.table_bar,
+          'color': Colors.green,
+        };
+      case 'emergency':
+        return {
+          'icon': Icons.emergency,
+          'color': Colors.red,
+        };
+      default:
+        return {
+          'icon': Icons.pets,
+          'color': Colors.orange,
+        };
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final categoryStyle = _categoryStyle(category);
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.07),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // ✅ First Row: Pet image + Pet name + Species + Chevron
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 24,
+                backgroundImage: AssetImage(imageUrl),
+              ),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    petName,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                  Text(
+                    species,
+                    style: const TextStyle(
+                      color: Colors.black54,
+                      fontSize: 13,
+                    ),
+                  ),
+                ],
+              ),
+              const Spacer(),
+              const Icon(Icons.chevron_right, color: Colors.green),
+            ],
+          ),
+          const SizedBox(height: 14),
+
+          // ✅ Second Row: Category
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: (categoryStyle['color'] as Color).withOpacity(0.15),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  categoryStyle['icon'] as IconData,
+                  size: 18,
+                  color: categoryStyle['color'] as Color,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                category,
+                style: TextStyle(
+                  color: categoryStyle['color'] as Color,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+
+          // ✅ Third Row: Date & Time
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: Colors.orange.withOpacity(0.15),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.calendar_today,
+                    size: 16, color: Colors.orange),
+              ),
+              const SizedBox(width: 6),
+
+              Text(
+                DateFormat("d MMM").format(dateTime), // 👉 14 Sept
+                style: const TextStyle(fontSize: 13),
+              ),
+              const SizedBox(width: 20),
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: Colors.green.withOpacity(0.15),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.access_time,
+                    size: 16, color: Colors.green),
+              ),
+              const SizedBox(width: 6),
+              Text(
+                DateFormat.jm().format(dateTime), // 👉 10:00 AM
+                style: const TextStyle(fontSize: 13),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _monthName(int month) {
+    const months = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+    return months[month - 1];
+  }
+
+  String _formatTime(DateTime dateTime) {
+    int hour = dateTime.hour;
+    final minute = dateTime.minute.toString().padLeft(2, '0');
+    final period = hour >= 12 ? 'PM' : 'AM';
+
+    if (hour == 0) {
+      hour = 12; // midnight
+    } else if (hour > 12) {
+      hour -= 12; // convert to 12-hour
+    }
+
+    return "$hour:$minute $period";
+  }
+
+}
+
 
 class _SectionHeader extends StatelessWidget {
   final String title;

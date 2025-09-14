@@ -115,7 +115,7 @@ class _DashboardShellState extends State<DashboardShell> with TickerProviderStat
         showUnselectedLabels: true,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.calendar_month), label: 'Appointments'),
+          BottomNavigationBarItem(icon: Icon(Icons.event_note), label: 'Schedule'),
           // BottomNavigationBarItem(icon: Icon(Icons.storefront), label: 'Store'),
           BottomNavigationBarItem(icon: Icon(Icons.folder_shared_outlined), label: 'Records'),
           BottomNavigationBarItem(icon: Icon(Icons.person_outlined), label: 'Profile'),

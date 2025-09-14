@@ -314,7 +314,7 @@ class _VetSchedulePageState extends State<VetSchedulePage>
       margin: const EdgeInsets.only(bottom: 14),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: appt.cardColor,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -670,13 +670,13 @@ class _VetSchedulePageState extends State<VetSchedulePage>
         child: Column(children: [
           // top mini toolbar: availability + edit
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            padding: const EdgeInsets.all(10.0),
             child: Row(children: [
               Expanded(
                 child: OutlinedButton.icon(
                   onPressed: () => _editAvailability(_selectedDay),
                   icon: const Icon(Icons.schedule),
-                  label: Text('Availability: ${_getAvailabilityFor(_selectedDay)}'),
+                  label: Text('Toggle Availability'),
                 ),
               ),
               // const SizedBox(width: 8),

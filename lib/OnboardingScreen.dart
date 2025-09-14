@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 // import 'LoginScreen.dart';
-
+import 'onBoardingScreen1.dart';
 
 void main() => runApp(const OnboardingApp());
 

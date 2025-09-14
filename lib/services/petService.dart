@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 
 /// ----------------------
-/// Pet Model
+/// Pet Model (UNCHANGED)
 /// ----------------------
 class Pet {
   final String petId;
@@ -56,7 +56,9 @@ class Pet {
       "breed": breed,
       "age": age,
       "photoUrl": photoUrl,
-      "createdAt": createdAt != null ? Timestamp.fromDate(createdAt!) : FieldValue.serverTimestamp(),
+      "createdAt": createdAt != null
+          ? Timestamp.fromDate(createdAt!)
+          : FieldValue.serverTimestamp(),
       "medicalRecords": medicalRecords,
     };
   }
@@ -75,7 +77,8 @@ class PetService {
 
   /// Upload file to Cloudinary
   Future<String?> _uploadImageToCloudinary(File image) async {
-    final url = Uri.parse("https://api.cloudinary.com/v1_1/$cloudName/image/upload");
+    final url = Uri.parse(
+        "https://api.cloudinary.com/v1_1/$cloudName/image/upload");
 
     final request = http.MultipartRequest("POST", url)
       ..fields['upload_preset'] = uploadPreset
@@ -88,11 +91,12 @@ class PetService {
       final data = jsonDecode(resStr);
       return data['secure_url']; // Cloudinary image URL
     } else {
-      throw Exception("Cloudinary upload failed: ${response.statusCode}");
+      throw Exception(
+          "Cloudinary upload failed: ${response.statusCode}");
     }
   }
 
-  /// Add pet to Firestore
+  /// Add pet to Firestore (sub-collection)
   Future<void> addPet({
     required String name,
     required String species,
@@ -108,7 +112,11 @@ class PetService {
       photoUrl = await _uploadImageToCloudinary(photo);
     }
 
-    final docRef = _firestore.collection("pets").doc();
+    final docRef = _firestore
+        .collection("users")
+        .doc(user.uid)
+        .collection("pets")
+        .doc();
 
     final pet = Pet(
       petId: docRef.id,
@@ -125,15 +133,35 @@ class PetService {
     await docRef.set(pet.toMap());
   }
 
-  /// Get Pet Profile
-  Future<Pet?> getPetProfile(String petId) async {
+  /// Get Pet Profile (from sub-collection)
+  Future<Pet?> getPetProfile(String userId, String petId) async {
     try {
-      DocumentSnapshot doc = await _firestore.collection('pets').doc(petId).get();
+      DocumentSnapshot doc = await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('pets')
+          .doc(petId)
+          .get();
       if (doc.exists) return Pet.fromFirestore(doc);
       return null;
     } catch (e) {
       print('GetPetProfileError: $e');
       return null;
+    }
+  }
+
+  /// Get all pets for a user
+  Future<List<Pet>> getUserPets(String userId) async {
+    try {
+      QuerySnapshot snapshot = await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('pets')
+          .get();
+      return snapshot.docs.map((doc) => Pet.fromFirestore(doc)).toList();
+    } catch (e) {
+      print('GetUserPetsError: $e');
+      return [];
     }
   }
 }

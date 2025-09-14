@@ -84,7 +84,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
                 Icon(Icons.pets, color: Colors.green, size: 28),
                 const SizedBox(width: 6),
                 const Text(
-                  "PetCare",
+                  "PawfectCare",
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w600,
@@ -147,16 +147,14 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
+
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
                 onPressed: () {
                   if (isLast) {
-                    // TODO: Navigate to login/home screen
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Onboarding Completed!")),
-                    );
+                    Navigator.restorablePushReplacementNamed(context, '/login');
                   } else {
                     _controller.nextPage(
                       duration: const Duration(milliseconds: 400),
@@ -167,7 +165,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
                 child: Text(
                   isLast ? "Get Started" : "Next",
                   style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.w600),
+                      fontSize: 16, color: Colors.white, fontWeight: FontWeight.w600),
                 ),
               ),
             ),

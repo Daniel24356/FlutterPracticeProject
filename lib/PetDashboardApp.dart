@@ -1,5 +1,6 @@
 import 'dart:io';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:math';
@@ -2047,192 +2048,330 @@ class _AddPetPageState extends State<AddPetPage> {
   }
 }
 
-class PetProfileListPage extends StatelessWidget {
-  const PetProfileListPage({super.key});
+/// --------------------
+/// Pet Profile Page (Detail View)
+/// --------------------
+class PetProfilePage extends StatelessWidget {
+  final String petId;
+
+  const PetProfilePage({super.key, required this.petId});
 
   @override
   Widget build(BuildContext context) {
+    final petRef = FirebaseFirestore.instance.collection("pets").doc(petId);
+
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: const [
-              Icon(Icons.pets, size: 56, color: Colors.green),
-              SizedBox(height: 12),
-              Text(
-                'My Pets',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 24),
-              PetProfile(), // ✅ your widget is placed here
-            ],
-          ),
+      appBar: AppBar(
+        title: const Text("Pet Profile", style: TextStyle(color: Colors.green)),
+        backgroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.green),
+        elevation: 0,
+      ),
+      body: FutureBuilder<DocumentSnapshot>(
+        future: petRef.get(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (!snapshot.hasData || !snapshot.data!.exists) {
+            return const Center(child: Text("Pet not found"));
+          }
+
+          final pet = snapshot.data!.data() as Map<String, dynamic>;
+
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                // --- Pet Info Card ---
+                Card(
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        pet["photoUrl"] != null && pet["photoUrl"] != ""
+                            ? CircleAvatar(
+                          radius: 50,
+                          backgroundImage:
+                          NetworkImage(pet["photoUrl"]),
+                        )
+                            : const Icon(Icons.pets,
+                            size: 80, color: Colors.green),
+                        const SizedBox(height: 8),
+                        Text(pet["name"] ?? "Unknown",
+                            style: const TextStyle(
+                                fontSize: 22, fontWeight: FontWeight.bold)),
+                        Text("${pet["species"] ?? "-"} • ${pet["age"] ?? "-"} years"),
+                        if (pet["breed"] != null && pet["breed"].isNotEmpty)
+                          Text("Breed: ${pet["breed"]}"),
+                        const SizedBox(height: 8),
+                        if (pet["microchipId"] != null &&
+                            pet["microchipId"].isNotEmpty)
+                          Text("Microchip ID: ${pet["microchipId"]}"),
+                        const SizedBox(height: 16),
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            // TODO: Add booking flow
+                          },
+                          icon: const Icon(Icons.calendar_today),
+                          label: const Text("Book Appointment"),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // --- Vaccination Status ---
+                Card(
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("Vaccination Status",
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 8),
+                        if (pet["vaccinations"] != null &&
+                            (pet["vaccinations"] as List).isNotEmpty)
+                          ...((pet["vaccinations"] as List)
+                              .map((vaccine) => ListTile(
+                            title: Text(vaccine["name"] ?? "Unknown"),
+                            subtitle: Text(
+                                "Last: ${vaccine["date"] ?? '-'} | Next: ${vaccine["nextDue"] ?? '-'}"),
+                            trailing: Chip(
+                              label: Text(vaccine["status"] ?? "N/A"),
+                              backgroundColor:
+                              vaccine["status"] == "Up to date"
+                                  ? Colors.green[100]
+                                  : Colors.red[100],
+                            ),
+                          )))
+                        else
+                          const Text("No vaccination records"),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // --- Medical History ---
+                Card(
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("Medical History",
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 8),
+                        if (pet["healthRecords"] != null &&
+                            (pet["healthRecords"] as List).isNotEmpty)
+                          ...((pet["healthRecords"] as List)
+                              .map((record) => ListTile(
+                            leading: const Icon(Icons.health_and_safety,
+                                color: Colors.green),
+                            title: Text(record["type"] ?? "Unknown"),
+                            subtitle: Text(
+                                "Dr: ${record["vet"] ?? '-'} • ${record["notes"] ?? ''}"),
+                            trailing:
+                            Chip(label: Text(record["date"] ?? "")),
+                          )))
+                        else
+                          const Text("No medical history available"),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // --- Appointments ---
+                Card(
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        const Text("Upcoming Appointments",
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 12),
+                        if (pet["appointments"] != null &&
+                            (pet["appointments"] as List).isNotEmpty)
+                          ...((pet["appointments"] as List)
+                              .map((appt) => ListTile(
+                            leading: const Icon(Icons.calendar_month,
+                                color: Colors.green),
+                            title: Text(appt["date"] ?? "-"),
+                            subtitle: Text(appt["reason"] ?? ""),
+                          )))
+                        else ...[
+                          const Icon(Icons.calendar_month,
+                              size: 48, color: Colors.grey),
+                          const SizedBox(height: 8),
+                          const Text("No upcoming appointments"),
+                        ]
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+/// --------------------
+/// Pet Profile Card (List Item)
+/// --------------------
+class PetProfile extends StatelessWidget {
+  final Map<String, dynamic> pet;
+  final String petId;
+
+  const PetProfile({super.key, required this.pet, required this.petId});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 3,
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            // 🐶 Pet Photo
+            pet["photoUrl"] != null && pet["photoUrl"] != ""
+                ? CircleAvatar(
+              radius: 40,
+              backgroundImage: NetworkImage(pet["photoUrl"]),
+            )
+                : const Icon(Icons.pets, size: 80, color: Colors.green),
+            const SizedBox(height: 8),
+
+            // 🐾 Pet Details
+            Text(
+              pet["name"] ?? "Unknown",
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            Text("${pet["species"] ?? "-"} • ${pet["age"] ?? "-"} years"),
+            if (pet["breed"] != null && pet["breed"].isNotEmpty)
+              Text("Breed: ${pet["breed"]}"),
+            const SizedBox(height: 8),
+
+            // Microchip ID (optional)
+            if (pet["microchipId"] != null && pet["microchipId"].isNotEmpty)
+              Text("Microchip ID: ${pet["microchipId"]}"),
+
+            const SizedBox(height: 16),
+
+            // Actions
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => PetProfilePage(petId: petId),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.info),
+              label: const Text("View Profile"),
+            ),
+            OutlinedButton.icon(
+              onPressed: () {
+                // TODO: Implement photo update
+              },
+              icon: const Icon(Icons.camera_alt),
+              label: const Text("Update Photo"),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-// ----------------- PetProfile widget -----------------
-
-class PetProfile extends StatelessWidget {
-  const PetProfile({super.key});
+/// --------------------
+/// Pet Profile List Page
+/// --------------------
+class PetProfileListPage extends StatelessWidget {
+  const PetProfileListPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final pet = {
-      "name": "Max",
-      "species": "Dog",
-      "breed": "Golden Retriever",
-      "age": "3 years",
-      "gender": "Male",
-      "weight": "25 kg",
-      "color": "Golden",
-      "microchipId": "123456789",
-      "status": "Healthy",
-      "photo": "🐕",
-    };
+    final user = FirebaseAuth.instance.currentUser;
 
-    final vaccinations = [
-      {"name": "Rabies", "date": "2024-01-15", "nextDue": "2025-01-15", "status": "Up to date"},
-      {"name": "DHPP", "date": "2024-02-10", "nextDue": "2025-02-10", "status": "Up to date"},
-      {"name": "Bordetella", "date": "2023-11-20", "nextDue": "2024-11-20", "status": "Due Soon"},
-    ];
-
-    final healthRecords = [
-      {"date": "2024-08-15", "type": "Checkup", "vet": "Dr. Smith", "notes": "General health checkup - all good"},
-      {"date": "2024-06-10", "type": "Vaccination", "vet": "Dr. Johnson", "notes": "Annual vaccinations completed"},
-      {"date": "2024-03-22", "type": "Dental", "vet": "Dr. Smith", "notes": "Dental cleaning performed"},
-    ];
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        // Pet Info Card
-        Card(
-          elevation: 3,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                Text(pet["photo"]!, style: const TextStyle(fontSize: 48)),
-                const SizedBox(height: 8),
-                Text(pet["name"]!, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                Text("${pet["breed"]} • ${pet["age"]}"),
-                Chip(label: Text(pet["status"]!)),
-                const SizedBox(height: 16),
-                GridView.count(
-                  crossAxisCount: 2,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  crossAxisSpacing: 8,
-                  mainAxisSpacing: 8,
-                  childAspectRatio: 3,
-                  children: [
-                    _infoTile("Species", pet["species"]!),
-                    _infoTile("Gender", pet["gender"]!),
-                    _infoTile("Weight", pet["weight"]!),
-                    _infoTile("Color", pet["color"]!),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                if (pet["microchipId"] != null)
-                  Column(
-                    children: [
-                      const Divider(),
-                      const SizedBox(height: 8),
-                      Text("Microchip ID: ${pet["microchipId"]!}"),
-                    ],
-                  ),
-                const SizedBox(height: 16),
-                ElevatedButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.calendar_today),
-                  label: const Text("Book Appointment"),
-                ),
-                OutlinedButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.camera_alt),
-                  label: const Text("Add Photo"),
-                ),
-              ],
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            const SizedBox(height: 16),
+            const Icon(Icons.pets, size: 56, color: Colors.green),
+            const SizedBox(height: 12),
+            const Text(
+              'My Pets',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
             ),
-          ),
-        ),
-        const SizedBox(height: 24),
+            const SizedBox(height: 24),
 
-        // Vaccination Status
-        Card(
-          elevation: 3,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text("Vaccination Status", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 8),
-                ...vaccinations.map((vaccine) => ListTile(
-                  title: Text(vaccine["name"]!),
-                  subtitle: Text("Last: ${vaccine["date"]} | Next: ${vaccine["nextDue"]}"),
-                  trailing: Chip(
-                    label: Text(vaccine["status"]!),
-                    backgroundColor: vaccine["status"] == "Up to date" ? Colors.green[100] : Colors.red[100],
-                  ),
-                )),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 24),
+            // Stream pets of logged-in user
+            Expanded(
+              child: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection("pets")
+                    .where("userId", isEqualTo: user!.uid)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
 
-        // Medical Records
-        Card(
-          elevation: 3,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text("Medical History", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 8),
-                ...healthRecords.map((record) => ListTile(
-                  leading: const Icon(Icons.health_and_safety, color: Colors.green),
-                  title: Text(record["type"]!),
-                  subtitle: Text("Dr: ${record["vet"]} • ${record["notes"]}"),
-                  trailing: Chip(label: Text(record["date"]!)),
-                )),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 24),
+                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                    return const Center(
+                      child: Text("No pets found. Add your first pet!"),
+                    );
+                  }
 
-        // Appointments
-        Card(
-          elevation: 3,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          child: const Padding(
-            padding: EdgeInsets.all(16),
-            child: Column(
-              children: [
-                Text("Upcoming Appointments", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                SizedBox(height: 12),
-                Icon(Icons.calendar_month, size: 48, color: Colors.grey),
-                SizedBox(height: 8),
-                Text("No upcoming appointments"),
-              ],
+                  final pets = snapshot.data!.docs;
+
+                  return ListView.builder(
+                    itemCount: pets.length,
+                    itemBuilder: (context, index) {
+                      final pet = pets[index].data() as Map<String, dynamic>;
+                      final petId = pets[index].id;
+
+                      return PetProfile(pet: pet, petId: petId);
+                    },
+                  );
+                },
+              ),
             ),
-          ),
+          ],
         ),
-      ],
+      ),
     );
   }
+}
+
+
 
   Widget _infoTile(String title, String value) {
     return Column(
@@ -2243,7 +2382,6 @@ class PetProfile extends StatelessWidget {
       ],
     );
   }
-}
 
 class CareTipsPage extends StatelessWidget {
   const CareTipsPage({super.key});
@@ -2252,88 +2390,3 @@ class CareTipsPage extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(body: SafeArea(child: ListView(padding: const EdgeInsets.all(16), children: const [Text('Care Tips', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)), SizedBox(height: 12), Text('- Tip 1: Keep your pet hydrated.'), SizedBox(height: 6), Text('- Tip 2: Regular checkups.')])));
 }
 
-// class LoginPage extends StatelessWidget {
-//   const LoginPage({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) => Scaffold(
-//     body: SafeArea(
-//       child: Center(
-//         child: Padding(
-//           padding: const EdgeInsets.all(16),
-//           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-//             const Text('Login', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-//             const SizedBox(height: 12),
-//             const TextField(decoration: InputDecoration(labelText: 'Email')),
-//             const SizedBox(height: 8),
-//             const TextField(decoration: InputDecoration(labelText: 'Password'), obscureText: true),
-//             const SizedBox(height: 12),
-//             ElevatedButton(
-//               style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-//               onPressed: () {},
-//               child: const Text('Login', style: TextStyle(color: Colors.white)),
-//             )
-//           ]),
-//         ),
-//       ),
-//     ),
-//   );
-// }
-
-// class SignupPage extends StatelessWidget {
-//   const SignupPage({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) => Scaffold(
-//     body: SafeArea(
-//       child: Center(
-//         child: Padding(
-//           padding: const EdgeInsets.all(16),
-//           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-//             const Text('Signup', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-//             const SizedBox(height: 12),
-//             const TextField(decoration: InputDecoration(labelText: 'Name')),
-//             const SizedBox(height: 8),
-//             const TextField(decoration: InputDecoration(labelText: 'Email')),
-//             const SizedBox(height: 8),
-//             const TextField(decoration: InputDecoration(labelText: 'Password'), obscureText: true),
-//             const SizedBox(height: 12),
-//             ElevatedButton(
-//               style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-//               onPressed: () {},
-//               child: const Text('Create Account', style: TextStyle(color: Colors.white)),
-//             )
-//           ]),
-//         ),
-//       ),
-//     ),
-//   );
-// }
-
-// class ForgotPasswordPage extends StatelessWidget {
-//   const ForgotPasswordPage({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) => Scaffold(
-//     body: SafeArea(
-//       child: Center(
-//         child: Padding(
-//           padding: const EdgeInsets.all(16),
-//           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-//             const Text('Forgot Password', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-//             const SizedBox(height: 12),
-//             const TextField(decoration: InputDecoration(labelText: 'Email')),
-//             const SizedBox(height: 12),
-//             ElevatedButton(
-//               style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-//               onPressed: () {},
-//               child: const Text('Reset Password', style: TextStyle(color: Colors.white)),
-//             )
-//           ]),
-//         ),
-//       ),
-//     ),
-//   );
-// }
-
-// -------------------- End --------------------

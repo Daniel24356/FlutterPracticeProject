@@ -7,7 +7,6 @@ import 'OnboardingScreen.dart';
 import 'onBoardingScreen1.dart';
 import 'LoginScreen.dart';
 import 'SignUpScreen.dart';
-import 'AppointmentPage.dart';
 import 'PetDashboardApp.dart';
 import 'ForgotPasswordScreen.dart';
 import 'ResetPasswordScreen.dart';
@@ -46,7 +45,6 @@ class MyApp extends StatelessWidget {
         '/forgotPassword': (context) => const ForgotPasswordScreen(),
         '/resetPassword': (context) => const ResetPasswordScreen(),
         '/petDashboardApp': (context) => const PetDashboardApp(),
-        // '/appointmentscreen': (context) => const AppointmentPage(),
       },
     );
   }

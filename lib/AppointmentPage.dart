@@ -5,7 +5,16 @@ import '../services/appointmentService.dart';
 enum AppointmentStatus { Upcoming, Completed, Cancelled }
 
 class AppointmentPage extends StatefulWidget {
-  const AppointmentPage({super.key, required String petName});
+  final String petId;
+  final String petName;
+  final String userId; // Pet owner's UID
+
+  const AppointmentPage({
+    super.key,
+    required this.petId,
+    required this.petName,
+    required this.userId,
+  });
 
   @override
   State<AppointmentPage> createState() => _AppointmentPageState();
@@ -67,8 +76,7 @@ class _AppointmentPageState extends State<AppointmentPage>
   void _openBookingSheet() {
     final _formKey = GlobalKey<FormState>();
     final reasonController = TextEditingController();
-    DateTime selectedDateTime =
-    DateTime.now().add(const Duration(days: 1));
+    DateTime selectedDateTime = DateTime.now().add(const Duration(days: 1));
 
     showModalBottomSheet(
       isScrollControlled: true,
@@ -81,11 +89,9 @@ class _AppointmentPageState extends State<AppointmentPage>
             return Container(
               decoration: const BoxDecoration(
                 color: Colors.white,
-                borderRadius:
-                BorderRadius.vertical(top: Radius.circular(20)),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
               ),
-              padding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: SingleChildScrollView(
                 controller: controller,
                 child: Form(
@@ -95,8 +101,7 @@ class _AppointmentPageState extends State<AppointmentPage>
                       const SizedBox(height: 12),
                       const Text('Book Appointment',
                           style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold)),
+                              fontSize: 18, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 12),
 
                       TextFormField(
@@ -118,17 +123,17 @@ class _AppointmentPageState extends State<AppointmentPage>
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             await _appointmentService.bookAppointment(
-                              petId: "somePetId", // 🔥 plug in actual petId
-                              vetId: "someVetId", // 🔥 plug in actual vetId
+                              userId: widget.userId,
+                              petId: widget.petId,
+                              vetId: "someVetId", // 🔥 replace with actual vetId
                               dateTime: selectedDateTime,
                               reason: reasonController.text.trim(),
                             );
                             Navigator.pop(context);
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content:
-                                  Text('Appointment booked ✅')),
+                              const SnackBar(content: Text('Appointment booked ✅')),
                             );
+                            setState(() {}); // refresh UI
                           }
                         },
                         child: const Text('Book Appointment'),
@@ -149,11 +154,10 @@ class _AppointmentPageState extends State<AppointmentPage>
     final dt = (data["dateTime"] as Timestamp).toDate();
 
     return Card(
-      shape:
-      RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
       child: ListTile(
-        leading: _petAvatar("dog"), // 🔥 you can load actual petType here
+        leading: _petAvatar("dog"), // 🔥 replace with actual petType if available
         title: Text(data["reason"] ?? ""),
         subtitle: Text(_formatDateTime(dt)),
         trailing: Text(
@@ -178,12 +182,15 @@ class _AppointmentPageState extends State<AppointmentPage>
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: const Text('My Appointments',
-            style: TextStyle(color: Colors.black87)),
+        title: const Text('My Appointments', style: TextStyle(color: Colors.black87)),
         centerTitle: true,
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
+            .collection("users")
+            .doc(widget.userId)
+            .collection("pets")
+            .doc(widget.petId)
             .collection("appointments")
             .orderBy("dateTime", descending: false)
             .snapshots(),
@@ -207,8 +214,7 @@ class _AppointmentPageState extends State<AppointmentPage>
         onPressed: _openBookingSheet,
         backgroundColor: Colors.green,
         icon: const Icon(Icons.add_circle_outline),
-        label: const Text('Book',
-            style: TextStyle(color: Colors.white)),
+        label: const Text('Book', style: TextStyle(color: Colors.white)),
       ),
     );
   }

@@ -221,7 +221,7 @@ class IndexPage extends StatelessWidget {
             Row(
               children: [
                 const CircleAvatar(
-                  radius: 20,
+                  radius: 30,
                   backgroundImage: AssetImage('images/avatar.jpeg'), // Replace with your device image path
                 ),
                 const SizedBox(width: 12),
@@ -236,7 +236,7 @@ class IndexPage extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Good morning!',
+                      'Welcome!',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey,
@@ -843,14 +843,19 @@ class _AppointmentListPageState extends State<AppointmentListPage>
                   ),
                 ],
               ),
-              Chip(
-                label: Text(appointment["status"].toString().toUpperCase()),
-                backgroundColor:
-                _statusColor(appointment["status"]).withOpacity(0.15),
-                labelStyle: TextStyle(
-                  color: _statusColor(appointment["status"]),
-                  fontWeight: FontWeight.w600,
-                  fontSize: 12,
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                decoration: BoxDecoration(
+                  color: _statusColor(appointment["status"]).withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(20), // pill shape
+                ),
+                child: Text(
+                  appointment["status"].toString().toUpperCase(),
+                  style: TextStyle(
+                    color: _statusColor(appointment["status"]),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 12,
+                  ),
                 ),
               ),
             ],
@@ -928,34 +933,48 @@ class _AppointmentListPageState extends State<AppointmentListPage>
 
           // Action Buttons
           if (showActions) ...[
-            const Divider(height: 28),
+            const SizedBox(height: 10),
             Row(
               children: [
+                // ✅ Confirm button (green filled)
                 Expanded(
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) => RescheduleAppointmentPage(
-                              appointment: appointment)));
+                      // handle confirm logic here
                     },
-                    icon: const Icon(Icons.edit_calendar, size: 18, color: Colors.white,),
-                    label: const Text("Reschedule", style: TextStyle(color: Colors.white),),
+                    icon: const Icon(Icons.check_circle, size: 18, color: Colors.white),
+                    label: const Text(
+                      "Confirm",
+                      style: TextStyle(color: Colors.white),
+                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                   ),
                 ),
                 const SizedBox(width: 12),
+
+                // ✅ Reschedule button (outlined style)
                 Expanded(
                   child: OutlinedButton.icon(
-                    onPressed: () {},
-                    icon: const Icon(Icons.cancel, size: 18),
-                    label: const Text("Cancel"),
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => RescheduleAppointmentPage(appointment: appointment),
+                      ));
+                    },
+                    icon: const Icon(Icons.edit_calendar, size: 18, color: Colors.green),
+                    label: const Text(
+                      "Reschedule",
+                      style: TextStyle(color: Colors.green),
+                    ),
                     style: OutlinedButton.styleFrom(
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      side: const BorderSide(color: Colors.green),
                     ),
                   ),
                 ),

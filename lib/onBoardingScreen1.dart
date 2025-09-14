@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+import 'LoginScreen.dart'; // replace with your login screen
+
+
 class OnboardingFlow extends StatefulWidget {
   const OnboardingFlow({super.key});
 
@@ -151,11 +155,15 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                onPressed: () {
+                onPressed: () async {
                   if (isLast) {
-                    // TODO: Navigate to login/home screen
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Onboarding Completed!")),
+                    final prefs = await SharedPreferences.getInstance();
+                    await prefs.setBool('hasSeenOnboarding', true);
+
+                    // Navigate to Login
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (_) => const LoginScreen()),
                     );
                   } else {
                     _controller.nextPage(

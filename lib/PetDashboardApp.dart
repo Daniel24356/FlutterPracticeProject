@@ -508,7 +508,7 @@ class _AppointmentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -539,7 +539,7 @@ class _AppointmentCard extends StatelessWidget {
             //   size: 24,
             // ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 4),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -672,7 +672,7 @@ class _ArticleCard extends StatelessWidget {
               ),
               child: Image.asset(
                 'images/hygiene.png', // Replace with your device image path; duplicate for 3 items or vary
-                fit: BoxFit.cover,
+                fit: BoxFit.contain,
                 width: double.infinity,
               ),
             ),
@@ -685,7 +685,7 @@ class _ArticleCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Daily Exercise for Active Pups',
+                    'Daily Hygiene for Active Pups',
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 14,
@@ -695,7 +695,7 @@ class _ArticleCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Keep your furry friend healthy with these tips...',
+                    'Keep your furry friend clean with these tips...',
                     style: TextStyle(
                       color: Colors.grey[600],
                       fontSize: 12,

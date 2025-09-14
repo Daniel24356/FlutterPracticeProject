@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:projects/ResetPasswordScreen.dart';
 import 'firebase_options.dart';
 
 // Screens
@@ -10,6 +9,7 @@ import 'SignUpScreen.dart';
 import 'AppointmentPage.dart';
 import 'PetDashboardApp.dart';
 import 'ForgotPasswordScreen.dart';
+import 'ResetPasswordScreen.dart';
 
 
 void main() async {

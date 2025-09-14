@@ -1,6 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
+import 'components/AppSidebar.dart';
+import 'components/CustomAppBar.dart';
+
 void main() {
   runApp(const VetHealthRecords());
 }
@@ -252,6 +255,12 @@ class _VetDashboardPageState extends State<VetDashboardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: const CustomAppBar(
+        title: "Pet Records",
+        showMenu: true,
+        actionIcon: Icons.notifications_outlined,
+      ),
+      drawer: const AppSidebar(),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -259,27 +268,7 @@ class _VetDashboardPageState extends State<VetDashboardPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Header
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.arrow_back),
-                        onPressed: () {
-                          // Handle back
-                        },
-                      ),
-                      const Text(
-                        "Assigned Pets",
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                  const Icon(Icons.pets, size: 28), // Adapted from cart
-                ],
-              ),
+
               const SizedBox(height: 20),
 
               // Search Bar
@@ -578,7 +567,7 @@ class _PetDetailPageState extends State<PetDetailPage> {
           icon: const Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text('Health Card'),
+        title: Text("${widget.pet.name}'s Record ", style: TextStyle(fontWeight: FontWeight.bold),),
         centerTitle: false,
       ),
       body: SingleChildScrollView(
@@ -598,7 +587,7 @@ class _PetDetailPageState extends State<PetDetailPage> {
                   children: [
                     Text(
                       widget.pet.name,
-                      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     Text(
                       '${widget.pet.species} - ${widget.pet.breed}',
@@ -777,7 +766,7 @@ class _PetDetailPageState extends State<PetDetailPage> {
                       child: ListTile(
                         title: Text(
                           visit.type,
-                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                         ),
                         subtitle: Text(visit.date.toString().substring(0, 10)),
                         onTap: () => setState(() => selectedVisit = visit),

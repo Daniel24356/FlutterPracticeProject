@@ -10,6 +10,8 @@ import 'package:projects/VetHealthRecords.dart';
 import 'VetSchedulePage.dart';
 import 'VetHealthRecords.dart';
 import 'UserProfile.dart';
+import 'components/AppSidebar.dart';
+import 'components/CustomAppBar.dart';
 
 void main() {
   runApp(const VetDashboard());
@@ -87,21 +89,7 @@ class _DashboardShellState extends State<DashboardShell> with TickerProviderStat
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: _buildDrawer(context),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
-        title: const Text('Pawfect Care', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
-        leading: Builder(builder: (c) => IconButton(icon: const Icon(Icons.menu, color: Colors.green), onPressed: () => Scaffold.of(c).openDrawer())),
-        actions: [
-          IconButton(
-            onPressed: () => _openRoute(const BookAppointmentPage()),
-            icon: const Icon(Icons.add_circle_outline, color: Colors.green),
-            tooltip: 'Quick Book',
-          )
-        ],
-      ),
+
       body: PageView(controller: _pageController, physics: const BouncingScrollPhysics(), children: _pages, onPageChanged: (i) => setState(() => _selectedIndex = i)),
       bottomNavigationBar: _buildBottomNav(),
       // floatingActionButton: ScaleTransition(
@@ -198,8 +186,14 @@ class IndexPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
+    return Scaffold(
+      appBar: const CustomAppBar(
+        title: "PawfectCare",
+        showMenu: true,
+        actionIcon: Icons.notifications_outlined,
+      ),
+      drawer: const AppSidebar(),
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -230,11 +224,11 @@ class IndexPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                const Spacer(),
-                IconButton(
-                  icon: const Icon(Icons.notifications_outlined, color: Colors.grey, size: 30),
-                  onPressed: () {},
-                ),
+                // const Spacer(),
+                // IconButton(
+                //   icon: const Icon(Icons.notifications_outlined, color: Colors.grey, size: 30),
+                //   onPressed: () {},
+                // ),
               ],
             ),
             const SizedBox(height: 18),

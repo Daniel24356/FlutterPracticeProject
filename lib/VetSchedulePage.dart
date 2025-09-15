@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import 'components/AppSidebar.dart';
+import 'components/CustomAppBar.dart';
+
 // ----------------------------- Models ------------------------------------
 
 enum ApptStatus { pending, confirmed, rescheduled, cancelled }
@@ -13,8 +16,8 @@ class Appointment {
   String id;
   String title;
   String timeRange; // "10:30 AM - 11:00 AM"
-  String ownerName;
-  String ownerImageAsset; // local asset path e.g. images/owners/owner1.png
+  String petName;
+  String petImageAsset; // local asset path e.g. images/owners/owner1.png
   String petCategoryAsset; // local asset path e.g. images/pets/dog.png
   ApptStatus status;
   Color cardColor;
@@ -25,8 +28,8 @@ class Appointment {
     required this.id,
     required this.title,
     required this.timeRange,
-    required this.ownerName,
-    required this.ownerImageAsset,
+    required this.petName,
+    required this.petImageAsset,
     required this.petCategoryAsset,
     required this.status,
     required this.cardColor,
@@ -111,9 +114,9 @@ class _VetSchedulePageState extends State<VetSchedulePage>
         id: 'a1',
         title: 'General Checkup',
         timeRange: '10:30 AM - 11:00 AM',
-        ownerName: 'Evelyn Parker',
-        ownerImageAsset: 'images/avatar.jpeg',
-        petCategoryAsset: 'images/dog.png',
+        petName: 'Max',
+        petImageAsset: 'images/maltese.png',
+        petCategoryAsset: 'Dog',
         status: ApptStatus.pending,
         cardColor: const Color(0xFFD9F7E2),
         room: 'Room 2',
@@ -127,9 +130,9 @@ class _VetSchedulePageState extends State<VetSchedulePage>
         id: 'a2',
         title: 'Vaccination',
         timeRange: '12:00 PM - 12:30 PM',
-        ownerName: 'Samuel K.',
-        ownerImageAsset: 'images/avatar2.jpeg',
-        petCategoryAsset: 'images/cat.png',
+        petName: 'Luna',
+        petImageAsset: 'images/luna.jpg',
+        petCategoryAsset: 'Cat',
         status: ApptStatus.confirmed,
         cardColor: const Color(0xFFFFFFFF),
         room: 'Room 3',
@@ -142,11 +145,11 @@ class _VetSchedulePageState extends State<VetSchedulePage>
       tomorrow,
       Appointment(
         id: 'a3',
-        title: 'Grooming Check',
+        title: 'Consultation',
         timeRange: '09:00 AM - 09:30 AM',
-        ownerName: 'Eren',
-        ownerImageAsset: 'images/eren.jpg',
-        petCategoryAsset: 'images/rabbit.png',
+        petName: 'Dash',
+        petImageAsset: 'images/dash.jpg',
+        petCategoryAsset: 'Rabbit',
         status: ApptStatus.rescheduled,
         cardColor: const Color(0xFFFFF6E6),
         room: 'Room 1',
@@ -311,7 +314,7 @@ class _VetSchedulePageState extends State<VetSchedulePage>
       margin: const EdgeInsets.only(bottom: 14),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: appt.cardColor,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -340,7 +343,7 @@ class _VetSchedulePageState extends State<VetSchedulePage>
                     Text(
                       _start(appt.timeRange),
                       style: const TextStyle(
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w300,
                         fontSize: 14,
                       ),
                     ),
@@ -363,7 +366,7 @@ class _VetSchedulePageState extends State<VetSchedulePage>
                     Text(
                       _end(appt.timeRange),
                       style: const TextStyle(
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w300,
                         fontSize: 14,
                       ),
                     ),
@@ -381,22 +384,22 @@ class _VetSchedulePageState extends State<VetSchedulePage>
                       appt.title,
                       style: const TextStyle(
                         fontSize: 16,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 15),
                     Row(
                       children: [
                         CircleAvatar(
-                          radius: 16,
-                          backgroundImage: AssetImage(appt.ownerImageAsset),
+                          radius: 29,
+                          backgroundImage: AssetImage(appt.petImageAsset),
                         ),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            appt.ownerName,
+                            appt.petName,
                             style: const TextStyle(
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w400,
                               fontSize: 14,
                             ),
                             overflow: TextOverflow.ellipsis,
@@ -411,6 +414,7 @@ class _VetSchedulePageState extends State<VetSchedulePage>
               // Column 3: Status pill + Pet category image
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
                     padding: const EdgeInsets.symmetric(
@@ -428,12 +432,33 @@ class _VetSchedulePageState extends State<VetSchedulePage>
                       ),
                     ),
                   ),
-                  // const SizedBox(height: 30),
-                  Image.asset(
-                    appt.petCategoryAsset,
-                    width: 45,
-                    height: 45,
+                  const SizedBox(height: 20),
+
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 14, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.shade50,
+                      borderRadius: BorderRadius.circular(18),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Icon(Icons.pets, size: 15, color: Colors.orange),
+                        SizedBox(width: 5,),
+                        Text(
+                          (appt.petCategoryAsset),
+                          style: TextStyle(
+                            color: Colors.orange,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ],
+                    )
                   ),
+                  SizedBox(height: 25,),
+
                 ],
               ),
             ],
@@ -635,26 +660,23 @@ class _VetSchedulePageState extends State<VetSchedulePage>
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
-        title: const Text('Vet Schedule', style: TextStyle(color: Colors.black87)),
-        actions: [
-          IconButton(icon: const Icon(Icons.calendar_month, color: Colors.black87), onPressed: _openCompactCalendar),
-        ],
+      appBar: const CustomAppBar(
+        title: "My Schedule",
+        showMenu: true,
+        actionIcon: Icons.notifications_outlined,
       ),
+      drawer: const AppSidebar(),
       body: SafeArea(
         child: Column(children: [
           // top mini toolbar: availability + edit
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            padding: const EdgeInsets.all(10.0),
             child: Row(children: [
               Expanded(
                 child: OutlinedButton.icon(
                   onPressed: () => _editAvailability(_selectedDay),
                   icon: const Icon(Icons.schedule),
-                  label: Text('Availability: ${_getAvailabilityFor(_selectedDay)}'),
+                  label: Text('Toggle Availability'),
                 ),
               ),
               // const SizedBox(width: 8),
@@ -803,9 +825,9 @@ class _VetSchedulePageState extends State<VetSchedulePage>
                 id: DateTime.now().millisecondsSinceEpoch.toString(),
                 title: titleCtl.text.isEmpty ? 'Consult' : titleCtl.text,
                 timeRange: '${time.format(ctx)} - ${time.replacing(hour: time.hour+1).format(ctx)}',
-                ownerName: ownerCtl.text.isEmpty ? 'Owner' : ownerCtl.text,
-                ownerImageAsset: 'images/owners/default_owner.png', // placeholder local asset
-                petCategoryAsset: 'images/pets/dog.png',
+                petName: ownerCtl.text.isEmpty ? 'Owner' : ownerCtl.text,
+                petImageAsset: 'images/owners/default_owner.png', // placeholder local asset
+                petCategoryAsset: 'rabbit',
                 status: ApptStatus.pending,
                 cardColor: Colors.white,
                 room: 'Room 1',

@@ -1,10 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:projects/PetDashboardApp.dart';
-import 'package:projects/services/authService.dart';
-import 'ForgotPasswordScreen.dart';
-import 'ShelterDashboard.dart';
-import 'VetDashboard.dart';
-
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -99,6 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           labelText: "Password",
                           hintText: "Enter your password",
                           prefixIcon: const Icon(Icons.lock_outline),
+                          suffixIcon: const Icon(Icons.panorama_fish_eye),
                           filled: true,
                           fillColor: const Color(0xFFF8F9FA),
                           border: OutlineInputBorder(
@@ -220,10 +214,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const Text("Don’t have an account? "),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        '/signup'
-                      );
+                      Navigator.pushReplacementNamed(context, '/signup');
                     },
                     child: const Text(
                       "Sign up",

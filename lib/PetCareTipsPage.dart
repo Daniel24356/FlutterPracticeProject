@@ -299,9 +299,13 @@ If you’re responsible caring for puppies in the first few months of their live
     super.dispose();
   }
 
-  void _addBookmark(Map<String, dynamic> article) {
+  void _toggleBookmark(Map<String, dynamic> article) {
     setState(() {
-      bookmarkedArticles.add(article);
+      if (bookmarkedArticles.contains(article)) {
+        bookmarkedArticles.remove(article);
+      } else {
+        bookmarkedArticles.add(article);
+      }
     });
   }
 
@@ -322,12 +326,6 @@ If you’re responsible caring for puppies in the first few months of their live
         title: const Text("Blogs & Tips", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         centerTitle: true,
         backgroundColor: Colors.green,
-        // actions: [
-        //   IconButton(
-        //     icon: const Icon(Icons.filter_list, color: Colors.white),
-        //     onPressed: () {},
-        //   ),
-        // ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -355,7 +353,6 @@ If you’re responsible caring for puppies in the first few months of their live
                   ),
                 );
               },
-
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 decoration: BoxDecoration(
@@ -370,15 +367,14 @@ If you’re responsible caring for puppies in the first few months of their live
                   ],
                 ),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start, // ✅ align left
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // ✅ Image with bookmark icon
                     Stack(
                       children: [
                         ClipRRect(
                           borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
                           child: SizedBox(
-                            height: 150, // ✅ reduced height
+                            height: 150,
                             width: double.infinity,
                             child: Image.asset(
                               featuredArticle["imageUrl"],
@@ -395,13 +391,15 @@ If you’re responsible caring for puppies in the first few months of their live
                               color: Colors.white.withOpacity(0.7),
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(Icons.bookmark_border, size: 20, color: Colors.black87),
+                            child: Icon(
+                              bookmarkedArticles.contains(featuredArticle) ? Icons.bookmark : Icons.bookmark_border,
+                              size: 20,
+                              color: bookmarkedArticles.contains(featuredArticle) ? Colors.green : Colors.black87,
+                            ),
                           ),
                         ),
                       ],
                     ),
-
-                    // ✅ Title
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
@@ -412,8 +410,6 @@ If you’re responsible caring for puppies in the first few months of their live
                         ),
                       ),
                     ),
-
-                    // ✅ Date & duration aligned left
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0, bottom: 12.0),
                       child: Text(
@@ -424,7 +420,6 @@ If you’re responsible caring for puppies in the first few months of their live
                   ],
                 ),
               ),
-
             ),
             const Padding(
               padding: EdgeInsets.all(16.0),
@@ -458,7 +453,6 @@ If you’re responsible caring for puppies in the first few months of their live
                           ),
                         );
                       },
-
                       child: Container(
                         margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                         decoration: BoxDecoration(
@@ -474,7 +468,6 @@ If you’re responsible caring for puppies in the first few months of their live
                         ),
                         child: Row(
                           children: [
-                            // ✅ First column - Image
                             ClipRRect(
                               borderRadius: const BorderRadius.horizontal(left: Radius.circular(12)),
                               child: Image.asset(
@@ -484,8 +477,6 @@ If you’re responsible caring for puppies in the first few months of their live
                                 fit: BoxFit.cover,
                               ),
                             ),
-
-                            // ✅ Second column - Title & Date
                             Expanded(
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -515,19 +506,19 @@ If you’re responsible caring for puppies in the first few months of their live
                                 ),
                               ),
                             ),
-
-                            // ✅ Third column - Bookmark icon
                             Padding(
                               padding: const EdgeInsets.only(right: 8.0),
                               child: IconButton(
-                                icon: const Icon(Icons.bookmark_border, color: Colors.black87),
-                                onPressed: () => _addBookmark(article),
+                                icon: Icon(
+                                  bookmarkedArticles.contains(article) ? Icons.bookmark : Icons.bookmark_border,
+                                  color: bookmarkedArticles.contains(article) ? Colors.green : Colors.black87,
+                                ),
+                                onPressed: () => _toggleBookmark(article),
                               ),
                             ),
                           ],
                         ),
                       ),
-
                     );
                   },
                 )),
@@ -548,7 +539,11 @@ class ArticleDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(article["title"])),
+      appBar: AppBar(
+        leading: IconButton(icon: const Icon(Icons.arrow_back, color: Colors.white), onPressed: () => Navigator.pop(context)),
+        backgroundColor: Colors.green,
+        title: Text(article["title"], style: TextStyle(color: Colors.white)),
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -560,8 +555,9 @@ class ArticleDetailPage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(article["title"], style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-            Text("By ${article["author"]} • ${article["date"]}"),
-            const SizedBox(height: 16),
+            const SizedBox(height: 10),
+            Text("By ${article["author"]} • ${article["date"]}", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
+            const SizedBox(height: 20),
             Text(article["content"]),
           ],
         ),
@@ -570,31 +566,152 @@ class ArticleDetailPage extends StatelessWidget {
   }
 }
 
-class BookmarksPage extends StatelessWidget {
+class BookmarksPage extends StatefulWidget {
   final List<Map<String, dynamic>> bookmarks;
 
   const BookmarksPage({super.key, required this.bookmarks});
 
   @override
+  State<BookmarksPage> createState() => _BookmarksPageState();
+}
+
+class _BookmarksPageState extends State<BookmarksPage> {
+  final TextEditingController _searchController = TextEditingController();
+  String searchQuery = "";
+  bool sortByDate = false;
+
+  void _toggleBookmark(Map<String, dynamic> article) {
+    setState(() {
+      if (widget.bookmarks.contains(article)) {
+        widget.bookmarks.remove(article);
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    List<Map<String, dynamic>> filteredBookmarks = widget.bookmarks
+        .where((article) => article["title"].toString().toLowerCase().contains(searchQuery.toLowerCase()))
+        .toList();
+
+    if (sortByDate) {
+      filteredBookmarks.sort((a, b) {
+        DateTime dateA = DateTime.parse(a["date"]);
+        DateTime dateB = DateTime.parse(b["date"]);
+        return dateB.compareTo(dateA);
+      });
+    }
+
     return Scaffold(
-      appBar: AppBar(title: const Text("Bookmarks")),
-      body: ListView.builder(
-        itemCount: bookmarks.length,
-        itemBuilder: (context, index) {
-          final article = bookmarks[index];
-          return ListTile(
-            title: Text(article["title"]),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ArticleDetailPage(article: article),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: const Text(
+          "Bookmarks",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.green,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: _searchController,
+              onChanged: (value) {
+                setState(() => searchQuery = value);
+              },
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                hintText: "Search bookmarks...",
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.tune, color: Colors.grey),
+                  onPressed: () {
+                    setState(() => sortByDate = !sortByDate);
+                  },
                 ),
-              );
-            },
-          );
-        },
+                filled: true,
+                fillColor: Colors.grey.shade100,
+                contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: filteredBookmarks.isEmpty
+                  ? const Center(child: Text("No bookmarks found", style: TextStyle(color: Colors.grey)))
+                  : ListView.builder(
+                itemCount: filteredBookmarks.length,
+                itemBuilder: (context, index) {
+                  final article = filteredBookmarks[index];
+                  return Container(
+                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.07),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.asset(
+                            article["imageUrl"],
+                            width: 70,
+                            height: 70,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                article["title"],
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                article["date"] + " • ${article["readTime"]}",
+                                style: TextStyle(color: Colors.grey[600], fontSize: 13),
+                              ),
+                            ],
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            widget.bookmarks.contains(article) ? Icons.bookmark : Icons.bookmark_border,
+                            color: widget.bookmarks.contains(article) ? Colors.green : Colors.black87,
+                          ),
+                          onPressed: () => _toggleBookmark(article),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

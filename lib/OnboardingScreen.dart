@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // import your Login screen here
-import 'onBoardingScreen1.dart'; // onboarding flow
+import 'OnboardingFlow.dart'; // onboarding flow
 import 'LoginScreen.dart'; // replace with your login screen
 
 void main() => runApp(const OnboardingScreen());
@@ -83,7 +83,7 @@ class _SplashScreenState extends State<SplashScreen> {
 // import 'package:flutter/material.dart';
 //
 // // import 'LoginScreen.dart';
-// import 'onBoardingScreen1.dart';
+// import 'OnboardingFlow.dart';
 //
 // void main() => runApp(const OnboardingApp());
 //

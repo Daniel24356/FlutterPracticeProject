@@ -4,7 +4,7 @@ import 'firebase_options.dart';
 
 // Screens
 import 'OnboardingScreen.dart';
-import 'onBoardingScreen1.dart';
+import 'OnboardingFlow.dart';
 import 'LoginScreen.dart';
 import 'SignUpScreen.dart';
 import 'PetDashboardApp.dart';

@@ -459,6 +459,7 @@ class _PetListingsPageState extends State<PetListingsPage> {
         showMenu: true,
         actionIcon: Icons.notifications_outlined,
       ),
+      drawer: const AppSidebar(),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -681,6 +682,7 @@ class _AnimalDetailPageState extends State<AnimalDetailPage> {
         showMenu: true,
         actionIcon: Icons.favorite_border,
       ),
+      drawer: const AppSidebar(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -898,6 +900,7 @@ class _AddAnimalPageState extends State<AddAnimalPage> {
         showMenu: true,
         actionIcon: null,
       ),
+      drawer: const AppSidebar(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -1057,6 +1060,7 @@ class _AdoptionRequestsPageState extends State<AdoptionRequestsPage> with Single
         showMenu: true,
         actionIcon: Icons.notifications_outlined,
       ),
+      drawer: const AppSidebar(),
       body: Column(
         children: [
           Padding(
@@ -1094,7 +1098,7 @@ class _AdoptionRequestsPageState extends State<AdoptionRequestsPage> with Single
                   Tab(
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 1, vertical: 2),
-                      child: Text('Accepted', style: TextStyle(fontSize: 12.5)),
+                      child: Text('Approved', style: TextStyle(fontSize: 12.5)),
                     ),
                   ),
                   Tab(
@@ -1258,6 +1262,7 @@ class _SuccessStoriesPageState extends State<SuccessStoriesPage> {
         showMenu: true,
         actionIcon: Icons.notifications_outlined,
       ),
+      drawer: const AppSidebar(),
       body: GridView.builder(
         padding: const EdgeInsets.all(16),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -1337,6 +1342,7 @@ class _AddStoryPageState extends State<AddStoryPage> {
         showMenu: true,
         actionIcon: null,
       ),
+      drawer: const AppSidebar(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -1460,6 +1466,7 @@ class _ContactVolunteerPageState extends State<ContactVolunteerPage> {
         showMenu: true,
         actionIcon: Icons.notifications_outlined,
       ),
+      drawer: const AppSidebar(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(

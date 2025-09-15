@@ -15,7 +15,7 @@ class _PetCareTipsPageState extends State<PetCareTipsPage> with TickerProviderSt
       "author": "PetMD Editorial",
       "date": "Aug 29, 2024",
       "readTime": "5 min read",
-      "imageUrl": "assets/images/dog_care.jpg",
+      "imageUrl": "images/dogPlay.jpg",
       "category": "Latest",
       "content": """
 A pet parent snuggles with their dog. (Image credit: iladendron/E+ via Getty Images)
@@ -70,7 +70,7 @@ Not all pets enjoy the same types of play, so you will have to figure out what g
       "author": "ASPCA",
       "date": "N/A",
       "readTime": "5 min read",
-      "imageUrl": "assets/images/grooming.jpg",
+      "imageUrl": "images/grooming.png",
       "category": "Grooming",
       "content": """
 Have you ever watched your dog roll on the ground, lick her coat or chew at her fur? These are her ways of keeping clean. Sometimes, though, she’ll need a little help from you to look and smell her best. But don’t worry, we’re here to help. Read on for ways to keep your dog’s fur, skin, nails, teeth, ears and paws healthy and clean.
@@ -129,7 +129,7 @@ For long-haired pooches, it's a good idea to set up a daily grooming routine to 
       "author": "AKC",
       "date": "Apr 3, 2024",
       "readTime": "5 min read",
-      "imageUrl": "assets/images/training.jpg",
+      "imageUrl": "images/training.jpg",
       "category": "Training",
       "content": """
 1. Understand that a puppy is an infant dog – not a miniature adult.  
@@ -176,7 +176,7 @@ Got the hang of it? If you’re interested in taking your dog training even furt
       "author": "Rhiannon Koehler, DVM",
       "date": "Mar 12, 2024",
       "readTime": "5 min read",
-      "imageUrl": "assets/images/health.jpg",
+      "imageUrl": "images/health.png",
       "category": "Health",
       "content": """
 Your pet’s care is important to you, but there’s so much to keep track of. You already know your pet should be on parasite prevention, get their vaccines regularly, and do more than sit on the couch. But caring for a pet is more complicated than simply checking a couple of boxes.
@@ -222,7 +222,7 @@ It may be tempting to decline the recommended lab work at your pet’s wellness 
       "author": "ASPCA",
       "date": "N/A",
       "readTime": "5 min read",
-      "imageUrl": "assets/images/nutrition.jpg",
+      "imageUrl": "images/nutrition.jpg",
       "category": "Nutrition",
       "content": """
 A balanced diet is critically important to your dog’s cell maintenance and growth and overall health. Barring any special needs, illness-related deficiencies, or instructions from your vet, your pet should be able to get all the nutrients he or she needs from high-quality commercial pet foods, which are specially formulated with these standards in mind.

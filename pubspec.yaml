@@ -98,9 +98,10 @@ flutter:
      - images/medicine.png
      - images/allergy.png
      - images/surgery.webp
-     - images/onboardImage-1.png
-     - images/onboardImage-2.png
-     - images/onboardImage-3.png
+     - images/onboarding1.jpg
+     - images/onboarding2.jpg
+     - images/onboarding4.png
+     - images/onboarding3.jpg
      - images/doctor.png
      - images/grooming.png
      - images/dogPlay.jpg

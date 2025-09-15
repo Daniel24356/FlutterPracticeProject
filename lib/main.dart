@@ -40,8 +40,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/onboarding': (context) => const OnboardingScreen(),
         '/onboarding1': (context) => const OnboardingFlow(),
-        '/login': (context) => const LoginScreen(),
         '/signup': (context) => const SignUpScreen(),
+        '/login': (context) => const LoginScreen(),
         '/forgotPassword': (context) => const ForgotPasswordScreen(),
         '/resetPassword': (context) => const ResetPasswordScreen(),
         '/petDashboardApp': (context) => const PetDashboardApp(),

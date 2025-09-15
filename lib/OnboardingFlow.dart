@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:projects/SignUpScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'LoginScreen.dart'; // replace with your login screen
 
 class OnboardingFlow extends StatefulWidget {
   const OnboardingFlow({super.key});
@@ -65,7 +65,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
                     await prefs.setBool('hasSeenOnboarding', true);
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (_) => const LoginScreen()),
+                      MaterialPageRoute(builder: (_) => const SignUpScreen()),
                     );
                   },
                   child: const Text(
@@ -120,7 +120,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
                                   await prefs.setBool('hasSeenOnboarding', true);
                                   Navigator.pushReplacement(
                                     context,
-                                    MaterialPageRoute(builder: (_) => const LoginScreen()),
+                                    MaterialPageRoute(builder: (_) => const SignUpScreen()),
                                   );
                                 } else {
                                   _pageController.nextPage(

@@ -104,7 +104,7 @@ class AppSidebar extends StatelessWidget {
                       context,
                       Icons.lightbulb,
                       'Blog & Tips',
-                          () => _openRoute(context, const PetCareTipsPage()),
+          () => _openRoute(context, const PetCareTipsPage()),
                       color: Colors.green,
                     ),
                   ),

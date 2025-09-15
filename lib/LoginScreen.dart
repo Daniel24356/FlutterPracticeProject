@@ -162,7 +162,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     .getUserProfile(user.uid);
 
                                 final role =
-                                    userProfile?['role'] ?? 'Unknown';
+                                    userProfile?.role ?? 'Unknown';
 
                                 if (role == "Pet Owner") {
                                   Navigator.pushReplacement(
@@ -220,7 +220,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const Text("Don’t have an account? "),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, '/signup');
+                      Navigator.pushReplacementNamed(context, '/signup');
                     },
                     child: const Text(
                       "Sign up",

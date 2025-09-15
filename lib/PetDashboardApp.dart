@@ -241,7 +241,7 @@ class IndexPage extends StatelessWidget {
                 // ),
               ],
             ),
-            const SizedBox(height: 24),
+
             // Pets row
             Row(
               children: [

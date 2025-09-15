@@ -31,7 +31,6 @@ class ShelterDashboard extends StatelessWidget {
   }
 }
 
-// Shell that holds bottom navigation + drawer
 class ShelterShell extends StatefulWidget {
   const ShelterShell({super.key});
 
@@ -69,7 +68,7 @@ class _ShelterShellState extends State<ShelterShell> with TickerProviderStateMix
   void _onNavTap(int idx) {
     setState(() => _selectedIndex = idx);
     _pageController.animateToPage(idx, duration: const Duration(milliseconds: 400), curve: Curves.easeOutCubic);
-    if (idx == 1 || idx == 3) { // FAB for adding in Listings and Stories
+    if (idx == 1 || idx == 3) {
       _fabController.forward();
     } else {
       _fabController.reverse();
@@ -146,7 +145,6 @@ class _ShelterShellState extends State<ShelterShell> with TickerProviderStateMix
               ),
             ),
             const SizedBox(height: 8),
-
           ],
         ),
       ),
@@ -164,8 +162,6 @@ class _ShelterShellState extends State<ShelterShell> with TickerProviderStateMix
     );
   }
 }
-
-// ---------------------- Shelter Pages ----------------------
 
 class ShelterIndexPage extends StatelessWidget {
   const ShelterIndexPage({super.key});
@@ -188,7 +184,7 @@ class ShelterIndexPage extends StatelessWidget {
               children: [
                 const CircleAvatar(
                   radius: 30,
-                  backgroundImage: AssetImage('images/avatar3.jpeg'), // Assume asset
+                  backgroundImage: AssetImage('images/avatar3.jpeg'),
                 ),
                 const SizedBox(width: 12),
                 const Column(
@@ -196,17 +192,11 @@ class ShelterIndexPage extends StatelessWidget {
                   children: [
                     Text(
                       'Hello Shelter Admin',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                     ),
                     Text(
                       'Welcome!',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                      ),
+                      style: TextStyle(fontSize: 14, color: Colors.grey),
                     ),
                   ],
                 ),
@@ -220,7 +210,7 @@ class ShelterIndexPage extends StatelessWidget {
                   _SectionHeader(title: "Today's Adoption Requests", actionLabel: 'View all', onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AdoptionRequestsPage()))),
                   const SizedBox(height: 8),
                   SizedBox(
-                    height: 170,
+                    height: 160,
                     child: PageView(
                       controller: PageController(viewportFraction: 0.86),
                       children: [
@@ -244,9 +234,14 @@ class ShelterIndexPage extends StatelessWidget {
                   const SizedBox(height: 18),
                   _SectionHeader(title: "Shelter Stats", actionLabel: 'View details', onPressed: () {}),
                   const SizedBox(height: 8),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
+                  GridView.count(
+                    crossAxisCount: 2,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.all(2.0),
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    children: const [
                       _StatCard(title: 'Available Animals', value: '45', icon: Icons.pets),
                       _StatCard(title: 'Pending Requests', value: '12', icon: Icons.assignment),
                       _StatCard(title: 'Adoptions This Month', value: '8', icon: Icons.star),
@@ -254,7 +249,7 @@ class ShelterIndexPage extends StatelessWidget {
                   ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -272,10 +267,12 @@ class _StatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.green.shade50,
+      color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(icon, color: Colors.green, size: 32),
             const SizedBox(height: 4),
@@ -334,17 +331,11 @@ class _RequestMiniCard extends StatelessWidget {
                 children: [
                   Text(
                     petName,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   Text(
                     species,
-                    style: const TextStyle(
-                      color: Colors.black54,
-                      fontSize: 13,
-                    ),
+                    style: const TextStyle(color: Colors.black54, fontSize: 13),
                   ),
                 ],
               ),
@@ -363,14 +354,10 @@ class _RequestMiniCard extends StatelessWidget {
                   color: Colors.green.withOpacity(0.15),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.calendar_today,
-                    size: 16, color: Colors.green),
+                child: const Icon(Icons.calendar_today, size: 16, color: Colors.green),
               ),
               const SizedBox(width: 6),
-              Text(
-                DateFormat("d MMM").format(dateTime),
-                style: const TextStyle(fontSize: 13),
-              ),
+              Text(DateFormat("d MMM").format(dateTime), style: const TextStyle(fontSize: 13)),
               const SizedBox(width: 20),
               Container(
                 padding: const EdgeInsets.all(6),
@@ -378,14 +365,10 @@ class _RequestMiniCard extends StatelessWidget {
                   color: Colors.green.withOpacity(0.15),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.access_time,
-                    size: 16, color: Colors.green),
+                child: const Icon(Icons.access_time, size: 16, color: Colors.green),
               ),
               const SizedBox(width: 6),
-              Text(
-                DateFormat.jm().format(dateTime),
-                style: const TextStyle(fontSize: 13),
-              ),
+              Text(DateFormat.jm().format(dateTime), style: const TextStyle(fontSize: 13)),
             ],
           ),
         ],
@@ -406,7 +389,6 @@ class _SectionHeader extends StatelessWidget {
   }
 }
 
-// Pet Listings Page
 class PetListingsPage extends StatefulWidget {
   const PetListingsPage({super.key});
 
@@ -416,7 +398,7 @@ class PetListingsPage extends StatefulWidget {
 
 class _PetListingsPageState extends State<PetListingsPage> {
   String searchQuery = "";
-  String selectedCategory = "";
+  String selectedCategory = "All";
 
   final List<Map<String, dynamic>> animals = [
     {
@@ -439,7 +421,7 @@ class _PetListingsPageState extends State<PetListingsPage> {
       "age": "4 months",
       "gender": "Female",
       "health": "Fit",
-      "location": "Kastanienallee, Berlin",
+      "location": "Tokyo, Japan",
       "distance": "23km",
       "donation": "\$53",
       "imageUrl": "images/luna.jpg",
@@ -447,7 +429,6 @@ class _PetListingsPageState extends State<PetListingsPage> {
       "status": "Available",
       "description": "Luna is lovely and well trained. She loves to pull a little bit when she sees other dogs.",
     },
-    // Add more hardcoded animals
     {
       "name": "Dash",
       "breed": "Giant Flemming",
@@ -498,17 +479,25 @@ class _PetListingsPageState extends State<PetListingsPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
-              const Text("Categories", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildCategory("Dogs", Colors.purple),
-                  _buildCategory("Cats", Colors.grey.shade300),
-                  _buildCategory("Birds", Colors.grey.shade300),
-                  // Add more categories as needed
-                ],
+              const SizedBox(height: 12),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  children: [
+                    _buildCategory("All", Colors.green),
+                    const SizedBox(width: 8),
+                    _buildCategory("Dogs", Colors.green),
+                    const SizedBox(width: 8),
+                    _buildCategory("Cats", Colors.green),
+                    const SizedBox(width: 8),
+                    _buildCategory("Birds", Colors.green),
+                    const SizedBox(width: 8),
+                    _buildCategory("Rabbits", Colors.green),
+                    const SizedBox(width: 8),
+                    _buildCategory("Fishes", Colors.green),
+                  ],
+                ),
               ),
               const SizedBox(height: 20),
               GridView.builder(
@@ -527,25 +516,77 @@ class _PetListingsPageState extends State<PetListingsPage> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => AnimalDetailPage(animal: animal),
-                        ),
+                        MaterialPageRoute(builder: (context) => AnimalDetailPage(animal: animal)),
                       );
                     },
-                    child: Card(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 8,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
-                            child: Image.asset(animal["imageUrl"], fit: BoxFit.cover),
+                            flex: 3,
+                            child: ClipRRect(
+                              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                              child: Image.asset(
+                                animal["imageUrl"],
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                              ),
+                            ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(8),
+                            padding: const EdgeInsets.all(8.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(animal["name"], style: const TextStyle(fontWeight: FontWeight.bold)),
-                                Text(animal["donation"]),
-                                Text("${animal["distance"]}"),
+                                Text(
+                                  animal["name"],
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  '${animal["breed"]} • ${animal["age"]}',
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      animal["location"],
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    Text(
+                                      animal["donation"],
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.green,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ],
                             ),
                           ),
@@ -584,7 +625,6 @@ class _PetListingsPageState extends State<PetListingsPage> {
   }
 }
 
-// Animal Detail Page
 class AnimalDetailPage extends StatefulWidget {
   final Map<String, dynamic> animal;
 
@@ -622,7 +662,6 @@ class _AnimalDetailPageState extends State<AnimalDetailPage> {
   }
 
   void _saveChanges() {
-    // Update animal data (in real app, save to db)
     setState(() {
       isEditing = false;
     });
@@ -630,7 +669,6 @@ class _AnimalDetailPageState extends State<AnimalDetailPage> {
   }
 
   void _deleteListing() {
-    // Remove listing (in real app, delete from db)
     Navigator.pop(context);
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Listing deleted!')));
   }
@@ -638,112 +676,153 @@ class _AnimalDetailPageState extends State<AnimalDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => Navigator.pop(context)),
-        actions: [
-          IconButton(icon: const Icon(Icons.favorite_border), onPressed: () {}),
-          if (!isEditing) IconButton(icon: const Icon(Icons.edit), onPressed: () => setState(() => isEditing = true)),
-        ],
+      appBar: const CustomAppBar(
+        title: "Animal Details",
+        showMenu: true,
+        actionIcon: Icons.favorite_border,
       ),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(widget.animal["imageUrl"], fit: BoxFit.cover, height: 300, width: double.infinity),
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  isEditing
-                      ? TextField(controller: nameController, decoration: const InputDecoration(labelText: "Name"))
-                      : Text(widget.animal["name"], style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      isEditing
-                          ? TextField(controller: donationController, decoration: const InputDecoration(labelText: "Donation"))
-                          : Text(widget.animal["donation"]),
-                      Text(widget.animal["distance"]),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  //   children: [
-                  //     _infoItem("Breed", isEditing ? breedController : Text(widget.animal["breed"].toString())),
-                  //     _infoItem("Age", isEditing ? ageController : Text(widget.animal["age"].toString())),
-                  //   ],
-                  // ),
-                  // const SizedBox(height: 8),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  //   children: [
-                  //     _infoItem("Health", isEditing ? healthController : Text(widget.animal["health"].toString())),
-                  //     _infoItem("Gender", isEditing ? genderController : Text(widget.animal["gender"].toString())),
-                  //   ],
-                  // ),
-                  // const SizedBox(height: 16),
-                  // _infoItem("Location", isEditing ? locationController : Text(widget.animal["location"].toString())),
-                  const SizedBox(height: 16),
-                  const Text("Description", style: TextStyle(fontWeight: FontWeight.bold)),
-                  isEditing
-                      ? TextField(controller: descriptionController, maxLines: 5)
-                      : Text(widget.animal["description"]),
-                  const SizedBox(height: 16),
-                  const Text("Status", style: TextStyle(fontWeight: FontWeight.bold)),
-                  DropdownButton<String>(
-                    value: status,
-                    items: const [
-                      DropdownMenuItem(value: "Available", child: Text("Available")),
-                      DropdownMenuItem(value: "Adopted", child: Text("Adopted")),
-                    ],
-                    onChanged: isEditing ? (val) => setState(() => status = val!) : null,
-                  ),
-                  const SizedBox(height: 24),
-                  if (isEditing) ...[
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: _saveChanges,
-                            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                            child: const Text('Save'),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: () => setState(() => isEditing = false),
-                            child: const Text('Cancel'),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    ElevatedButton(
-                      onPressed: _deleteListing,
-                      style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                      child: const Text('Delete Listing'),
-                    ),
-                  ] else
-                    ElevatedButton(
-                      onPressed: () {
-                        // View requests for this pet
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AdoptionRequestsPage(petName: widget.animal["name"]),
-                          ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                      child: const Text('View Requests'),
-                    ),
-                ],
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.asset(
+                widget.animal["imageUrl"],
+                fit: BoxFit.cover,
+                height: 250,
+                width: double.infinity,
               ),
             ),
+            const SizedBox(height: 16),
+            Text(
+              isEditing ? nameController.text : widget.animal["name"],
+              style: const TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  isEditing ? donationController.text : widget.animal["donation"],
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
+                  ),
+                ),
+                Text(
+                  widget.animal["distance"],
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Text(
+              "Details",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 12),
+            // _infoItem("Breed", isEditing ? breedController : Text(widget.animal["breed"], style: const TextStyle(fontSize: 16))),
+            // _infoItem("Age", isEditing ? ageController : Text(widget.animal["age"], style: const TextStyle(fontSize: 16))),
+            // _infoItem("Health", isEditing ? healthController : Text(widget.animal["health"], style: const TextStyle(fontSize: 16))),
+            // _infoItem("Gender", isEditing ? genderController : Text(widget.animal["gender"], style: const TextStyle(fontSize: 16))),
+            // _infoItem("Location", isEditing ? locationController : Text(widget.animal["location"], style: const TextStyle(fontSize: 16))),
+            const SizedBox(height: 16),
+            Text(
+              "Description",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 8),
+            isEditing
+                ? TextField(
+              controller: descriptionController,
+              maxLines: 5,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+              ),
+            )
+                : Text(
+              widget.animal["description"],
+              style: const TextStyle(
+                fontSize: 16,
+                color: Colors.black54,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              "Status",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 8),
+            DropdownButton<String>(
+              value: status,
+              items: const [
+                DropdownMenuItem(value: "Available", child: Text("Available")),
+                DropdownMenuItem(value: "Adopted", child: Text("Adopted")),
+              ],
+              onChanged: isEditing ? (val) => setState(() => status = val!) : null,
+              style: const TextStyle(fontSize: 16, color: Colors.black87),
+            ),
+            const SizedBox(height: 24),
+            if (isEditing) ...[
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: _saveChanges,
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                      child: const Text('Save', style: TextStyle(fontSize: 16)),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => setState(() => isEditing = false),
+                      child: const Text('Cancel', style: TextStyle(fontSize: 16)),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              ElevatedButton(
+                onPressed: _deleteListing,
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                child: const Text('Delete Listing', style: TextStyle(fontSize: 16)),
+              ),
+            ] else
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AdoptionRequestsPage(petName: widget.animal["name"]),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                child: const Text('View Requests', style: TextStyle(fontSize: 16)),
+              ),
           ],
         ),
       ),
@@ -751,17 +830,26 @@ class _AnimalDetailPageState extends State<AnimalDetailPage> {
   }
 
   Widget _infoItem(String label, Widget value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: const TextStyle(color: Colors.grey)),
-        value,
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey,
+            ),
+          ),
+          value,
+        ],
+      ),
     );
   }
 }
 
-// Add Animal Page
 class AddAnimalPage extends StatefulWidget {
   const AddAnimalPage({super.key});
 
@@ -797,7 +885,6 @@ class _AddAnimalPageState extends State<AddAnimalPage> {
   void _handleSubmit() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      // Add to listings (in real app, save to db)
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Animal added!")));
       Navigator.pop(context);
     }
@@ -806,7 +893,11 @@ class _AddAnimalPageState extends State<AddAnimalPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Add Animal')),
+      appBar: const CustomAppBar(
+        title: "Add Animal",
+        showMenu: true,
+        actionIcon: null,
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -887,7 +978,7 @@ class _AddAnimalPageState extends State<AddAnimalPage> {
               ElevatedButton(
                 onPressed: _handleSubmit,
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                child: const Text('Add Animal'),
+                child: const Text('Add Animal', style: TextStyle(fontSize: 16)),
               ),
             ],
           ),
@@ -897,9 +988,8 @@ class _AddAnimalPageState extends State<AddAnimalPage> {
   }
 }
 
-// Adoption Requests Page
 class AdoptionRequestsPage extends StatefulWidget {
-  final String? petName; // Optional filter by pet
+  final String? petName;
 
   const AdoptionRequestsPage({super.key, this.petName});
 
@@ -908,7 +998,7 @@ class AdoptionRequestsPage extends StatefulWidget {
 }
 
 class _AdoptionRequestsPageState extends State<AdoptionRequestsPage> with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+  late TabController _miniTabController;
 
   final List<Map<String, dynamic>> requests = [
     {
@@ -917,6 +1007,7 @@ class _AdoptionRequestsPageState extends State<AdoptionRequestsPage> with Single
       "applicant": {"name": "John Doe", "email": "john@example.com", "phone": "+123456789", "address": "123 Street"},
       "date": "2025-09-14",
       "status": "Pending",
+      "imageUrl": "images/maltese.png",
     },
     {
       "id": "2",
@@ -924,14 +1015,14 @@ class _AdoptionRequestsPageState extends State<AdoptionRequestsPage> with Single
       "applicant": {"name": "Jane Smith", "email": "jane@example.com", "phone": "+987654321", "address": "456 Avenue"},
       "date": "2025-09-13",
       "status": "Approved",
+      "imageUrl": "images/luna.jpg",
     },
-    // Add more
   ];
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _miniTabController = TabController(length: 3, vsync: this);
   }
 
   List<Map<String, dynamic>> filteredRequests(String status) {
@@ -943,46 +1034,86 @@ class _AdoptionRequestsPageState extends State<AdoptionRequestsPage> with Single
   }
 
   void _approveRequest(String id) {
-    // Update status
     setState(() {
       final req = requests.firstWhere((r) => r["id"] == id);
       req["status"] = "Approved";
     });
-    // Send notification (mock)
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Request approved! Notification sent.')));
   }
 
   void _rejectRequest(String id) {
-    // Update status
     setState(() {
       final req = requests.firstWhere((r) => r["id"] == id);
       req["status"] = "Rejected";
     });
-    // Send notification (mock)
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Request rejected! Notification sent.')));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Adoption Requests')),
+      appBar: const CustomAppBar(
+        title: "Adoption Requests",
+        showMenu: true,
+        actionIcon: Icons.notifications_outlined,
+      ),
       body: Column(
         children: [
-          TabBar(
-            controller: _tabController,
-            tabs: const [
-              Tab(text: "Pending"),
-              Tab(text: "Approved"),
-              Tab(text: "Rejected"),
-            ],
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: Container(
+              padding: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.07),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: TabBar(
+                controller: _miniTabController,
+                labelColor: Colors.white,
+                unselectedLabelColor: Colors.black87,
+                indicator: BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                indicatorSize: TabBarIndicatorSize.tab,
+                dividerColor: Colors.transparent,
+                tabs: const [
+                  Tab(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 1, vertical: 2),
+                      child: Text('Pending', style: TextStyle(fontSize: 12.5)),
+                    ),
+                  ),
+                  Tab(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 1, vertical: 2),
+                      child: Text('Accepted', style: TextStyle(fontSize: 12.5)),
+                    ),
+                  ),
+                  Tab(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 1, vertical: 2),
+                      child: Text('Rejected', style: TextStyle(fontSize: 12.5)),
+                    ),
+                  ),
+                ],
+                onTap: (idx) => setState(() {}),
+              ),
+            ),
           ),
           Expanded(
             child: TabBarView(
-              controller: _tabController,
+              controller: _miniTabController,
               children: [
                 _buildRequestList("Pending"),
-                _buildRequestList("Approved"),
-                _buildRequestList("Rejected"),
+                _buildRequestList("Accepted"),
               ],
             ),
           ),
@@ -994,30 +1125,91 @@ class _AdoptionRequestsPageState extends State<AdoptionRequestsPage> with Single
   Widget _buildRequestList(String status) {
     final filtered = filteredRequests(status);
     return ListView.builder(
+      padding: const EdgeInsets.all(16),
       itemCount: filtered.length,
       itemBuilder: (context, index) {
         final req = filtered[index];
-        return Card(
+        return Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Pet: ${req["petName"]}", style: const TextStyle(fontWeight: FontWeight.bold)),
-                Text("Applicant: ${req["applicant"]["name"]}"),
-                Text("Email: ${req["applicant"]["email"]}"),
-                Text("Phone: ${req["applicant"]["phone"]}"),
-                Text("Address: ${req["applicant"]["address"]}"),
-                Text("Date: ${req["date"]}"),
+                Row(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.asset(
+                        req["imageUrl"],
+                        width: 60,
+                        height: 60,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            req["petName"],
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            "Applicant: ${req["applicant"]["name"]}",
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.black54,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  "Email: ${req["applicant"]["email"]}",
+                  style: const TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+                Text(
+                  "Phone: ${req["applicant"]["phone"]}",
+                  style: const TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+                Text(
+                  "Address: ${req["applicant"]["address"]}",
+                  style: const TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+                Text(
+                  "Date: ${req["date"]}",
+                  style: const TextStyle(fontSize: 14, color: Colors.grey),
+                ),
                 if (status == "Pending") ...[
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
                   Row(
                     children: [
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () => _approveRequest(req["id"]),
                           style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                          child: const Text('Approve'),
+                          child: const Text('Approve', style: TextStyle(fontSize: 14, color: Colors.white)),
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -1025,7 +1217,7 @@ class _AdoptionRequestsPageState extends State<AdoptionRequestsPage> with Single
                         child: ElevatedButton(
                           onPressed: () => _rejectRequest(req["id"]),
                           style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                          child: const Text('Reject'),
+                          child: const Text('Reject', style: TextStyle(fontSize: 14, color: Colors.white)),
                         ),
                       ),
                     ],
@@ -1040,7 +1232,6 @@ class _AdoptionRequestsPageState extends State<AdoptionRequestsPage> with Single
   }
 }
 
-// Success Stories Page
 class SuccessStoriesPage extends StatefulWidget {
   const SuccessStoriesPage({super.key});
 
@@ -1057,13 +1248,16 @@ class _SuccessStoriesPageState extends State<SuccessStoriesPage> {
       "description": "Max found a loving home with John!",
       "photo": "images/maltese.png",
     },
-    // Add more
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Success Stories')),
+      appBar: const CustomAppBar(
+        title: "Success Stories",
+        showMenu: true,
+        actionIcon: Icons.notifications_outlined,
+      ),
       body: GridView.builder(
         padding: const EdgeInsets.all(16),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -1101,7 +1295,6 @@ class _SuccessStoriesPageState extends State<SuccessStoriesPage> {
   }
 }
 
-// Add Story Page
 class AddStoryPage extends StatefulWidget {
   const AddStoryPage({super.key});
 
@@ -1131,7 +1324,6 @@ class _AddStoryPageState extends State<AddStoryPage> {
   void _handleSubmit() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      // Add to stories (in real app, save to db)
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Story added!")));
       Navigator.pop(context);
     }
@@ -1140,7 +1332,11 @@ class _AddStoryPageState extends State<AddStoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Add Success Story')),
+      appBar: const CustomAppBar(
+        title: "Add Success Story",
+        showMenu: true,
+        actionIcon: null,
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -1193,7 +1389,7 @@ class _AddStoryPageState extends State<AddStoryPage> {
               ElevatedButton(
                 onPressed: _handleSubmit,
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                child: const Text('Add Story'),
+                child: const Text('Add Story', style: TextStyle(fontSize: 16)),
               ),
             ],
           ),
@@ -1203,7 +1399,6 @@ class _AddStoryPageState extends State<AddStoryPage> {
   }
 }
 
-// Contact and Volunteer Page
 class ContactVolunteerPage extends StatefulWidget {
   const ContactVolunteerPage({super.key});
 
@@ -1260,7 +1455,11 @@ class _ContactVolunteerPageState extends State<ContactVolunteerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Contact & Volunteer')),
+      appBar: const CustomAppBar(
+        title: "Contact & Volunteer",
+        showMenu: true,
+        actionIcon: Icons.notifications_outlined,
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -1290,7 +1489,7 @@ class _ContactVolunteerPageState extends State<ContactVolunteerPage> {
                   ElevatedButton(
                     onPressed: _submitContact,
                     style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                    child: const Text('Send Message'),
+                    child: const Text('Send Message', style: TextStyle(fontSize: 16)),
                   ),
                 ],
               ),
@@ -1323,7 +1522,7 @@ class _ContactVolunteerPageState extends State<ContactVolunteerPage> {
                   ElevatedButton(
                     onPressed: _submitVolunteer,
                     style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                    child: const Text('Sign Up'),
+                    child: const Text('Sign Up', style: TextStyle(fontSize: 16)),
                   ),
                 ],
               ),
@@ -1362,7 +1561,7 @@ class _ContactVolunteerPageState extends State<ContactVolunteerPage> {
                   ElevatedButton(
                     onPressed: _submitDonation,
                     style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                    child: const Text('Submit Donation Intent'),
+                    child: const Text('Submit Donation Intent', style: TextStyle(fontSize: 16)),
                   ),
                 ],
               ),
@@ -1373,7 +1572,3 @@ class _ContactVolunteerPageState extends State<ContactVolunteerPage> {
     );
   }
 }
-
-// Placeholder for other pages like UserProfile, Login, etc. from template
-
-// Assume components/AppSidebar.dart and components/CustomAppBar.dart are defined as in template or similar.

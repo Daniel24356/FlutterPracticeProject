@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'components/AppSidebar.dart';
 import 'components/CustomAppBar.dart';
-
-void main() {
-  runApp(const MaterialApp(home: HealthRecordsPage()));
-}
+import '../services/medicalRecordService.dart';
 
 class Pet {
+  final String id;
   final String name;
   final String image;
-  Pet(this.name, this.image);
+  Pet(this.id, this.name, this.image);
 }
 
 class HealthRecordsPage extends StatefulWidget {
@@ -24,89 +24,79 @@ class _HealthRecordsPageState extends State<HealthRecordsPage> {
   final TextEditingController _searchController = TextEditingController();
   String searchQuery = "";
 
-  final List<Pet> pets = [
-    Pet("Max", "images/maltese.png"),
-    Pet("Luna", "images/luna.jpg"),
-    Pet("Dash", "images/dash.jpg"),
-    Pet("Tom", "images/tom.jpg"),
-  ];
-
-  Pet? selectedPet; // New: currently picked pet
-  String? selectedCategory; // null = show grid, not null = show records
-
-  final Map<String, List<Map<String, String>>> exampleRecords = {
-    "Surgeries": [
-      {
-        "date": "2024-09-01",
-        "title": "Knee Surgery",
-        "details":
-        "Procedure done at Downtown Vet Clinic.\nRecovery time: 6 weeks."
-      },
-      {
-        "date": "2023-11-15",
-        "title": "Dental Surgery",
-        "details": "Teeth cleaning under anesthesia.\nDoctor: Dr. Brown."
-      },
-    ],
-    "Vaccinations": [
-      {
-        "date": "2024-02-10",
-        "title": "Rabies Vaccine",
-        "details": "Annual booster shot.\nDoctor: Dr. White."
-      }
-    ],
-    "Medications": [],
-    "Allergies": [],
-  };
+  Pet? selectedPet; // currently picked pet
+  String? selectedCategory; // null = grid, not null = show records
+  final MedicalRecordService _recordService = MedicalRecordService();
 
   void _showPetDropdown(BuildContext context) {
+    // 🔥 Fetch pets dynamically for logged-in user
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true, // so we can control height
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
       builder: (_) {
-        return Container(
-          height: MediaQuery.of(context).size.height * 0.4, // reduce modal height
-          padding: const EdgeInsets.all(16.0),
-          child: ListView.builder(
-            itemCount: pets.length,
-            itemBuilder: (context, index) {
-              final pet = pets[index];
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: ListTile(
-                  contentPadding: EdgeInsets.zero,
+        return StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection("users")
+              .doc(userId)
+              .collection("pets")
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+              return const Center(child: Text("No pets found"));
+            }
+
+            final pets = snapshot.data!.docs;
+
+            return ListView.builder(
+              itemCount: pets.length,
+              itemBuilder: (context, index) {
+                final pet = pets[index].data() as Map<String, dynamic>;
+                final petId = pets[index].id;
+
+                return ListTile(
                   leading: CircleAvatar(
-                    radius: 28, // increase image size
-                    backgroundImage: AssetImage(pet.image),
+                    radius: 28,
+                    backgroundImage: pet["photoUrl"] != null &&
+                        pet["photoUrl"].toString().isNotEmpty
+                        ? NetworkImage(pet["photoUrl"])
+                        : const AssetImage("images/avatar.jpeg")
+                    as ImageProvider,
                   ),
                   title: Text(
-                    pet.name,
+                    pet["name"] ?? "Unnamed",
                     style: const TextStyle(
-                      fontSize: 18, // bigger text
+                      fontSize: 18,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   onTap: () {
                     setState(() {
-                      selectedPet = pet;
-                      searchQuery = pet.name;
+                      selectedPet = Pet(
+                        petId,
+                        pet["name"] ?? "Unnamed",
+                        pet["photoUrl"] ?? "",
+                      );
+                      searchQuery = pet["name"] ?? "";
                       _searchController.clear();
                     });
                     Navigator.pop(context);
                   },
-                ),
-              );
-            },
-          ),
+                );
+              },
+            );
+          },
         );
       },
     );
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -163,7 +153,10 @@ class _HealthRecordsPageState extends State<HealthRecordsPage> {
                   children: [
                     Chip(
                       avatar: CircleAvatar(
-                        backgroundImage: AssetImage(currentPet.image),
+                        backgroundImage: currentPet.image.isNotEmpty
+                            ? NetworkImage(currentPet.image)
+                            : const AssetImage("images/avatar.jpeg")
+                        as ImageProvider,
                       ),
                       label: Text(currentPet.name),
                       deleteIcon: const Icon(Icons.close),
@@ -196,9 +189,11 @@ class _HealthRecordsPageState extends State<HealthRecordsPage> {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: selectedCategory == null
+                child: selectedPet == null
+                    ? const Center(child: Text("Pick a pet to view records"))
+                    : (selectedCategory == null
                     ? _buildCategoryGrid()
-                    : _buildRecordsView(selectedCategory!),
+                    : _buildRecordsView(selectedCategory!, currentPet!)),
               ),
             ),
           ],
@@ -256,118 +251,140 @@ class _HealthRecordsPageState extends State<HealthRecordsPage> {
     );
   }
 
-  /// Records View with Breadcrumb
-  Widget _buildRecordsView(String category) {
-    final records = exampleRecords[category] ?? [];
+  /// Records View with Firebase
+  Widget _buildRecordsView(String category, Pet pet) {
+    final userId = FirebaseAuth.instance.currentUser!.uid;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Breadcrumb
-        Container(
-          // margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
-          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.08),
-                blurRadius: 6,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              GestureDetector(
-                onTap: () => setState(() => selectedCategory = null),
-                child: const Text(
-                  "Records",
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.green,
-                    fontWeight: FontWeight.bold,
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection("users")
+          .doc(userId)
+          .collection("pets")
+          .doc(pet.id)
+          .collection("healthRecords")
+          .where("category", isEqualTo: category)
+          .orderBy("date", descending: true)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return const Center(child: Text("No records available"));
+        }
+
+        final records = snapshot.data!.docs;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Breadcrumb
+            Container(
+              padding:
+              const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.08),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
                   ),
-                ),
+                ],
               ),
-              const Text(
-                "  >  ",
-                style: TextStyle(fontSize: 20),
-              ),
-              Text(
-                category,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
-                ),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(height: 16),
-
-        // Records list
-        Expanded(
-          child: records.isEmpty
-              ? const Center(
-            child: Text("No records available"),
-          )
-              : ListView.builder(
-            itemCount: records.length,
-            itemBuilder: (_, i) {
-              final record = records[i];
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Row(
                 children: [
-                  Column(
-                    children: [
-                      Container(
-                        width: 12,
-                        height: 12,
-                        decoration: const BoxDecoration(
-                          color: Colors.green,
-                          shape: BoxShape.circle,
-                        ),
+                  GestureDetector(
+                    onTap: () => setState(() => selectedCategory = null),
+                    child: const Text(
+                      "Records",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.green,
+                        fontWeight: FontWeight.bold,
                       ),
-                      if (i != records.length - 1)
-                        Container(
-                          width: 2,
-                          height: 60,
-                          color: Colors.green,
-                        ),
-                    ],
+                    ),
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(record["date"]!,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                                color: Colors.black87)),
-                        const SizedBox(height: 4),
-                        Text(record["title"]!,
-                            style: const TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600)),
-                        const SizedBox(height: 4),
-                        Text(record["details"]!,
-                            style:
-                            const TextStyle(color: Colors.grey)),
-                        const SizedBox(height: 16),
-                      ],
+                  const Text("  >  ", style: TextStyle(fontSize: 20)),
+                  Text(
+                    category,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
                     ),
                   ),
                 ],
-              );
-            },
-          ),
-        ),
-      ],
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Records list
+            Expanded(
+              child: ListView.builder(
+                itemCount: records.length,
+                itemBuilder: (_, i) {
+                  final record =
+                  records[i].data() as Map<String, dynamic>;
+
+                  final date = (record["date"] as Timestamp?)?.toDate();
+
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        children: [
+                          Container(
+                            width: 12,
+                            height: 12,
+                            decoration: const BoxDecoration(
+                              color: Colors.green,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          if (i != records.length - 1)
+                            Container(
+                              width: 2,
+                              height: 60,
+                              color: Colors.green,
+                            ),
+                        ],
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              date != null
+                                  ? "${date.day}/${date.month}/${date.year}"
+                                  : "No date",
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: Colors.black87),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(record["diagnosis"] ?? "No title",
+                                style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600)),
+                            const SizedBox(height: 4),
+                            Text(record["notes"] ?? "No details",
+                                style: const TextStyle(color: Colors.grey)),
+                            const SizedBox(height: 16),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

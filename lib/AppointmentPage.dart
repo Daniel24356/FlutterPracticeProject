@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../services/appointmentService.dart';
 
 enum AppointmentStatus { Upcoming, Completed, Cancelled }
@@ -113,7 +114,7 @@ class _AppointmentPageState extends State<AppointmentPage>
                         validator: (v) =>
                         v == null || v.isEmpty ? 'Enter reason' : null,
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 12),
 
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -122,16 +123,42 @@ class _AppointmentPageState extends State<AppointmentPage>
                         ),
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
+                            // pick date
+                            final pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime.now(),
+                              lastDate: DateTime(2100),
+                            );
+                            if (pickedDate == null) return;
+
+                            // pick time
+                            final pickedTime = await showTimePicker(
+                              context: context,
+                              initialTime: TimeOfDay.now(),
+                            );
+                            if (pickedTime == null) return;
+
+                            selectedDateTime = DateTime(
+                              pickedDate.year,
+                              pickedDate.month,
+                              pickedDate.day,
+                              pickedTime.hour,
+                              pickedTime.minute,
+                            );
+
                             await _appointmentService.bookAppointment(
                               userId: widget.userId,
                               petId: widget.petId,
-                              vetId: "someVetId", // 🔥 replace with actual vetId
+                              vetId: "someVetId", // 🔥 replace later
                               dateTime: selectedDateTime,
                               reason: reasonController.text.trim(),
                             );
+
                             Navigator.pop(context);
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Appointment booked ✅')),
+                              const SnackBar(
+                                  content: Text('Appointment booked ✅')),
                             );
                             setState(() {}); // refresh UI
                           }
@@ -157,7 +184,7 @@ class _AppointmentPageState extends State<AppointmentPage>
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
       child: ListTile(
-        leading: _petAvatar("dog"), // 🔥 replace with actual petType if available
+        leading: _petAvatar(data["petType"] ?? "pet"),
         title: Text(data["reason"] ?? ""),
         subtitle: Text(_formatDateTime(dt)),
         trailing: Text(
@@ -182,8 +209,20 @@ class _AppointmentPageState extends State<AppointmentPage>
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: const Text('My Appointments', style: TextStyle(color: Colors.black87)),
+        title: const Text('My Appointments',
+            style: TextStyle(color: Colors.black87)),
         centerTitle: true,
+        bottom: TabBar(
+          controller: _tabController,
+          indicatorColor: Colors.green,
+          labelColor: Colors.green,
+          unselectedLabelColor: Colors.grey,
+          tabs: const [
+            Tab(text: "Upcoming"),
+            Tab(text: "Completed"),
+            Tab(text: "Cancelled"),
+          ],
+        ),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
@@ -202,11 +241,43 @@ class _AppointmentPageState extends State<AppointmentPage>
             return const Center(child: Text("No appointments yet"));
           }
           final docs = snapshot.data!.docs;
-          return ListView.builder(
-            padding: const EdgeInsets.all(12),
-            itemCount: docs.length,
-            itemBuilder: (_, i) =>
-                buildAppointmentCard(docs[i].data() as Map<String, dynamic>),
+
+          final upcoming = docs.where((d) {
+            final dt = (d["dateTime"] as Timestamp).toDate();
+            return dt.isAfter(DateTime.now()) &&
+                (d["status"] ?? "pending") != "cancelled";
+          }).toList();
+
+          final completed = docs
+              .where((d) => (d["status"] ?? "").toLowerCase() == "completed")
+              .toList();
+
+          final cancelled = docs
+              .where((d) => (d["status"] ?? "").toLowerCase() == "cancelled")
+              .toList();
+
+          return TabBarView(
+            controller: _tabController,
+            children: [
+              ListView.builder(
+                padding: const EdgeInsets.all(12),
+                itemCount: upcoming.length,
+                itemBuilder: (_, i) =>
+                    buildAppointmentCard(upcoming[i].data() as Map<String, dynamic>),
+              ),
+              ListView.builder(
+                padding: const EdgeInsets.all(12),
+                itemCount: completed.length,
+                itemBuilder: (_, i) =>
+                    buildAppointmentCard(completed[i].data() as Map<String, dynamic>),
+              ),
+              ListView.builder(
+                padding: const EdgeInsets.all(12),
+                itemCount: cancelled.length,
+                itemBuilder: (_, i) =>
+                    buildAppointmentCard(cancelled[i].data() as Map<String, dynamic>),
+              ),
+            ],
           );
         },
       ),

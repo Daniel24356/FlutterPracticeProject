@@ -5,6 +5,7 @@ import 'ForgotPasswordScreen.dart';
 import 'ShelterDashboard.dart';
 import 'VetDashboard.dart';
 
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -17,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   String email = "";
   String password = "";
   bool isLoading = false;
+  bool _obscurePassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -81,24 +83,35 @@ class _LoginScreenState extends State<LoginScreen> {
                           prefixIcon: const Icon(Icons.email_outlined),
                           filled: true,
                           fillColor: const Color(0xFFF8F9FA),
-                          focusColor: Colors.green,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none,
                           ),
                         ),
-                        validator: (val) =>
-                        val!.isEmpty ? "Enter your email" : null,
+                        cursorColor: Colors.green,
+                        style: const TextStyle(color: Colors.black),
+                        validator: (val) => val!.isEmpty ? "Enter your email" : null,
                         onChanged: (val) => setState(() => email = val),
                       ),
                       const SizedBox(height: 16),
                       // Password
                       TextFormField(
-                        obscureText: true,
+                        obscureText: _obscurePassword,
                         decoration: InputDecoration(
                           labelText: "Password",
                           hintText: "Enter your password",
                           prefixIcon: const Icon(Icons.lock_outline),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                              color: Colors.grey,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                          ),
                           filled: true,
                           fillColor: const Color(0xFFF8F9FA),
                           border: OutlineInputBorder(
@@ -106,9 +119,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             borderSide: BorderSide.none,
                           ),
                         ),
-                        validator: (val) => val!.length < 6
-                            ? "Password too short"
-                            : null,
+                        cursorColor: Colors.green,
+                        style: const TextStyle(color: Colors.black),
+                        validator: (val) => val!.length < 6 ? "Password too short" : null,
                         onChanged: (val) => setState(() => password = val),
                       ),
                       const SizedBox(height: 8),
@@ -161,29 +174,25 @@ class _LoginScreenState extends State<LoginScreen> {
                                 final userProfile = await AuthService()
                                     .getUserProfile(user.uid);
 
-                                final role =
-                                    userProfile?.role ?? 'Unknown';
+                                final role = userProfile?.role ?? 'Unknown';
 
                                 if (role == "Pet Owner") {
                                   Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (_) =>
-                                        const PetDashboardApp()),
+                                        builder: (_) => const PetDashboardApp()),
                                   );
                                 } else if (role == "Veterinarian") {
                                   Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (_) =>
-                                        const VetDashboard()),
+                                        builder: (_) => const VetDashboard()),
                                   );
                                 } else if (role == "Animal Shelter") {
                                   Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (_) =>
-                                        const ShelterDashboard()),
+                                        builder: (_) => const ShelterDashboard()),
                                   );
                                 } else {
                                   ScaffoldMessenger.of(context)
@@ -220,7 +229,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const Text("Don’t have an account? "),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushReplacementNamed(context, '/signup');
+                      Navigator.pushNamed(context, '/signup');
                     },
                     child: const Text(
                       "Sign up",
@@ -239,3 +248,241 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
+
+
+
+// class LoginScreen extends StatefulWidget {
+//   const LoginScreen({super.key});
+//
+//   @override
+//   State<LoginScreen> createState() => _LoginScreenState();
+// }
+//
+// class _LoginScreenState extends State<LoginScreen> {
+//   final _formKey = GlobalKey<FormState>();
+//   String email = "";
+//   String password = "";
+//   bool isLoading = false;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: const Color(0xFFF6FAFF),
+//       body: Center(
+//         child: SingleChildScrollView(
+//           padding: const EdgeInsets.symmetric(horizontal: 24),
+//           child: Column(
+//             mainAxisAlignment: MainAxisAlignment.center,
+//             children: [
+//               // Logo + Title
+//               Column(
+//                 children: const [
+//                   Icon(Icons.pets, color: Colors.green, size: 48),
+//                   SizedBox(height: 8),
+//                   Text(
+//                     "PawfectCare",
+//                     style: TextStyle(
+//                       fontSize: 22,
+//                       fontWeight: FontWeight.bold,
+//                       color: Colors.green,
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//               const SizedBox(height: 20),
+//               const Text(
+//                 "Welcome Back",
+//                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+//               ),
+//               const SizedBox(height: 4),
+//               const Text(
+//                 "Sign in to your account to continue",
+//                 style: TextStyle(color: Colors.grey, fontSize: 14),
+//               ),
+//               const SizedBox(height: 30),
+//
+//               // Card Container
+//               Container(
+//                 padding: const EdgeInsets.all(24),
+//                 decoration: BoxDecoration(
+//                   color: Colors.white,
+//                   borderRadius: BorderRadius.circular(16),
+//                   boxShadow: [
+//                     BoxShadow(
+//                       color: Colors.black12.withOpacity(0.05),
+//                       blurRadius: 12,
+//                       offset: const Offset(0, 4),
+//                     ),
+//                   ],
+//                 ),
+//                 child: Form(
+//                   key: _formKey,
+//                   child: Column(
+//                     children: [
+//                       // Email
+//                       TextFormField(
+//                         decoration: InputDecoration(
+//                           labelText: "Email",
+//                           hintText: "Enter your email",
+//                           prefixIcon: const Icon(Icons.email_outlined),
+//                           filled: true,
+//                           fillColor: const Color(0xFFF8F9FA),
+//                           focusColor: Colors.green,
+//                           border: OutlineInputBorder(
+//                             borderRadius: BorderRadius.circular(10),
+//                             borderSide: BorderSide.none,
+//                           ),
+//                         ),
+//                         validator: (val) =>
+//                         val!.isEmpty ? "Enter your email" : null,
+//                         onChanged: (val) => setState(() => email = val),
+//                       ),
+//                       const SizedBox(height: 16),
+//                       // Password
+//                       TextFormField(
+//                         obscureText: true,
+//                         decoration: InputDecoration(
+//                           labelText: "Password",
+//                           hintText: "Enter your password",
+//                           prefixIcon: const Icon(Icons.lock_outline),
+//                           suffixIcon: const Icon(Icons.panorama_fish_eye),
+//                           filled: true,
+//                           fillColor: const Color(0xFFF8F9FA),
+//                           border: OutlineInputBorder(
+//                             borderRadius: BorderRadius.circular(10),
+//                             borderSide: BorderSide.none,
+//                           ),
+//                         ),
+//                         validator: (val) => val!.length < 6
+//                             ? "Password too short"
+//                             : null,
+//                         onChanged: (val) => setState(() => password = val),
+//                       ),
+//                       const SizedBox(height: 8),
+//                       Align(
+//                         alignment: Alignment.center,
+//                         child: TextButton(
+//                           onPressed: () {
+//                             Navigator.push(
+//                               context,
+//                               MaterialPageRoute(
+//                                 builder: (_) => const ForgotPasswordScreen(),
+//                               ),
+//                             );
+//                           },
+//                           child: const Text(
+//                             "Forgot Password?",
+//                             style: TextStyle(
+//                               fontSize: 13,
+//                               color: Color(0xFF007BFF),
+//                             ),
+//                           ),
+//                         ),
+//                       ),
+//                       const SizedBox(height: 10),
+//                       // Login Button
+//                       SizedBox(
+//                         width: double.infinity,
+//                         child: ElevatedButton(
+//                           style: ElevatedButton.styleFrom(
+//                             backgroundColor: Colors.green,
+//                             padding: const EdgeInsets.symmetric(vertical: 14),
+//                             shape: RoundedRectangleBorder(
+//                               borderRadius: BorderRadius.circular(10),
+//                             ),
+//                           ),
+//                           onPressed: isLoading
+//                               ? null
+//                               : () async {
+//                             if (_formKey.currentState!.validate()) {
+//                               setState(() => isLoading = true);
+//
+//                               final user = await AuthService().login(
+//                                 email: email.trim(),
+//                                 password: password,
+//                               );
+//
+//                               setState(() => isLoading = false);
+//
+//                               if (user != null) {
+//                                 final userProfile = await AuthService()
+//                                     .getUserProfile(user.uid);
+//
+//                                 final role =
+//                                     userProfile?.role ?? 'Unknown';
+//
+//                                 if (role == "Pet Owner") {
+//                                   Navigator.pushReplacement(
+//                                     context,
+//                                     MaterialPageRoute(
+//                                         builder: (_) =>
+//                                         const PetDashboardApp()),
+//                                   );
+//                                 } else if (role == "Veterinarian") {
+//                                   Navigator.pushReplacement(
+//                                     context,
+//                                     MaterialPageRoute(
+//                                         builder: (_) =>
+//                                         const VetDashboard()),
+//                                   );
+//                                 } else if (role == "Animal Shelter") {
+//                                   Navigator.pushReplacement(
+//                                     context,
+//                                     MaterialPageRoute(
+//                                         builder: (_) =>
+//                                         const ShelterDashboard()),
+//                                   );
+//                                 } else {
+//                                   ScaffoldMessenger.of(context)
+//                                       .showSnackBar(const SnackBar(
+//                                       content: Text('Role not found')));
+//                                 }
+//                               } else {
+//                                 ScaffoldMessenger.of(context)
+//                                     .showSnackBar(const SnackBar(
+//                                     content: Text('Login Failed')));
+//                               }
+//                             }
+//                           },
+//                           child: isLoading
+//                               ? const CircularProgressIndicator(
+//                               color: Colors.white)
+//                               : const Text(
+//                             "Sign In",
+//                             style: TextStyle(
+//                                 fontSize: 16,
+//                                 fontWeight: FontWeight.w600,
+//                                 color: Colors.white),
+//                           ),
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//               ),
+//               const SizedBox(height: 16),
+//               Row(
+//                 mainAxisAlignment: MainAxisAlignment.center,
+//                 children: [
+//                   const Text("Don’t have an account? "),
+//                   GestureDetector(
+//                     onTap: () {
+//                       Navigator.pushReplacementNamed(context, '/signup');
+//                     },
+//                     child: const Text(
+//                       "Sign up",
+//                       style: TextStyle(
+//                         color: Colors.green,
+//                         fontWeight: FontWeight.w600,
+//                       ),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }

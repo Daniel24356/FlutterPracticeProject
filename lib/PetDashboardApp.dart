@@ -210,39 +210,9 @@ class IndexPage extends StatelessWidget {
           children: [
             // Greeting
             Row(
-              children: [
-                const CircleAvatar(
-                  radius: 30,
-                  backgroundImage: AssetImage('images/avatar.jpeg'), // Replace with your device image path
-                ),
-                const SizedBox(width: 12),
-                const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
 
-                  children: [
-                    Text(
-                      'Hello Evelyn',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Text(
-                      'Welcome!',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-                // const Spacer(),
-                // IconButton(
-                //   icon: const Icon(Icons.notifications_outlined, color: Colors.grey, size: 30),
-                //   onPressed: () {},
-                // ),
-              ],
             ),
+
             SizedBox(height: 5,),
             // Pets row
             Row(
@@ -377,6 +347,7 @@ class IndexPage extends StatelessWidget {
     );
   }
 }
+
 
 class _PetAvatar extends StatelessWidget {
   final String name;
